@@ -68,7 +68,7 @@ namespace Drax360Client.AMXClean
             {
                 ret += renderlong(s);
             }
-            ret += renderchar(Text, 64);
+            ret += renderchar(Text.Length > 40 ? Text.Substring(0, 40) : Text, 64);
             ret += renderchar(Text2, 40);
             ret += renderchar(Text3, 40);
             return ret;
@@ -89,12 +89,22 @@ namespace Drax360Client.AMXClean
             return ret;
         }
 
-
         private string rendertime()
         {
             long secondsSince1970 = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             return renderlong(secondsSince1970);
         }
+
+        private string rendertimeNEW()
+        {
+            DateTimeOffset fixedTime = new DateTimeOffset(2025, 7, 8, 9, 4, 00, TimeSpan.Zero);
+            //DateTimeOffset fixedTime = new DateTimeOffset(System.DateTime.Now.Year, 7, 8, 15, 24, 00, TimeSpan.Zero);
+            uint unixSeconds = (uint)fixedTime.ToUnixTimeSeconds(); // ensures it's unsigned 32-bit
+            byte[] bytes = BitConverter.GetBytes(unixSeconds);      // little-endian 4 bytes
+            //return Encoding.GetEncoding("ISO-8859-1").GetString(bytes); // safely converts raw bytes to string
+            return Encoding.ASCII.GetString(bytes);
+        }
+
 
         private string render__int16(int ourval)
         {

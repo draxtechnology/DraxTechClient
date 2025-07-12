@@ -32,6 +32,9 @@
             btnfakeisolation = new Button();
             btntestmessage = new Button();
             bttestmessageclean = new Button();
+            btcleanisoloate = new Button();
+            btcleanalarm = new Button();
+            btcleanalarmoff = new Button();
             SuspendLayout();
             // 
             // btnfakeisolation
@@ -56,7 +59,7 @@
             // 
             // bttestmessageclean
             // 
-            bttestmessageclean.Location = new Point(283, 241);
+            bttestmessageclean.Location = new Point(283, 191);
             bttestmessageclean.Name = "bttestmessageclean";
             bttestmessageclean.Size = new Size(131, 77);
             bttestmessageclean.TabIndex = 2;
@@ -64,11 +67,44 @@
             bttestmessageclean.UseVisualStyleBackColor = true;
             bttestmessageclean.Click += bttestmessageclean_Click;
             // 
+            // btcleanisoloate
+            // 
+            btcleanisoloate.Location = new Point(81, 191);
+            btcleanisoloate.Name = "btcleanisoloate";
+            btcleanisoloate.Size = new Size(143, 74);
+            btcleanisoloate.TabIndex = 3;
+            btcleanisoloate.Text = "Clean Fake Isolate";
+            btcleanisoloate.UseVisualStyleBackColor = true;
+            btcleanisoloate.Click += btcleanisoloate_Click;
+            // 
+            // btcleanalarm
+            // 
+            btcleanalarm.Location = new Point(81, 286);
+            btcleanalarm.Name = "btcleanalarm";
+            btcleanalarm.Size = new Size(131, 77);
+            btcleanalarm.TabIndex = 4;
+            btcleanalarm.Text = "Clean Alarm On";
+            btcleanalarm.UseVisualStyleBackColor = true;
+            btcleanalarm.Click += btcleanalarm_Click;
+            // 
+            // btcleanalarmoff
+            // 
+            btcleanalarmoff.Location = new Point(283, 286);
+            btcleanalarmoff.Name = "btcleanalarmoff";
+            btcleanalarmoff.Size = new Size(131, 77);
+            btcleanalarmoff.TabIndex = 4;
+            btcleanalarmoff.Text = "Clean Alarm Off";
+            btcleanalarmoff.UseVisualStyleBackColor = true;
+            btcleanalarmoff.Click += btcleanalarmoff_Click;
+            // 
             // frmamxtest
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(499, 450);
+            Controls.Add(btcleanalarmoff);
+            Controls.Add(btcleanalarm);
+            Controls.Add(btcleanisoloate);
             Controls.Add(bttestmessageclean);
             Controls.Add(btntestmessage);
             Controls.Add(btnfakeisolation);
@@ -82,5 +118,8 @@
         private Button btnfakeisolation;
         private Button btntestmessage;
         private Button bttestmessageclean;
+        private Button btcleanisoloate;
+        private Button btcleanalarm;
+        private Button btcleanalarmoff;
     }
 }

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drax360Client", "Drax360Client\Drax360Client.csproj", "{FFE1AAA5-4EEA-46AC-8925-848BCE8AF37F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Read AMX File", "Read AMX File\Read AMX File.csproj", "{76D5697B-B0D9-4C9B-BCAF-83A3450D9DE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{FFE1AAA5-4EEA-46AC-8925-848BCE8AF37F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFE1AAA5-4EEA-46AC-8925-848BCE8AF37F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFE1AAA5-4EEA-46AC-8925-848BCE8AF37F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76D5697B-B0D9-4C9B-BCAF-83A3450D9DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76D5697B-B0D9-4C9B-BCAF-83A3450D9DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76D5697B-B0D9-4C9B-BCAF-83A3450D9DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76D5697B-B0D9-4C9B-BCAF-83A3450D9DE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
