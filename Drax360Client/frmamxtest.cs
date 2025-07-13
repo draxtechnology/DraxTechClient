@@ -267,7 +267,7 @@ namespace Drax360Client
 
                         string tempRefParam = "";
                         string tempRefParam2 = "";
-                        cleanamx.WriteNWMData(2, evnum, ps, tempRefParam, tempRefParam2, OnOff);
+                        cleanamx.WriteData(2, evnum, ps, tempRefParam, tempRefParam2, OnOff);
 
                     }
                     //Fake an "input" from the remote
@@ -279,7 +279,7 @@ namespace Drax360Client
 
                     string tempRefParam3 = "";
                     string tempRefParam4 = "";
-                    cleanamx.WriteNWMData(1, evnum, ps, tempRefParam3, tempRefParam4, OnOff);
+                    cleanamx.WriteData(1, evnum, ps, tempRefParam3, tempRefParam4, OnOff);
                     numberofisolations++;
                 }
                 else
@@ -322,7 +322,7 @@ namespace Drax360Client
             string ps = "##TEST";
             string tempRefParam = "";
             string tempRefParam2 = "";
-            cleanamx.WriteNWMData(1, evnum, ps, tempRefParam, tempRefParam2, on);
+            cleanamx.WriteData(1, evnum, ps, tempRefParam, tempRefParam2, on);
             cleanamx.FlushMessages();
         }
 

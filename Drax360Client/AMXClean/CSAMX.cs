@@ -38,7 +38,7 @@ namespace Drax360Client.AMXClean
             return inputn + (zone * 0x100) + (node * 0x10000) + (inputtype * 0x8000000);
         }
 
-        public void WriteNWMData(int eventtype, int eventnumber,
+        public void WriteData(int eventtype, int eventnumber,
              string textparameter, string textparameter2, string textparameter3, bool on)
         {
             NVM ournvm = new NVM();
