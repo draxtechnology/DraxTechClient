@@ -225,7 +225,7 @@ namespace Drax360Client
 
         private void bttestmessageclean_Click(object sender, EventArgs e)
         {
-            string strmsg = "c# Gent Network Manager Started " + DateTime.UtcNow.ToString(); 
+            string strmsg = "c# Gent Started " + DateTime.Now.ToString(); 
             cleanamx.LogMessage(9, 0, strmsg, 3);
             cleanamx.FlushMessages();
 
