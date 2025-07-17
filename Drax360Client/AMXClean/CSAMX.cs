@@ -68,14 +68,14 @@ namespace Drax360Client.AMXClean
             if (nvms.Count == 0) return;
 
 
-            string contents = "";
+            List<byte> contents = new List<byte>(); 
             foreach (NVM ournvm in nvms)
             {
-                contents += ournvm.Render();
+                contents.AddRange(ournvm.RenderBytes());
             }
 
             // safety check
-            if (String.IsNullOrEmpty(contents))
+            if (contents.Count==0)
             {
                 nvms.Clear();
                 return;
@@ -88,10 +88,15 @@ namespace Drax360Client.AMXClean
             // Open the file in append mode
             using (FileStream fileStream = new FileStream(fullfilename, FileMode.Append, FileAccess.Write))
             {
+                byte[] ourbytes = contents.ToArray();
+                fileStream.Write(ourbytes, 0, ourbytes.Length);
+                fileStream.Close();
+                /*
                 using (StreamWriter writer = new StreamWriter(fileStream))
                 {
-                    writer.Write(contents);
-                }
+                    
+                    writer.(ourbytes);
+                }*/
             }
 
             if (filenumber > kmaxfilenumber) filenumber = kstartingfilenumber;

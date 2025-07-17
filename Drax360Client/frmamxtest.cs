@@ -207,7 +207,7 @@ namespace Drax360Client
             string tempRefParam2 = GetCurrentTransferFile();
 
             // this works 
-            //File.WriteAllText(tempRefParam2, tempRefParam);
+            File.WriteAllText(tempRefParam2, tempRefParam);
 
 
             NetmanSafe.LogMessageToAMX1(9, 0, ref tempRefParam, ref tempRefParam2, 3);
@@ -225,13 +225,13 @@ namespace Drax360Client
 
         private void bttestmessageclean_Click(object sender, EventArgs e)
         {
-            string strmsg = "c# Gent Network Manager Started 12:05";
+            string strmsg = "c# Gent Network Manager Started " + DateTime.UtcNow.ToString(); 
             cleanamx.LogMessage(9, 0, strmsg, 3);
             cleanamx.FlushMessages();
 
-            //string tempRefParam2 = GetCurrentTransferFile();
-            //NetmanSafe.LogMessageToAMX1(9, 0, ref strmsg, ref tempRefParam2, 3);
-            //FlushAMX1Messages();
+            string tempRefParam2 = GetCurrentTransferFile();
+            NetmanSafe.LogMessageToAMX1(9, 0, ref strmsg, ref tempRefParam2, 3);
+            FlushAMX1Messages();
         }
 
         private void btcleanisoloate_Click(object sender, EventArgs e)
