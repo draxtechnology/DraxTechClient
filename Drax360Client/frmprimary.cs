@@ -16,7 +16,7 @@ namespace Drax360Client
 
         #endregion
 
-        NamedPipeServerStream pipeserverreturn = null;
+        NamedPipeServerStream pipeserverreturn;
 
 
         private bool panelconnected = false;
