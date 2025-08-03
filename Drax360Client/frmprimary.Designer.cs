@@ -50,7 +50,6 @@
             btAlert = new Button();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
-            toolStripMenuItem1 = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             quitToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
@@ -254,28 +253,21 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem1, toolStripSeparator1, quitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripSeparator1, quitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(46, 24);
             fileToolStripMenuItem.Text = "File";
             // 
-            // toolStripMenuItem1
-            // 
-            toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(169, 26);
-            toolStripMenuItem1.Text = "Test AMX";
-            toolStripMenuItem1.Click += toolStripMenuItem1_Click;
-            // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(166, 6);
+            toolStripSeparator1.Size = new Size(221, 6);
             // 
             // quitToolStripMenuItem
             // 
             quitToolStripMenuItem.Name = "quitToolStripMenuItem";
             quitToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.F4;
-            quitToolStripMenuItem.Size = new Size(169, 26);
+            quitToolStripMenuItem.Size = new Size(224, 26);
             quitToolStripMenuItem.Text = "Exit";
             quitToolStripMenuItem.Click += quitToolStripMenuItem_Click;
             // 
@@ -314,6 +306,7 @@
             MainMenuStrip = menuStrip1;
             Name = "frmprimary";
             Text = "Drax Technology";
+            FormClosing += frmprimary_FormClosing;
             Load += frmprimary_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -349,7 +342,6 @@
         private ToolStripMenuItem quitToolStripMenuItem;
         private ToolStripMenuItem helpToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem1;
-        private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripSeparator toolStripSeparator1;
     }
 }
