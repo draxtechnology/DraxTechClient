@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Drax360Client
 {
     internal static class Program
@@ -11,8 +13,8 @@ namespace Drax360Client
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            //Application.Run(new frmprimary());
-            Application.Run(new frmTestBox());
+            Application.Run(new frmprimary());
+            //Application.Run(new frmTestBox());
         }
     }
 }

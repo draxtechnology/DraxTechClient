@@ -21,6 +21,7 @@ namespace Drax360Client
 
         private bool panelconnected = false;
 
+
         public frmprimary()
         {
             InitializeComponent();
@@ -29,8 +30,13 @@ namespace Drax360Client
             startpipeservers();
             startpipereturn();
 
+            this.ShowInTaskbar = false;
         }
 
+        protected override void SetVisibleCore(bool value)
+        {
+            base.SetVisibleCore(false); // never show the window
+        }
         private void startpipeservers()
         {
             pipeserverreturn = new NamedPipeServerStream(kpipenamereturn, PipeDirection.InOut, 254, PipeTransmissionMode.Message);
@@ -48,6 +54,20 @@ namespace Drax360Client
                 string strresponse = Encoding.UTF8.GetString(messagebytes);
                 Console.WriteLine("Message received from server return: " + strresponse);
                 string strret = handlepiperesponse(strresponse);
+                if (strresponse == "|NWM:TBSHOW")
+                {
+                    var testBox = new frmTestBox();
+                    testBox.StartPosition = FormStartPosition.CenterScreen; // optional
+                    testBox.TopMost = true; // bring it above all windows
+                    testBox.ShowDialog();
+                }
+                if (strresponse == "|NWM:SHOWABOUT")
+                {
+                    var about = new frmAbout();
+                    about.StartPosition = FormStartPosition.CenterScreen; // optional
+                    about.TopMost = true; // bring it above all windows
+                    about.ShowDialog();
+                }
                 //prepare some response
                 byte[] response = Encoding.UTF8.GetBytes(strret);
 
