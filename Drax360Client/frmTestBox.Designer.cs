@@ -30,14 +30,17 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTestBox));
             label1 = new Label();
-            tbNode = new TextBox();
             label2 = new Label();
-            tbLoop = new TextBox();
             label3 = new Label();
-            tbDevice = new TextBox();
             cbType = new ComboBox();
             btOn = new Button();
             btReset = new Button();
+            tbNode = new NumericUpDown();
+            tbLoop = new NumericUpDown();
+            tbDevice = new NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)tbNode).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)tbLoop).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)tbDevice).BeginInit();
             SuspendLayout();
             // 
             // label1
@@ -49,14 +52,6 @@
             label1.TabIndex = 0;
             label1.Text = "Node";
             // 
-            // tbNode
-            // 
-            tbNode.Location = new Point(81, 32);
-            tbNode.Name = "tbNode";
-            tbNode.Size = new Size(62, 27);
-            tbNode.TabIndex = 1;
-            tbNode.Text = "1";
-            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -66,14 +61,6 @@
             label2.TabIndex = 2;
             label2.Text = "Loop";
             // 
-            // tbLoop
-            // 
-            tbLoop.Location = new Point(212, 32);
-            tbLoop.Name = "tbLoop";
-            tbLoop.Size = new Size(62, 27);
-            tbLoop.TabIndex = 3;
-            tbLoop.Text = "1";
-            // 
             // label3
             // 
             label3.AutoSize = true;
@@ -82,14 +69,6 @@
             label3.Size = new Size(54, 20);
             label3.TabIndex = 4;
             label3.Text = "Device";
-            // 
-            // tbDevice
-            // 
-            tbDevice.Location = new Point(353, 32);
-            tbDevice.Name = "tbDevice";
-            tbDevice.Size = new Size(62, 27);
-            tbDevice.TabIndex = 5;
-            tbDevice.Text = "1";
             // 
             // cbType
             // 
@@ -119,19 +98,40 @@
             btReset.UseVisualStyleBackColor = true;
             btReset.Click += btReset_Click;
             // 
+            // tbNode
+            // 
+            tbNode.Location = new Point(81, 32);
+            tbNode.Name = "tbNode";
+            tbNode.Size = new Size(62, 27);
+            tbNode.TabIndex = 9;
+            // 
+            // tbLoop
+            // 
+            tbLoop.Location = new Point(212, 32);
+            tbLoop.Name = "tbLoop";
+            tbLoop.Size = new Size(62, 27);
+            tbLoop.TabIndex = 10;
+            // 
+            // tbDevice
+            // 
+            tbDevice.Location = new Point(354, 32);
+            tbDevice.Name = "tbDevice";
+            tbDevice.Size = new Size(61, 27);
+            tbDevice.TabIndex = 11;
+            // 
             // frmTestBox
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(448, 162);
+            Controls.Add(tbDevice);
+            Controls.Add(tbLoop);
+            Controls.Add(tbNode);
             Controls.Add(btReset);
             Controls.Add(btOn);
             Controls.Add(cbType);
-            Controls.Add(tbDevice);
             Controls.Add(label3);
-            Controls.Add(tbLoop);
             Controls.Add(label2);
-            Controls.Add(tbNode);
             Controls.Add(label1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
@@ -139,6 +139,9 @@
             Name = "frmTestBox";
             Text = "Test Box";
             Load += frmTestBox_Load;
+            ((System.ComponentModel.ISupportInitialize)tbNode).EndInit();
+            ((System.ComponentModel.ISupportInitialize)tbLoop).EndInit();
+            ((System.ComponentModel.ISupportInitialize)tbDevice).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -146,13 +149,13 @@
         #endregion
 
         private Label label1;
-        private TextBox tbNode;
         private Label label2;
-        private TextBox tbLoop;
         private Label label3;
-        private TextBox tbDevice;
         private ComboBox cbType;
         private Button btOn;
         private Button btReset;
+        private NumericUpDown tbNode;
+        private NumericUpDown tbLoop;
+        private NumericUpDown tbDevice;
     }
 }

@@ -50,55 +50,44 @@ namespace Drax360Client
                 base.SetVisibleCore(value);
             }
         }
-
-
         private void btevacuate_Click(object sender, EventArgs e)
         {
             sendcmd("Evacuate");
         }
-
         private void btAlert_Click(object sender, EventArgs e)
         {
             sendcmd("Alert");
         }
-
         private void btReset_Click(object sender, EventArgs e)
         {
             sendcmd("Reset");
         }
-
         private void btSilence_Click(object sender, EventArgs e)
         {
             sendcmd("Silence");
         }
-
         private void btDisableDevice_Click(object sender, EventArgs e)
         {
             sendcmd("DisableDevice", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
         }
-
         private void btEnableDevice_Click(object sender, EventArgs e)
         {
             sendcmd("EnableDevice", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
         }
-
         private void btDisableZone_Click(object sender, EventArgs e)
         {
             sendcmd("DisableZone", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
         }
-
         private void btEnableZone_Click(object sender, EventArgs e)
         {
             sendcmd("EnableZone", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
         }
-
         private void btgetpanel_Click(object sender, EventArgs e)
         {
             string result = sendcmd("GetPanelType");
             if (!string.IsNullOrEmpty(result) && result != "Error")
                 MessageBox.Show(result);
         }
-
         private string sendcmd(string cmd, string parameters = "")
         {
             updatestatus("Sending");
@@ -211,8 +200,7 @@ namespace Drax360Client
 
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-
-            frmAbout about = new frmAbout();
+            frmAbout? about = new frmAbout();
             about.ShowDialog();
             about.Dispose();
             about = null;

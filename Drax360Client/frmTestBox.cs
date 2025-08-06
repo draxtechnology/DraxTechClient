@@ -11,16 +11,11 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Drax360Client
 {
     public partial class frmTestBox : Form
     {
-        NamedPipeServerStream pipeserverreturn;
-
         #region constants
         const string kpipename = "Drax360Pipe";
         const string kpipenamesend = "Drax360PipeSend";
@@ -50,6 +45,20 @@ namespace Drax360Client
             cbType.Items.Add(new ComboBoxItem { Text = "15 - Status", Value = "15" });
             cbType.SelectedIndex = 0; // Select first item
 
+            tbNode.Minimum = 1;
+            tbNode.Maximum = 255;
+            tbNode.Value = 1;
+            tbNode.Increment = 1;
+
+            tbLoop.Minimum = 1;
+            tbLoop.Maximum = 255;
+            tbLoop.Value = 1;
+            tbLoop.Increment = 1;
+
+            tbDevice.Minimum = 1;
+            tbDevice.Maximum = 255;
+            tbDevice.Value = 1;
+            tbDevice.Increment = 1;
         }
         public class ComboBoxItem
         {
@@ -69,7 +78,6 @@ namespace Drax360Client
         }
         private string sendcmd(string cmd, string parameters = "")
         {
-            updatestatus("Sending");
             string strcmd = cmd;
             if (!string.IsNullOrEmpty(parameters))
             {
@@ -87,14 +95,9 @@ namespace Drax360Client
             {
                 result = "Error: " + ex;
             }
-            updatestatus(result);
             return result;
         }
-        private void updatestatus(string msg)
-        {
-            //if (!string.IsNullOrEmpty(msg))
-            //lblstatus.Text = msg;
-        }
+
 
         private async Task<string> sendserver(string message)
         {
@@ -144,6 +147,11 @@ namespace Drax360Client
         private void frmTestBox_Load(object sender, EventArgs e)
         {
             Console.WriteLine("frmTestBox Load event fired.");
+        }
+
+        private void tbNode_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
