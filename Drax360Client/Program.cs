@@ -6,22 +6,27 @@ namespace Drax360Client
     {
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
         private static extern bool AllocConsole();
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
+
+        public class HiddenAppContext : ApplicationContext
+        {
+            public HiddenAppContext()
+            {
+                var mainForm = new frmprimary();
+
+                // Force the creation of the form's handle
+                var handle = mainForm.Handle;
+
+                PipeManager.SetMainForm(mainForm);
+                PipeManager.Start();
+            }
+        }
         [STAThread]
         static void Main()
         {
-            AllocConsole();
-
+            // AllocConsole();  Display console window for debugging purposes
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            var mainForm = new frmprimary();
-            PipeManager.SetMainForm(mainForm);
-
-            Application.Run(mainForm);
-
+            Application.Run(new HiddenAppContext());
         }
     }
 }

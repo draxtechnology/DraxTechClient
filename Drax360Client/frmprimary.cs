@@ -23,8 +23,8 @@ namespace Drax360Client
         public frmprimary()
         {
             InitializeComponent();
-            this.Load += frmprimary_Load;
-            this.Shown += Frmprimary_Shown;  
+            //this.Load += frmprimary_Load;
+            //this.Shown += Frmprimary_Shown;  
             lblversion.Text = "V" + Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
             this.ShowInTaskbar = false;
             PipeManager.SetMainForm(this);
@@ -32,7 +32,7 @@ namespace Drax360Client
 
         private void Frmprimary_Shown(object sender, EventArgs e)
         {
-            PipeManager.Start(); // Start pipe manager here, after form is fully created and shown
+            //PipeManager.Start(); // Start pipe manager here, after form is fully created and shown
             Console.Write("Frmprimary_Shown");
             Console.Out.Flush();
         }

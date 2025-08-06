@@ -74,6 +74,10 @@ namespace Drax360Client
                     ShowAbout();
                     return "OK";
 
+                //case "|NWM:CLOSEALLWINDOWS":
+                //    HideTestBox();
+                //    return "OK";
+
                 default:
                     // Optionally handle unknown responses
                     return "UNKNOWN_COMMAND";

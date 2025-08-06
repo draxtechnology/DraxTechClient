@@ -134,6 +134,8 @@
             Controls.Add(tbNode);
             Controls.Add(label1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frmTestBox";
             Text = "Test Box";
             Load += frmTestBox_Load;

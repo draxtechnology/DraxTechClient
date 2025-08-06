@@ -16,6 +16,7 @@ namespace Drax360Client
     {
         public frmAbout()
         {
+            this.TopMost = true;
             InitializeComponent();
             lblversion.Text = "V" + Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
         }

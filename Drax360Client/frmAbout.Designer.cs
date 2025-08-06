@@ -51,7 +51,7 @@
             // 
             // btok
             // 
-            btok.Location = new Point(606, 333);
+            btok.Location = new Point(680, 346);
             btok.Name = "btok";
             btok.Size = new Size(108, 52);
             btok.TabIndex = 1;
@@ -97,6 +97,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.Window;
             ClientSize = new Size(800, 450);
             Controls.Add(pictureBox1);
             Controls.Add(lbcopyright);
@@ -104,6 +105,8 @@
             Controls.Add(btok);
             Controls.Add(label1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frmAbout";
             Text = "About Network Manager";
             Load += frmAbout_Load;

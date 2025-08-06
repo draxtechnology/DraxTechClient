@@ -36,6 +36,7 @@ namespace Drax360Client
         #endregion
         public frmTestBox()
         {
+            this.TopMost = true;
             InitializeComponent();
             Console.WriteLine("frmTestBox initialized.");
 
