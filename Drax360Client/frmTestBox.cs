@@ -37,6 +37,7 @@ namespace Drax360Client
         public frmTestBox()
         {
             InitializeComponent();
+            Console.WriteLine("frmTestBox initialized.");
 
             cbType.Items.Add(new ComboBoxItem { Text = "0 - Fire - Alarm", Value = "0" });
             cbType.Items.Add(new ComboBoxItem { Text = "2 - Pre-Alarm", Value = "2" });
@@ -91,7 +92,7 @@ namespace Drax360Client
         private void updatestatus(string msg)
         {
             //if (!string.IsNullOrEmpty(msg))
-                //lblstatus.Text = msg;
+            //lblstatus.Text = msg;
         }
 
         private async Task<string> sendserver(string message)
@@ -137,6 +138,11 @@ namespace Drax360Client
         {
             ComboBoxItem selectedItem = this.cbType.SelectedItem as ComboBoxItem;
             sendcmd("Test Box Reset", selectedItem.Value + "," + this.tbNode.Text + "," + this.tbLoop.Text + "," + this.tbDevice.Text);
+        }
+
+        private void frmTestBox_Load(object sender, EventArgs e)
+        {
+            Console.WriteLine("frmTestBox Load event fired.");
         }
     }
 }

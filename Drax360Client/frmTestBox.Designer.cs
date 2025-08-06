@@ -136,6 +136,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmTestBox";
             Text = "Test Box";
+            Load += frmTestBox_Load;
             ResumeLayout(false);
             PerformLayout();
         }

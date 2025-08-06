@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
-
 namespace Drax360Client
 {
     public partial class frmprimary : Form
@@ -18,108 +17,37 @@ namespace Drax360Client
 
         NamedPipeServerStream pipeserverreturn;
 
-
         private bool panelconnected = false;
-
+        private bool allowShow = false;
 
         public frmprimary()
         {
             InitializeComponent();
+            this.Load += frmprimary_Load;
+            this.Shown += Frmprimary_Shown;  
             lblversion.Text = "V" + Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
-
-            startpipeservers();
-            startpipereturn();
-
             this.ShowInTaskbar = false;
+            PipeManager.SetMainForm(this);
+        }
+
+        private void Frmprimary_Shown(object sender, EventArgs e)
+        {
+            PipeManager.Start(); // Start pipe manager here, after form is fully created and shown
+            Console.Write("Frmprimary_Shown");
+            Console.Out.Flush();
         }
 
         protected override void SetVisibleCore(bool value)
         {
-            base.SetVisibleCore(false); // never show the window
-        }
-        private void startpipeservers()
-        {
-            pipeserverreturn = new NamedPipeServerStream(kpipenamereturn, PipeDirection.InOut, 254, PipeTransmissionMode.Message);
-            Console.WriteLine("Pipe Server Return is Started (" + kpipenamereturn + ")");
-        }
-
-        private async void startpipereturn()
-        {
-            while (pipeserverreturn != null)
+            // Always create handle by calling base once with true
+            if (!IsHandleCreated)
             {
-                await pipeserverreturn.WaitForConnectionAsync();
-
-                //receive message from client
-                var messagebytes = readpipemessage(pipeserverreturn);
-                string strresponse = Encoding.UTF8.GetString(messagebytes);
-                Console.WriteLine("Message received from server return: " + strresponse);
-                string strret = handlepiperesponse(strresponse);
-                if (strresponse == "|NWM:TBSHOW")
-                {
-                    var testBox = new frmTestBox();
-                    testBox.StartPosition = FormStartPosition.CenterScreen; // optional
-                    testBox.TopMost = true; // bring it above all windows
-                    testBox.ShowDialog();
-                }
-                if (strresponse == "|NWM:SHOWABOUT")
-                {
-                    var about = new frmAbout();
-                    about.StartPosition = FormStartPosition.CenterScreen; // optional
-                    about.TopMost = true; // bring it above all windows
-                    about.ShowDialog();
-                }
-                //prepare some response
-                byte[] response = Encoding.UTF8.GetBytes(strret);
-
-                //send response to a server
-                pipeserverreturn.Write(response, 0, response.Length);
-                pipeserverreturn.Disconnect();
-
+                base.SetVisibleCore(true); // create handle but show window once
+                this.Hide(); // immediately hide the form
             }
-
-        }
-        private string handlepiperesponse(string strresponse)
-        {
-            // this is where we need to implement the bring to the front messages
-            string[] parts = strresponse.Split(kpipedelim);
-            if (parts.Length > 2) return "ERROR";
-            string message = parts[0];
-
-            // brings current window to front
-            this.BringToFront();
-            string ret = "OK";
-
-
-            return ret;
-        }
-
-        private void stoppipeserver()
-        {
-            if (pipeserverreturn != null)
+            else
             {
-
-                Console.WriteLine("Pipe Server Return is stopping...");
-                pipeserverreturn.Close();
-                pipeserverreturn.Dispose();
-                pipeserverreturn = null;
-            }
-
-
-        }
-        private static byte[] readpipemessage(PipeStream pipe)
-        {
-            if (!pipe.IsConnected) return new byte[0];
-            byte[] buffer = new byte[2048];
-            using (var ms = new MemoryStream())
-            {
-                do
-                {
-                    var readBytes = pipe.Read(buffer, 0, buffer.Length);
-                    ms.Write(buffer, 0, readBytes);
-                }
-                while (!pipe.IsMessageComplete);
-
-                return ms.ToArray();
+                base.SetVisibleCore(value);
             }
         }
 
@@ -195,11 +123,6 @@ namespace Drax360Client
             return result;
         }
 
-
-
-
-
-
         private async Task<string> sendserver(string message)
         {
             using (NamedPipeClientStream pipe = new NamedPipeClientStream(".", kpipenamesend, PipeDirection.InOut))
@@ -248,6 +171,8 @@ namespace Drax360Client
 
         private void frmprimary_Load(object sender, EventArgs e)
         {
+            PipeManager.SetMainForm(this);
+            this.Hide(); // hide the window but keep it alive
             try
             {
                 string result = sendcmd("GetPanelType");
@@ -293,11 +218,9 @@ namespace Drax360Client
             about = null;
         }
 
-        
-
         private void frmprimary_FormClosing(object sender, FormClosingEventArgs e)
         {
-            stoppipeserver();
+            PipeManager.Stop();
         }
     }
 }
