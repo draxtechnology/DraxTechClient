@@ -36,11 +36,11 @@ namespace Drax360Client
             Console.WriteLine("frmTestBox initialized.");
 
             cbType.Items.Add(new ComboBoxItem { Text = "0 - Fire - Alarm", Value = "0" });
-            cbType.Items.Add(new ComboBoxItem { Text = "2 - Pre-Alarm", Value = "2" });
+            cbType.Items.Add(new ComboBoxItem { Text = "2 - Pre - Alarm", Value = "2" });
             cbType.Items.Add(new ComboBoxItem { Text = "4 - Disablement", Value = "4" });
             cbType.Items.Add(new ComboBoxItem { Text = "6 - Test Mode", Value = "6" });
             cbType.Items.Add(new ComboBoxItem { Text = "7 - Tech Alarm", Value = "7" });
-            cbType.Items.Add(new ComboBoxItem { Text = "8 - Device Faut", Value = "8" });
+            cbType.Items.Add(new ComboBoxItem { Text = "8 - Device Fault", Value = "8" });
             cbType.Items.Add(new ComboBoxItem { Text = "10 - Maintenance", Value = "10" });
             cbType.Items.Add(new ComboBoxItem { Text = "15 - Status", Value = "15" });
             cbType.SelectedIndex = 0; // Select first item
