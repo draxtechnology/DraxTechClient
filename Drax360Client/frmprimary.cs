@@ -210,5 +210,12 @@ namespace Drax360Client
         {
             PipeManager.Stop();
         }
+
+       
+
+        private void btnrestartservice_Click(object sender, EventArgs e)
+        {
+            sendcmd("ServiceRestart");
+        }
     }
 }

@@ -54,6 +54,7 @@
             quitToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem1 = new ToolStripMenuItem();
+            btnrestartservice = new Button();
             panel1.SuspendLayout();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -81,7 +82,7 @@
             // lblversion
             // 
             lblversion.AutoSize = true;
-            lblversion.Location = new Point(856, 430);
+            lblversion.Location = new Point(1131, 507);
             lblversion.Name = "lblversion";
             lblversion.Size = new Size(37, 20);
             lblversion.TabIndex = 2;
@@ -91,7 +92,7 @@
             // lblstatus
             // 
             lblstatus.AutoSize = true;
-            lblstatus.Location = new Point(12, 421);
+            lblstatus.Location = new Point(12, 507);
             lblstatus.Name = "lblstatus";
             lblstatus.Size = new Size(63, 20);
             lblstatus.TabIndex = 2;
@@ -247,7 +248,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(933, 28);
+            menuStrip1.Size = new Size(1180, 28);
             menuStrip1.TabIndex = 18;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -261,13 +262,13 @@
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(166, 6);
+            toolStripSeparator1.Size = new Size(221, 6);
             // 
             // quitToolStripMenuItem
             // 
             quitToolStripMenuItem.Name = "quitToolStripMenuItem";
             quitToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.F4;
-            quitToolStripMenuItem.Size = new Size(169, 26);
+            quitToolStripMenuItem.Size = new Size(224, 26);
             quitToolStripMenuItem.Text = "Exit";
             quitToolStripMenuItem.Click += quitToolStripMenuItem_Click;
             // 
@@ -285,11 +286,22 @@
             aboutToolStripMenuItem1.Text = "About Network Manager...";
             aboutToolStripMenuItem1.Click += aboutToolStripMenuItem1_Click;
             // 
+            // btnrestartservice
+            // 
+            btnrestartservice.Location = new Point(922, 63);
+            btnrestartservice.Name = "btnrestartservice";
+            btnrestartservice.Size = new Size(236, 98);
+            btnrestartservice.TabIndex = 19;
+            btnrestartservice.Text = "Restart Service";
+            btnrestartservice.UseVisualStyleBackColor = true;
+            btnrestartservice.Click += btnrestartservice_Click;
+            // 
             // frmprimary
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(933, 472);
+            ClientSize = new Size(1180, 536);
+            Controls.Add(btnrestartservice);
             Controls.Add(btAlert);
             Controls.Add(btEnableZone);
             Controls.Add(btDisableZone);
@@ -343,5 +355,6 @@
         private ToolStripMenuItem helpToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem1;
         private ToolStripSeparator toolStripSeparator1;
+        private Button btnrestartservice;
     }
 }
