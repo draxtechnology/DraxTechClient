@@ -137,7 +137,7 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "frmTestBox";
-            Text = "                                                                                                                                                                    ";
+            Text = "Test Box                                                                                                                                                     ";
             Load += frmTestBox_Load;
             ((System.ComponentModel.ISupportInitialize)tbNode).EndInit();
             ((System.ComponentModel.ISupportInitialize)tbLoop).EndInit();

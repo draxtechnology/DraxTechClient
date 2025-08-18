@@ -16,6 +16,7 @@ namespace Drax360Client
         private static NamedPipeServerStream? _pipeServer;
         private static frmTestBox? _testBox;
         private static frmAbout? _aboutBox;
+        private static frmSetup? _setup;
 
         public static void Start()
         {
@@ -74,9 +75,13 @@ namespace Drax360Client
                     ShowAbout();
                     return "OK";
 
-                //case "|NWM:CLOSEALLWINDOWS":
-                //    HideTestBox();
-                //    return "OK";
+                case "|GEN:SETUPSHOW":
+                    Setup();
+                    return "OK";
+
+                case "|NWM:CLOSEALLWINDOWS":
+                    HideTestBox();
+                    return "OK";
 
                 default:
                     // Optionally handle unknown responses
@@ -95,6 +100,9 @@ namespace Drax360Client
                     _testBox.StartPosition = FormStartPosition.CenterScreen;
                     _testBox.FormClosed += (s, e) => _testBox = null;
                     _testBox.Show();
+                    _testBox.BringToFront();
+                    _testBox.Activate();
+                    _testBox.Focus();
                 }
                 else
                 {
@@ -118,6 +126,9 @@ namespace Drax360Client
                     _aboutBox.StartPosition = FormStartPosition.CenterScreen;
                     _aboutBox.FormClosed += (s, e) => _aboutBox = null;
                     _aboutBox.Show();
+                    _aboutBox.BringToFront();
+                    _aboutBox.Activate();
+                    _aboutBox.Focus();
                 }
                 else
                 {
@@ -126,6 +137,33 @@ namespace Drax360Client
                     _aboutBox.BringToFront();
                     _aboutBox.Activate();
                     _aboutBox.Focus();
+
+                }
+            }));
+        }
+
+        public static void Setup()
+        {
+            _mainForm.Invoke((MethodInvoker)(() =>
+            {
+                if (_setup == null || _setup.IsDisposed)
+                {
+                    _setup = new frmSetup();
+                    _setup.StartPosition = FormStartPosition.CenterParent;
+                    _setup.StartPosition = FormStartPosition.CenterScreen;
+                    _setup.FormClosed += (s, e) => _setup = null;
+                    _setup.Show();
+                    _setup.BringToFront();
+                    _setup.Activate();
+                    _setup.Focus();
+                }
+                else
+                {
+                    if (!_setup.Visible)
+                        _setup.Show();
+                    _setup.BringToFront();
+                    _setup.Activate();
+                    _setup.Focus();
 
                 }
             }));
