@@ -14,9 +14,7 @@ namespace Drax360Client
 {
     public partial class frmSetup : Form
     {
-        const string kpipename = "Drax360Pipe";
         const string kpipenamesend = "Drax360PipeSend";
-        const string kpipenamereturn = "Drax360PipeReturn";
         const char kpipedelim = '|';
         public frmSetup()
         {
@@ -47,7 +45,7 @@ namespace Drax360Client
 
             this.tbOffset.Text = sendcmd($"SETTINGSGET|SETUP,GIAMX1OFFSET");
 
-            this.lbStatus.Text = sendcmd($"GETCOMMPORTSTATUS");
+            this.lbStatus.Text = sendcmd($"GETCOMMPORTSTATUS|COM3");
             if (this.lbStatus.Text.ToLower() == "connected")
             {
                 this.lbStatus.ForeColor = Color.Green;
@@ -141,10 +139,12 @@ namespace Drax360Client
         private void btApply_Click(object sender, EventArgs e)
         {
             sendcmd("SETTINGSSAVE");
+            sendcmd("ServiceRestart");
         }
         private void btok_Click(object sender, EventArgs e)
         {
             sendcmd("SETTINGSSAVE");
+            sendcmd("ServiceRestart");
             this.Close();
         }
 
@@ -198,6 +198,11 @@ namespace Drax360Client
         private void tbOffset_TextChanged(object sender, EventArgs e)
         {
             sendcmd($"SETTINGSSET|SETUP,GIAMX1OFFSET," + this.tbOffset.Text);
+        }
+
+        private void frmSetup_Load(object sender, EventArgs e)
+        {
+            string result = sendcmd($"SETTINGSRELOAD");
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Drax360Client
 {
@@ -48,7 +49,7 @@ namespace Drax360Client
             // find the item with matching Value
             foreach (ComboBoxItem item in cbType.Items)
             {
-                if (item.Value == result)
+                if (item.Text == result)
                 {
                     cbType.SelectedItem = item;
                     break;
@@ -56,23 +57,23 @@ namespace Drax360Client
             }
 
             tbNode.Minimum = 1;
-            tbNode.Maximum = 255;
+            tbNode.Maximum = 64;
             tbNode.Value = 1;
             tbNode.Increment = 1;
 
-            tbLoop.Minimum = 1;
+            tbLoop.Minimum = 0;
             tbLoop.Maximum = 255;
             tbLoop.Value = 1;
             tbLoop.Increment = 1;
 
-            tbDevice.Minimum = 1;
-            tbDevice.Maximum = 255;
+            tbDevice.Minimum = 0;
+            tbDevice.Maximum = 127;
             tbDevice.Value = 1;
             tbDevice.Increment = 1;
 
-            this.tbNode.Text = sendcmd($"SETTINGSGET|NODE,INPUT");
-            this.tbLoop.Text = sendcmd($"SETTINGSGET|ZONE,INPUT");
-            this.tbDevice.Text = sendcmd($"SETTINGSGET|TESTBOX,INPUT");
+            this.tbNode.Text = sendcmd($"SETTINGSGET|TESTBOX,Node");
+            this.tbLoop.Text = sendcmd($"SETTINGSGET|TESTBOX,Zone");
+            this.tbDevice.Text = sendcmd($"SETTINGSGET|TESTBOX,Input");
         }
         public class ComboBoxItem
         {
@@ -89,13 +90,18 @@ namespace Drax360Client
         {
             ComboBoxItem selectedItem = this.cbType.SelectedItem as ComboBoxItem;
             sendcmd("Test Box", selectedItem.Value + "," + this.tbNode.Text + "," + this.tbLoop.Text + "," + this.tbDevice.Text);
+            sendcmd($"SETTINGSSET|TESTBOX,Input," + this.tbDevice.Text);
+            sendcmd($"SETTINGSSET|TESTBOX,Zone," + this.tbLoop.Text);
+            sendcmd($"SETTINGSSET|TESTBOX,Node," + this.tbNode.Text);
+            sendcmd($"SETTINGSSET|TESTBOX,INPUTTYPE," + this.cbType.Text);
+            sendcmd("SETTINGSSAVE");
+
         }
         private string sendcmd(string cmd, string parameters = "")
         {
             string strcmd = cmd;
             if (!string.IsNullOrEmpty(parameters))
             {
-
                 strcmd += kpipedelim + parameters;
             }
 
@@ -111,7 +117,6 @@ namespace Drax360Client
             }
             return result;
         }
-
 
         private async Task<string> sendserver(string message)
         {
@@ -156,16 +161,16 @@ namespace Drax360Client
         {
             ComboBoxItem selectedItem = this.cbType.SelectedItem as ComboBoxItem;
             sendcmd("Test Box Reset", selectedItem.Value + "," + this.tbNode.Text + "," + this.tbLoop.Text + "," + this.tbDevice.Text);
+            sendcmd($"SETTINGSSET|TESTBOX,Input," + this.tbDevice.Text);
+            sendcmd($"SETTINGSSET|TESTBOX,Zone," + this.tbLoop.Text);
+            sendcmd($"SETTINGSSET|TESTBOX,Node," + this.tbNode.Text);
+            sendcmd($"SETTINGSSET|TESTBOX,INPUTTYPE," + this.cbType.Text);
+            sendcmd("SETTINGSSAVE");
         }
 
         private void frmTestBox_Load(object sender, EventArgs e)
         {
             Console.WriteLine("frmTestBox Load event fired.");
-        }
-
-        private void tbNode_TextChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

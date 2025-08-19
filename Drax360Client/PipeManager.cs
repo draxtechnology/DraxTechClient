@@ -80,7 +80,7 @@ namespace Drax360Client
                     return "OK";
 
                 case "|NWM:CLOSEALLWINDOWS":
-                    HideTestBox();
+                    // HideTestBox();
                     return "OK";
 
                 default:

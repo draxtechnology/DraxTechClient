@@ -91,9 +91,9 @@
             label1.AutoSize = true;
             label1.Location = new Point(47, 54);
             label1.Name = "label1";
-            label1.Size = new Size(79, 20);
+            label1.Size = new Size(83, 20);
             label1.TabIndex = 4;
-            label1.Text = "Comp Port";
+            label1.Text = "Comm Port";
             // 
             // lbStatus
             // 
@@ -220,6 +220,7 @@
             MinimizeBox = false;
             Name = "frmSetup";
             Text = "Setup";
+            Load += frmSetup_Load;
             ResumeLayout(false);
             PerformLayout();
         }
