@@ -52,19 +52,19 @@ namespace Drax360Client
         }
         private void btevacuate_Click(object sender, EventArgs e)
         {
-            sendcmd("Evacuate");
+            sendcmd("Evacuate", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
         }
         private void btAlert_Click(object sender, EventArgs e)
         {
-            sendcmd("Alert");
+            sendcmd("Alert", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
         }
         private void btReset_Click(object sender, EventArgs e)
         {
-            sendcmd("Reset");
+            sendcmd("Reset", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
         }
         private void btSilence_Click(object sender, EventArgs e)
         {
-            sendcmd("Silence");
+            sendcmd("Silence", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
         }
         private void btDisableDevice_Click(object sender, EventArgs e)
         {
