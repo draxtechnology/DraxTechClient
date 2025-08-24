@@ -234,7 +234,7 @@
             // 
             // btAlert
             // 
-            btAlert.Location = new Point(587, 63);
+            btAlert.Location = new Point(598, 54);
             btAlert.Name = "btAlert";
             btAlert.Size = new Size(236, 98);
             btAlert.TabIndex = 17;
