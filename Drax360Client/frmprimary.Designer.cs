@@ -82,7 +82,7 @@
             // lblversion
             // 
             lblversion.AutoSize = true;
-            lblversion.Location = new Point(1131, 507);
+            lblversion.Location = new Point(1086, 507);
             lblversion.Name = "lblversion";
             lblversion.Size = new Size(37, 20);
             lblversion.TabIndex = 2;
@@ -262,13 +262,13 @@
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(221, 6);
+            toolStripSeparator1.Size = new Size(166, 6);
             // 
             // quitToolStripMenuItem
             // 
             quitToolStripMenuItem.Name = "quitToolStripMenuItem";
             quitToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.F4;
-            quitToolStripMenuItem.Size = new Size(224, 26);
+            quitToolStripMenuItem.Size = new Size(169, 26);
             quitToolStripMenuItem.Text = "Exit";
             quitToolStripMenuItem.Click += quitToolStripMenuItem_Click;
             // 
@@ -288,7 +288,7 @@
             // 
             // btnrestartservice
             // 
-            btnrestartservice.Location = new Point(922, 63);
+            btnrestartservice.Location = new Point(887, 54);
             btnrestartservice.Name = "btnrestartservice";
             btnrestartservice.Size = new Size(236, 98);
             btnrestartservice.TabIndex = 19;
@@ -316,6 +316,8 @@
             Controls.Add(menuStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frmprimary";
             Text = "Drax Technology";
             FormClosing += frmprimary_FormClosing;
