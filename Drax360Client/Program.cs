@@ -14,6 +14,7 @@ namespace Drax360Client
             public HiddenAppContext()
             {
                 var _mainForm = new frmprimary();
+                //var _mainForm = new frmSetup();
 
                 // Force the creation of the form's handle
                 var handle = _mainForm.Handle;

@@ -43,7 +43,16 @@ namespace Drax360Client
             this.tbDataBits.Text = sendcmd($"SETTINGSGET|SETUP,DataBits");
             this.tbBaudRate.Text = sendcmd($"SETTINGSGET|SETUP,BaudRate");
 
-            this.tbOffset.Text = sendcmd($"SETTINGSGET|SETUP,GIAMX1OFFSET");
+            switch (this.lbStatus.Text)
+            {
+                case "ADVANCED":
+                    this.tbOffset.Text = sendcmd("SETTINGSGET|SETUP,AMX1OFFSET");
+                    break;
+
+                case "GENT":
+                    this.tbOffset.Text = sendcmd("SETTINGSGET|SETUP,GIAMX1OFFSET");
+                    break;
+            }
 
             this.lbStatus.Text = sendcmd($"GETCOMMPORTSTATUS|COM3");
             if (this.lbStatus.Text.ToLower() == "connected")
@@ -57,6 +66,7 @@ namespace Drax360Client
 
             cbParity.Items.Add(new ComboBoxItem { Text = "Even", Value = "Even" });
             cbParity.Items.Add(new ComboBoxItem { Text = "Odd", Value = "Odd" });
+            cbParity.Items.Add(new ComboBoxItem { Text = "None", Value = "None" });
             result = sendcmd($"SETTINGSGET|SETUP,PARITY");
             // find the item with matching Value
             foreach (ComboBoxItem item in cbParity.Items)
@@ -67,7 +77,19 @@ namespace Drax360Client
                     break;
                 }
             }
-            result = sendcmd($"SETTINGSGET|SETUP,DataLogging");
+
+            result = "0";
+            switch (this.lbStatus.Text)
+            {
+                case "ADVANCED":
+                    result = sendcmd("SETTINGSGET|SETUP,Design");
+                    break;
+
+                case "GENT":
+                    result = sendcmd("SETTINGSGET|SETUP,DataLogging");
+                    break;
+            }
+
             if (result == "1")
             {
                 this.debug.Checked = true;
@@ -75,6 +97,74 @@ namespace Drax360Client
             else
             {
                 this.debug.Checked = false;
+            }
+
+            if (this.lbStatus.Text == "ADVANCED")
+            {
+                cboHB1.Minimum = 0;
+                cboHB1.Maximum = 99;
+                cboHB1.Value = 1;
+                cboHB1.Increment = 1;
+
+                result = sendcmd($"SETTINGSGET|SETUP,RefreshZonesStart");
+                if (result == "1")
+                {
+                    this.chkRefreshZonesStart.Checked = true;
+                }
+                else
+                {
+                    this.chkRefreshZonesStart.Checked = false;
+                }
+
+                result = sendcmd($"SETTINGSGET|SETUP,RefreshZonesConfig");
+                if (result == "1")
+                {
+                    this.chkRefreshZonesConfig.Checked = true;
+                }
+                else
+                {
+                    this.chkRefreshZonesConfig.Checked = false;
+                }
+
+                result = sendcmd($"SETTINGSGET|SETUP,DefaultZone");
+                if (result == "1")
+                {
+                    this.chkDefaultZone.Checked = true;
+                }
+                else
+                {
+                    this.chkDefaultZone.Checked = false;
+                }
+
+                result = sendcmd($"SETTINGSGET|SETUP,IgnoreNullZone");
+                if (result == "1")
+                {
+                    this.chkIgnoreNullZone.Checked = true;
+                }
+                else
+                {
+                    this.chkIgnoreNullZone.Checked = false;
+                }
+
+                result = sendcmd($"SETTINGSGET|SETUP,IgnoreNullZone");
+                if (result == "1")
+                {
+                    this.chkIgnoreNullZone.Checked = true;
+                }
+                else
+                {
+                    this.chkIgnoreNullZone.Checked = false;
+                }
+
+                result = sendcmd($"SETTINGSGET|SETUP,gbUseSubAddressOffset");
+                if (chkSubAddressOffset.Checked)
+                {
+                    this.SubAddressOffsetNumber.Visible = true;
+                }
+                else
+                {
+                    this.SubAddressOffsetNumber.Visible = false;
+                }
             }
         }
 
@@ -203,6 +293,18 @@ namespace Drax360Client
         private void frmSetup_Load(object sender, EventArgs e)
         {
             string result = sendcmd($"SETTINGSRELOAD");
+        }
+
+        private void chkSubAddressOffset_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkSubAddressOffset.Checked)
+            {
+                this.SubAddressOffsetNumber.Visible = true;
+            }
+            else
+            {
+                this.SubAddressOffsetNumber.Visible = false;
+            }
         }
     }
 }
