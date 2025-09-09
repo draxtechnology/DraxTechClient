@@ -29,6 +29,9 @@ namespace Drax360Client
                 });
             }
 
+            string paneltype = sendcmd("GetPanelType");
+            paneltype = "ADVANCED";    // For testing purposes
+
             string result = sendcmd($"SETTINGSGET|PANEL1,COMMPORT");
             // find the item with matching Value
             foreach (ComboBoxItem item in cbComport.Items)
@@ -43,7 +46,7 @@ namespace Drax360Client
             this.tbDataBits.Text = sendcmd($"SETTINGSGET|SETUP,DataBits");
             this.tbBaudRate.Text = sendcmd($"SETTINGSGET|SETUP,BaudRate");
 
-            switch (this.lbStatus.Text)
+            switch (paneltype)
             {
                 case "ADVANCED":
                     this.tbOffset.Text = sendcmd("SETTINGSGET|SETUP,AMX1OFFSET");
@@ -79,18 +82,18 @@ namespace Drax360Client
             }
 
             result = "0";
-            switch (this.lbStatus.Text)
+            switch (paneltype)
             {
                 case "ADVANCED":
-                    result = sendcmd("SETTINGSGET|SETUP,Design");
+                    result = sendcmd("SETTINGSGET|MAIN,DesignTime");
                     break;
 
                 case "GENT":
-                    result = sendcmd("SETTINGSGET|SETUP,DataLogging");
+                    result = sendcmd("SETTINGSGET|MAIN,DataLogging");
                     break;
             }
 
-            if (result == "1")
+            if (result == "1" || result == "True")
             {
                 this.debug.Checked = true;
             }
@@ -99,7 +102,7 @@ namespace Drax360Client
                 this.debug.Checked = false;
             }
 
-            if (this.lbStatus.Text == "ADVANCED")
+            if (paneltype == "ADVANCED")
             {
                 cboHB1.Minimum = 0;
                 cboHB1.Maximum = 99;
@@ -126,7 +129,7 @@ namespace Drax360Client
                     this.chkRefreshZonesConfig.Checked = false;
                 }
 
-                result = sendcmd($"SETTINGSGET|SETUP,DefaultZone");
+                result = sendcmd($"SETTINGSGET|SETUP,DefaultZoneText");
                 if (result == "1")
                 {
                     this.chkDefaultZone.Checked = true;
@@ -156,6 +159,7 @@ namespace Drax360Client
                     this.chkIgnoreNullZone.Checked = false;
                 }
 
+                /*
                 result = sendcmd($"SETTINGSGET|SETUP,gbUseSubAddressOffset");
                 if (chkSubAddressOffset.Checked)
                 {
@@ -165,6 +169,7 @@ namespace Drax360Client
                 {
                     this.SubAddressOffsetNumber.Visible = false;
                 }
+                */
             }
         }
 
