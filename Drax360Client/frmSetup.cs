@@ -159,17 +159,26 @@ namespace Drax360Client
                     this.chkIgnoreNullZone.Checked = false;
                 }
 
-                /*
                 result = sendcmd($"SETTINGSGET|SETUP,gbUseSubAddressOffset");
                 if (chkSubAddressOffset.Checked)
                 {
                     this.SubAddressOffsetNumber.Visible = true;
+                    this.lblSubAddressOffsetNumber.Visible = true;
                 }
                 else
                 {
                     this.SubAddressOffsetNumber.Visible = false;
                 }
-                */
+
+                result = sendcmd($"SETTINGSGET|SETUP,UseClassicIsolations");
+                if (result == "1")
+                {
+                    this.chkClassicIsolations.Checked = true;
+                }
+                else
+                {
+                    this.chkClassicIsolations.Checked = false;
+                }
             }
         }
 
@@ -305,10 +314,12 @@ namespace Drax360Client
             if (chkSubAddressOffset.Checked)
             {
                 this.SubAddressOffsetNumber.Visible = true;
+                this.lblSubAddressOffsetNumber.Visible = true;
             }
             else
             {
                 this.SubAddressOffsetNumber.Visible = false;
+                this.lblSubAddressOffsetNumber.Visible = false; 
             }
         }
     }

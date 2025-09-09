@@ -47,7 +47,8 @@
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
             tabPage2 = new TabPage();
-            label7 = new Label();
+            chkClassicIsolations = new CheckBox();
+            lblSubAddressOffsetNumber = new Label();
             SubAddressOffsetNumber = new TextBox();
             chkSubAddressOffset = new CheckBox();
             cboHB1 = new NumericUpDown();
@@ -237,7 +238,8 @@
             // 
             // tabPage2
             // 
-            tabPage2.Controls.Add(label7);
+            tabPage2.Controls.Add(chkClassicIsolations);
+            tabPage2.Controls.Add(lblSubAddressOffsetNumber);
             tabPage2.Controls.Add(SubAddressOffsetNumber);
             tabPage2.Controls.Add(chkSubAddressOffset);
             tabPage2.Controls.Add(cboHB1);
@@ -254,23 +256,35 @@
             tabPage2.Text = "Advanced Panel";
             tabPage2.UseVisualStyleBackColor = true;
             // 
-            // label7
+            // chkClassicIsolations
             // 
-            label7.AccessibleRole = AccessibleRole.OutlineButton;
-            label7.AutoSize = true;
-            label7.Location = new Point(31, 256);
-            label7.Name = "label7";
-            label7.Size = new Size(135, 20);
-            label7.TabIndex = 17;
-            label7.Text = "Sub Address Offset";
+            chkClassicIsolations.AutoSize = true;
+            chkClassicIsolations.Location = new Point(30, 138);
+            chkClassicIsolations.Name = "chkClassicIsolations";
+            chkClassicIsolations.Size = new Size(142, 24);
+            chkClassicIsolations.TabIndex = 18;
+            chkClassicIsolations.Text = "Classic Isolations";
+            chkClassicIsolations.UseVisualStyleBackColor = true;
+            // 
+            // lblSubAddressOffsetNumber
+            // 
+            lblSubAddressOffsetNumber.AccessibleRole = AccessibleRole.OutlineButton;
+            lblSubAddressOffsetNumber.AutoSize = true;
+            lblSubAddressOffsetNumber.Location = new Point(31, 256);
+            lblSubAddressOffsetNumber.Name = "lblSubAddressOffsetNumber";
+            lblSubAddressOffsetNumber.Size = new Size(135, 20);
+            lblSubAddressOffsetNumber.TabIndex = 17;
+            lblSubAddressOffsetNumber.Text = "Sub Address Offset";
+            lblSubAddressOffsetNumber.Visible = false;
             // 
             // SubAddressOffsetNumber
             // 
-            SubAddressOffsetNumber.AccessibleRole = AccessibleRole.OutlineButton;
+            SubAddressOffsetNumber.AccessibleRole = AccessibleRole.Clock;
             SubAddressOffsetNumber.Location = new Point(191, 249);
             SubAddressOffsetNumber.Name = "SubAddressOffsetNumber";
             SubAddressOffsetNumber.Size = new Size(92, 27);
             SubAddressOffsetNumber.TabIndex = 16;
+            SubAddressOffsetNumber.Visible = false;
             // 
             // chkSubAddressOffset
             // 
@@ -286,7 +300,7 @@
             // 
             // cboHB1
             // 
-            cboHB1.Location = new Point(191, 150);
+            cboHB1.Location = new Point(191, 176);
             cboHB1.Name = "cboHB1";
             cboHB1.Size = new Size(74, 27);
             cboHB1.TabIndex = 7;
@@ -294,7 +308,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(30, 152);
+            label5.Location = new Point(30, 178);
             label5.Name = "label5";
             label5.Size = new Size(115, 20);
             label5.TabIndex = 5;
@@ -405,7 +419,8 @@
         private Label label5;
         private NumericUpDown cboHB1;
         private CheckBox chkSubAddressOffset;
-        private Label label7;
+        private Label lblSubAddressOffsetNumber;
         private TextBox SubAddressOffsetNumber;
+        private CheckBox chkClassicIsolations;
     }
 }
