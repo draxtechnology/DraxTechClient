@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Drax360Client.Panels.Email;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,6 +17,11 @@ namespace Drax360Client
     {
         const string kpipenamesend = "Drax360PipeSend";
         const char kpipedelim = '|';
+
+
+        #region private variables
+
+        #endregion
         public frmSetup()
         {
             InitializeComponent();
@@ -30,7 +36,7 @@ namespace Drax360Client
             }
 
             string paneltype = sendcmd("GetPanelType");
-            paneltype = "ADVANCED";    // For testing purposes
+            //paneltype = "ADVANCED";    // For testing purposes
 
             string result = sendcmd($"SETTINGSGET|PANEL1,COMMPORT");
             // find the item with matching Value
@@ -52,9 +58,16 @@ namespace Drax360Client
                     this.tbOffset.Text = sendcmd("SETTINGSGET|SETUP,AMX1OFFSET");
                     break;
 
+                case "EMAIL":
+                    load_email_groups();
+                    break;
+
+
                 case "GENT":
                     this.tbOffset.Text = sendcmd("SETTINGSGET|SETUP,GIAMX1OFFSET");
                     break;
+
+
             }
 
             this.lbStatus.Text = sendcmd($"GETCOMMPORTSTATUS|COM3");
@@ -308,6 +321,14 @@ namespace Drax360Client
         {
             string result = sendcmd($"SETTINGSRELOAD");
         }
+        private void load_email_groups()
+        {
+
+            this.tabControl1.SelectedTab = tpemail;
+
+
+
+        }
 
         private void chkSubAddressOffset_CheckedChanged(object sender, EventArgs e)
         {
@@ -319,8 +340,24 @@ namespace Drax360Client
             else
             {
                 this.SubAddressOffsetNumber.Visible = false;
-                this.lblSubAddressOffsetNumber.Visible = false; 
+                this.lblSubAddressOffsetNumber.Visible = false;
             }
+        }
+
+        private void bteditemailgroups_Click(object sender, EventArgs e)
+        {
+            frmemaigroups frmemail = new frmemaigroups();
+            frmemail.ShowDialog();
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -45,8 +45,9 @@
             label6 = new Label();
             tbOffset = new TextBox();
             tabControl1 = new TabControl();
-            tabPage1 = new TabPage();
-            tabPage2 = new TabPage();
+            tpserialsettings = new TabPage();
+            tpsettings = new TabPage();
+            tpadvanced = new TabPage();
             chkClassicIsolations = new CheckBox();
             lblSubAddressOffsetNumber = new Label();
             SubAddressOffsetNumber = new TextBox();
@@ -57,19 +58,31 @@
             chkDefaultZone = new CheckBox();
             chkRefreshZonesConfig = new CheckBox();
             chkRefreshZonesStart = new CheckBox();
-            tabPage3 = new TabPage();
+            tpemail = new TabPage();
+            bteditemailgroups = new Button();
+            lbsmtpserver = new Label();
+            tbname = new TextBox();
+            lbport = new Label();
+            tbport = new TextBox();
+            lbuser = new Label();
+            tbuser = new TextBox();
+            tbpassword = new TextBox();
+            lbpassword = new Label();
+            cbauthorisation = new CheckBox();
             tabControl1.SuspendLayout();
-            tabPage1.SuspendLayout();
-            tabPage2.SuspendLayout();
+            tpserialsettings.SuspendLayout();
+            tpsettings.SuspendLayout();
+            tpadvanced.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)cboHB1).BeginInit();
-            tabPage3.SuspendLayout();
+            tpemail.SuspendLayout();
             SuspendLayout();
             // 
             // btApply
             // 
-            btApply.Location = new Point(594, 409);
+            btApply.Location = new Point(520, 307);
+            btApply.Margin = new Padding(3, 2, 3, 2);
             btApply.Name = "btApply";
-            btApply.Size = new Size(94, 29);
+            btApply.Size = new Size(82, 22);
             btApply.TabIndex = 0;
             btApply.Text = "Apply";
             btApply.UseVisualStyleBackColor = true;
@@ -77,9 +90,10 @@
             // 
             // btok
             // 
-            btok.Location = new Point(494, 409);
+            btok.Location = new Point(432, 307);
+            btok.Margin = new Padding(3, 2, 3, 2);
             btok.Name = "btok";
-            btok.Size = new Size(94, 29);
+            btok.Size = new Size(82, 22);
             btok.TabIndex = 1;
             btok.Text = "OK";
             btok.UseVisualStyleBackColor = true;
@@ -87,9 +101,10 @@
             // 
             // btcancel
             // 
-            btcancel.Location = new Point(694, 409);
+            btcancel.Location = new Point(607, 307);
+            btcancel.Margin = new Padding(3, 2, 3, 2);
             btcancel.Name = "btcancel";
-            btcancel.Size = new Size(94, 29);
+            btcancel.Size = new Size(82, 22);
             btcancel.TabIndex = 2;
             btcancel.Text = "Cancel";
             btcancel.UseVisualStyleBackColor = true;
@@ -98,88 +113,93 @@
             // cbComport
             // 
             cbComport.FormattingEnabled = true;
-            cbComport.Location = new Point(140, 56);
+            cbComport.Location = new Point(122, 42);
+            cbComport.Margin = new Padding(3, 2, 3, 2);
             cbComport.Name = "cbComport";
-            cbComport.Size = new Size(92, 28);
+            cbComport.Size = new Size(81, 23);
             cbComport.TabIndex = 3;
             cbComport.SelectedIndexChanged += cbComport_SelectedIndexChanged;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(24, 64);
+            label1.Location = new Point(21, 48);
             label1.Name = "label1";
-            label1.Size = new Size(83, 20);
+            label1.Size = new Size(69, 15);
             label1.TabIndex = 4;
             label1.Text = "Comm Port";
             // 
             // lbStatus
             // 
             lbStatus.AutoSize = true;
-            lbStatus.Location = new Point(320, 22);
+            lbStatus.Location = new Point(280, 16);
             lbStatus.Name = "lbStatus";
-            lbStatus.Size = new Size(99, 20);
+            lbStatus.Size = new Size(79, 15);
             lbStatus.TabIndex = 5;
             lbStatus.Text = "Disconnected";
             // 
             // tbBaudRate
             // 
-            tbBaudRate.Location = new Point(140, 104);
+            tbBaudRate.Location = new Point(122, 78);
+            tbBaudRate.Margin = new Padding(3, 2, 3, 2);
             tbBaudRate.Name = "tbBaudRate";
-            tbBaudRate.Size = new Size(92, 27);
+            tbBaudRate.Size = new Size(81, 23);
             tbBaudRate.TabIndex = 6;
             tbBaudRate.TextChanged += tbBaudRate_TextChanged;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(24, 111);
+            label2.Location = new Point(21, 83);
             label2.Name = "label2";
-            label2.Size = new Size(77, 20);
+            label2.Size = new Size(60, 15);
             label2.TabIndex = 7;
             label2.Text = "Baud Rate";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(24, 153);
+            label3.Location = new Point(21, 115);
             label3.Name = "label3";
-            label3.Size = new Size(69, 20);
+            label3.Size = new Size(53, 15);
             label3.TabIndex = 9;
             label3.Text = "Data Bits";
             // 
             // tbDataBits
             // 
-            tbDataBits.Location = new Point(140, 146);
+            tbDataBits.Location = new Point(122, 110);
+            tbDataBits.Margin = new Padding(3, 2, 3, 2);
             tbDataBits.Name = "tbDataBits";
-            tbDataBits.Size = new Size(92, 27);
+            tbDataBits.Size = new Size(81, 23);
             tbDataBits.TabIndex = 8;
             tbDataBits.TextChanged += tbDataBits_TextChanged;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(24, 206);
+            label4.Location = new Point(21, 154);
             label4.Name = "label4";
-            label4.Size = new Size(45, 20);
+            label4.Size = new Size(37, 15);
             label4.TabIndex = 11;
             label4.Text = "Parity";
             // 
             // cbParity
             // 
             cbParity.FormattingEnabled = true;
-            cbParity.Location = new Point(140, 198);
+            cbParity.Location = new Point(122, 148);
+            cbParity.Margin = new Padding(3, 2, 3, 2);
             cbParity.Name = "cbParity";
-            cbParity.Size = new Size(92, 28);
+            cbParity.Size = new Size(81, 23);
             cbParity.TabIndex = 10;
             cbParity.SelectedIndexChanged += cbParity_SelectedIndexChanged;
             // 
             // debug
             // 
             debug.AutoSize = true;
-            debug.Location = new Point(37, 27);
+            debug.Location = new Point(32, 20);
+            debug.Margin = new Padding(3, 2, 3, 2);
             debug.Name = "debug";
-            debug.Size = new Size(105, 24);
+            debug.Size = new Size(84, 19);
             debug.TabIndex = 12;
             debug.Text = "Debug Log";
             debug.UseVisualStyleBackColor = true;
@@ -189,79 +209,97 @@
             // 
             label6.AccessibleRole = AccessibleRole.OutlineButton;
             label6.AutoSize = true;
-            label6.Location = new Point(24, 253);
+            label6.Location = new Point(21, 190);
             label6.Name = "label6";
-            label6.Size = new Size(49, 20);
+            label6.Size = new Size(39, 15);
             label6.TabIndex = 15;
             label6.Text = "Offset";
             // 
             // tbOffset
             // 
             tbOffset.AccessibleRole = AccessibleRole.OutlineButton;
-            tbOffset.Location = new Point(140, 246);
+            tbOffset.Location = new Point(122, 184);
+            tbOffset.Margin = new Padding(3, 2, 3, 2);
             tbOffset.Name = "tbOffset";
-            tbOffset.Size = new Size(92, 27);
+            tbOffset.Size = new Size(81, 23);
             tbOffset.TabIndex = 14;
             tbOffset.TextChanged += tbOffset_TextChanged;
             // 
             // tabControl1
             // 
-            tabControl1.Controls.Add(tabPage1);
-            tabControl1.Controls.Add(tabPage2);
-            tabControl1.Controls.Add(tabPage3);
+            tabControl1.Controls.Add(tpserialsettings);
+            tabControl1.Controls.Add(tpsettings);
+            tabControl1.Controls.Add(tpadvanced);
+            tabControl1.Controls.Add(tpemail);
             tabControl1.Location = new Point(4, 0);
+            tabControl1.Margin = new Padding(3, 2, 3, 2);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(801, 395);
+            tabControl1.Size = new Size(701, 296);
             tabControl1.TabIndex = 16;
             // 
-            // tabPage1
+            // tpserialsettings
             // 
-            tabPage1.Controls.Add(cbComport);
-            tabPage1.Controls.Add(label6);
-            tabPage1.Controls.Add(label1);
-            tabPage1.Controls.Add(tbOffset);
-            tabPage1.Controls.Add(tbBaudRate);
-            tabPage1.Controls.Add(label2);
-            tabPage1.Controls.Add(lbStatus);
-            tabPage1.Controls.Add(label4);
-            tabPage1.Controls.Add(tbDataBits);
-            tabPage1.Controls.Add(cbParity);
-            tabPage1.Controls.Add(label3);
-            tabPage1.Location = new Point(4, 29);
-            tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(793, 362);
-            tabPage1.TabIndex = 0;
-            tabPage1.Text = "Serial Settings";
-            tabPage1.UseVisualStyleBackColor = true;
+            tpserialsettings.Controls.Add(cbComport);
+            tpserialsettings.Controls.Add(label6);
+            tpserialsettings.Controls.Add(label1);
+            tpserialsettings.Controls.Add(tbOffset);
+            tpserialsettings.Controls.Add(tbBaudRate);
+            tpserialsettings.Controls.Add(label2);
+            tpserialsettings.Controls.Add(lbStatus);
+            tpserialsettings.Controls.Add(label4);
+            tpserialsettings.Controls.Add(tbDataBits);
+            tpserialsettings.Controls.Add(cbParity);
+            tpserialsettings.Controls.Add(label3);
+            tpserialsettings.Location = new Point(4, 24);
+            tpserialsettings.Margin = new Padding(3, 2, 3, 2);
+            tpserialsettings.Name = "tpserialsettings";
+            tpserialsettings.Padding = new Padding(3, 2, 3, 2);
+            tpserialsettings.Size = new Size(693, 268);
+            tpserialsettings.TabIndex = 0;
+            tpserialsettings.Text = "Serial Settings";
+            tpserialsettings.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // tpsettings
             // 
-            tabPage2.Controls.Add(chkClassicIsolations);
-            tabPage2.Controls.Add(lblSubAddressOffsetNumber);
-            tabPage2.Controls.Add(SubAddressOffsetNumber);
-            tabPage2.Controls.Add(chkSubAddressOffset);
-            tabPage2.Controls.Add(cboHB1);
-            tabPage2.Controls.Add(label5);
-            tabPage2.Controls.Add(chkIgnoreNullZone);
-            tabPage2.Controls.Add(chkDefaultZone);
-            tabPage2.Controls.Add(chkRefreshZonesConfig);
-            tabPage2.Controls.Add(chkRefreshZonesStart);
-            tabPage2.Location = new Point(4, 29);
-            tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(793, 362);
-            tabPage2.TabIndex = 1;
-            tabPage2.Text = "Advanced Panel";
-            tabPage2.UseVisualStyleBackColor = true;
+            tpsettings.Controls.Add(debug);
+            tpsettings.Location = new Point(4, 24);
+            tpsettings.Margin = new Padding(3, 2, 3, 2);
+            tpsettings.Name = "tpsettings";
+            tpsettings.Padding = new Padding(3, 2, 3, 2);
+            tpsettings.Size = new Size(693, 268);
+            tpsettings.TabIndex = 2;
+            tpsettings.Text = "Settings";
+            tpsettings.UseVisualStyleBackColor = true;
+            // 
+            // tpadvanced
+            // 
+            tpadvanced.Controls.Add(chkClassicIsolations);
+            tpadvanced.Controls.Add(lblSubAddressOffsetNumber);
+            tpadvanced.Controls.Add(SubAddressOffsetNumber);
+            tpadvanced.Controls.Add(chkSubAddressOffset);
+            tpadvanced.Controls.Add(cboHB1);
+            tpadvanced.Controls.Add(label5);
+            tpadvanced.Controls.Add(chkIgnoreNullZone);
+            tpadvanced.Controls.Add(chkDefaultZone);
+            tpadvanced.Controls.Add(chkRefreshZonesConfig);
+            tpadvanced.Controls.Add(chkRefreshZonesStart);
+            tpadvanced.Location = new Point(4, 24);
+            tpadvanced.Margin = new Padding(3, 2, 3, 2);
+            tpadvanced.Name = "tpadvanced";
+            tpadvanced.Padding = new Padding(3, 2, 3, 2);
+            tpadvanced.Size = new Size(693, 268);
+            tpadvanced.TabIndex = 1;
+            tpadvanced.Text = "Advanced Panel";
+            tpadvanced.UseVisualStyleBackColor = true;
             // 
             // chkClassicIsolations
             // 
             chkClassicIsolations.AutoSize = true;
-            chkClassicIsolations.Location = new Point(30, 138);
+            chkClassicIsolations.Location = new Point(26, 104);
+            chkClassicIsolations.Margin = new Padding(3, 2, 3, 2);
             chkClassicIsolations.Name = "chkClassicIsolations";
-            chkClassicIsolations.Size = new Size(142, 24);
+            chkClassicIsolations.Size = new Size(115, 19);
             chkClassicIsolations.TabIndex = 18;
             chkClassicIsolations.Text = "Classic Isolations";
             chkClassicIsolations.UseVisualStyleBackColor = true;
@@ -270,9 +308,9 @@
             // 
             lblSubAddressOffsetNumber.AccessibleRole = AccessibleRole.OutlineButton;
             lblSubAddressOffsetNumber.AutoSize = true;
-            lblSubAddressOffsetNumber.Location = new Point(31, 256);
+            lblSubAddressOffsetNumber.Location = new Point(27, 192);
             lblSubAddressOffsetNumber.Name = "lblSubAddressOffsetNumber";
-            lblSubAddressOffsetNumber.Size = new Size(135, 20);
+            lblSubAddressOffsetNumber.Size = new Size(107, 15);
             lblSubAddressOffsetNumber.TabIndex = 17;
             lblSubAddressOffsetNumber.Text = "Sub Address Offset";
             lblSubAddressOffsetNumber.Visible = false;
@@ -280,18 +318,20 @@
             // SubAddressOffsetNumber
             // 
             SubAddressOffsetNumber.AccessibleRole = AccessibleRole.Clock;
-            SubAddressOffsetNumber.Location = new Point(191, 249);
+            SubAddressOffsetNumber.Location = new Point(167, 187);
+            SubAddressOffsetNumber.Margin = new Padding(3, 2, 3, 2);
             SubAddressOffsetNumber.Name = "SubAddressOffsetNumber";
-            SubAddressOffsetNumber.Size = new Size(92, 27);
+            SubAddressOffsetNumber.Size = new Size(81, 23);
             SubAddressOffsetNumber.TabIndex = 16;
             SubAddressOffsetNumber.Visible = false;
             // 
             // chkSubAddressOffset
             // 
             chkSubAddressOffset.AutoSize = true;
-            chkSubAddressOffset.Location = new Point(30, 219);
+            chkSubAddressOffset.Location = new Point(26, 164);
+            chkSubAddressOffset.Margin = new Padding(3, 2, 3, 2);
             chkSubAddressOffset.Name = "chkSubAddressOffset";
-            chkSubAddressOffset.Size = new Size(157, 24);
+            chkSubAddressOffset.Size = new Size(126, 19);
             chkSubAddressOffset.TabIndex = 8;
             chkSubAddressOffset.TabStop = false;
             chkSubAddressOffset.Text = "Sub Address Offset";
@@ -300,26 +340,28 @@
             // 
             // cboHB1
             // 
-            cboHB1.Location = new Point(191, 176);
+            cboHB1.Location = new Point(167, 132);
+            cboHB1.Margin = new Padding(3, 2, 3, 2);
             cboHB1.Name = "cboHB1";
-            cboHB1.Size = new Size(74, 27);
+            cboHB1.Size = new Size(65, 23);
             cboHB1.TabIndex = 7;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(30, 178);
+            label5.Location = new Point(26, 134);
             label5.Name = "label5";
-            label5.Size = new Size(115, 20);
+            label5.Size = new Size(91, 15);
             label5.TabIndex = 5;
             label5.Text = "Heartbeat Panel";
             // 
             // chkIgnoreNullZone
             // 
             chkIgnoreNullZone.AutoSize = true;
-            chkIgnoreNullZone.Location = new Point(30, 108);
+            chkIgnoreNullZone.Location = new Point(26, 81);
+            chkIgnoreNullZone.Margin = new Padding(3, 2, 3, 2);
             chkIgnoreNullZone.Name = "chkIgnoreNullZone";
-            chkIgnoreNullZone.Size = new Size(174, 24);
+            chkIgnoreNullZone.Size = new Size(139, 19);
             chkIgnoreNullZone.TabIndex = 3;
             chkIgnoreNullZone.Text = "Ignore Null Zone Text";
             chkIgnoreNullZone.UseVisualStyleBackColor = true;
@@ -327,9 +369,10 @@
             // chkDefaultZone
             // 
             chkDefaultZone.AutoSize = true;
-            chkDefaultZone.Location = new Point(30, 78);
+            chkDefaultZone.Location = new Point(26, 58);
+            chkDefaultZone.Margin = new Padding(3, 2, 3, 2);
             chkDefaultZone.Name = "chkDefaultZone";
-            chkDefaultZone.Size = new Size(149, 24);
+            chkDefaultZone.Size = new Size(118, 19);
             chkDefaultZone.TabIndex = 2;
             chkDefaultZone.Text = "Default Zone Text";
             chkDefaultZone.UseVisualStyleBackColor = true;
@@ -337,9 +380,10 @@
             // chkRefreshZonesConfig
             // 
             chkRefreshZonesConfig.AutoSize = true;
-            chkRefreshZonesConfig.Location = new Point(30, 48);
+            chkRefreshZonesConfig.Location = new Point(26, 36);
+            chkRefreshZonesConfig.Margin = new Padding(3, 2, 3, 2);
             chkRefreshZonesConfig.Name = "chkRefreshZonesConfig";
-            chkRefreshZonesConfig.Size = new Size(325, 24);
+            chkRefreshZonesConfig.Size = new Size(262, 19);
             chkRefreshZonesConfig.TabIndex = 1;
             chkRefreshZonesConfig.Text = "Refresh Zone Texts on Configuration Change";
             chkRefreshZonesConfig.UseVisualStyleBackColor = true;
@@ -347,47 +391,145 @@
             // chkRefreshZonesStart
             // 
             chkRefreshZonesStart.AutoSize = true;
-            chkRefreshZonesStart.Location = new Point(30, 18);
+            chkRefreshZonesStart.Location = new Point(26, 14);
+            chkRefreshZonesStart.Margin = new Padding(3, 2, 3, 2);
             chkRefreshZonesStart.Name = "chkRefreshZonesStart";
-            chkRefreshZonesStart.Size = new Size(228, 24);
+            chkRefreshZonesStart.Size = new Size(182, 19);
             chkRefreshZonesStart.TabIndex = 0;
             chkRefreshZonesStart.Text = "Refresh Zone Texts on Startup";
             chkRefreshZonesStart.UseVisualStyleBackColor = true;
             // 
-            // tabPage3
+            // tpemail
             // 
-            tabPage3.Controls.Add(debug);
-            tabPage3.Location = new Point(4, 29);
-            tabPage3.Name = "tabPage3";
-            tabPage3.Padding = new Padding(3);
-            tabPage3.Size = new Size(793, 362);
-            tabPage3.TabIndex = 2;
-            tabPage3.Text = "Settings";
-            tabPage3.UseVisualStyleBackColor = true;
+            tpemail.Controls.Add(cbauthorisation);
+            tpemail.Controls.Add(lbpassword);
+            tpemail.Controls.Add(lbuser);
+            tpemail.Controls.Add(tbpassword);
+            tpemail.Controls.Add(tbuser);
+            tpemail.Controls.Add(lbport);
+            tpemail.Controls.Add(tbport);
+            tpemail.Controls.Add(lbsmtpserver);
+            tpemail.Controls.Add(tbname);
+            tpemail.Controls.Add(bteditemailgroups);
+            tpemail.Location = new Point(4, 24);
+            tpemail.Name = "tpemail";
+            tpemail.Padding = new Padding(3);
+            tpemail.Size = new Size(693, 268);
+            tpemail.TabIndex = 3;
+            tpemail.Text = "Email Panel";
+            tpemail.UseVisualStyleBackColor = true;
+            // 
+            // bteditemailgroups
+            // 
+            bteditemailgroups.Location = new Point(12, 20);
+            bteditemailgroups.Name = "bteditemailgroups";
+            bteditemailgroups.Size = new Size(75, 23);
+            bteditemailgroups.TabIndex = 0;
+            bteditemailgroups.Text = "Groups";
+            bteditemailgroups.UseVisualStyleBackColor = true;
+            bteditemailgroups.Click += bteditemailgroups_Click;
+            // 
+            // lbsmtpserver
+            // 
+            lbsmtpserver.AutoSize = true;
+            lbsmtpserver.Location = new Point(12, 59);
+            lbsmtpserver.Name = "lbsmtpserver";
+            lbsmtpserver.Size = new Size(76, 15);
+            lbsmtpserver.TabIndex = 3;
+            lbsmtpserver.Text = "SMTP Server:";
+            // 
+            // tbname
+            // 
+            tbname.Location = new Point(12, 77);
+            tbname.Name = "tbname";
+            tbname.Size = new Size(225, 23);
+            tbname.TabIndex = 2;
+            // 
+            // lbport
+            // 
+            lbport.AutoSize = true;
+            lbport.Location = new Point(12, 109);
+            lbport.Name = "lbport";
+            lbport.Size = new Size(32, 15);
+            lbport.TabIndex = 5;
+            lbport.Text = "Port:";
+            // 
+            // tbport
+            // 
+            tbport.Location = new Point(12, 127);
+            tbport.Name = "tbport";
+            tbport.Size = new Size(225, 23);
+            tbport.TabIndex = 4;
+            // 
+            // lbuser
+            // 
+            lbuser.AutoSize = true;
+            lbuser.Location = new Point(303, 59);
+            lbuser.Name = "lbuser";
+            lbuser.Size = new Size(33, 15);
+            lbuser.TabIndex = 7;
+            lbuser.Text = "User:";
+            // 
+            // tbuser
+            // 
+            tbuser.Location = new Point(303, 77);
+            tbuser.Name = "tbuser";
+            tbuser.Size = new Size(225, 23);
+            tbuser.TabIndex = 6;
+            // 
+            // tbpassword
+            // 
+            tbpassword.Location = new Point(303, 127);
+            tbpassword.Name = "tbpassword";
+            tbpassword.PasswordChar = '*';
+            tbpassword.Size = new Size(225, 23);
+            tbpassword.TabIndex = 6;
+            // 
+            // lbpassword
+            // 
+            lbpassword.AutoSize = true;
+            lbpassword.Location = new Point(303, 109);
+            lbpassword.Name = "lbpassword";
+            lbpassword.Size = new Size(60, 15);
+            lbpassword.TabIndex = 7;
+            lbpassword.Text = "Password:";
+            // 
+            // cbauthorisation
+            // 
+            cbauthorisation.AutoSize = true;
+            cbauthorisation.Location = new Point(12, 168);
+            cbauthorisation.Name = "cbauthorisation";
+            cbauthorisation.Size = new Size(98, 19);
+            cbauthorisation.TabIndex = 8;
+            cbauthorisation.Text = "Auhtorisation";
+            cbauthorisation.UseVisualStyleBackColor = true;
             // 
             // frmSetup
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(700, 338);
             Controls.Add(tabControl1);
             Controls.Add(btcancel);
             Controls.Add(btok);
             Controls.Add(btApply);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "frmSetup";
             Text = "Setup";
             Load += frmSetup_Load;
             tabControl1.ResumeLayout(false);
-            tabPage1.ResumeLayout(false);
-            tabPage1.PerformLayout();
-            tabPage2.ResumeLayout(false);
-            tabPage2.PerformLayout();
+            tpserialsettings.ResumeLayout(false);
+            tpserialsettings.PerformLayout();
+            tpsettings.ResumeLayout(false);
+            tpsettings.PerformLayout();
+            tpadvanced.ResumeLayout(false);
+            tpadvanced.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)cboHB1).EndInit();
-            tabPage3.ResumeLayout(false);
-            tabPage3.PerformLayout();
+            tpemail.ResumeLayout(false);
+            tpemail.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -409,12 +551,12 @@
         private Label label6;
         private TextBox tbOffset;
         private TabControl tabControl1;
-        private TabPage tabPage1;
-        private TabPage tabPage2;
+        private TabPage tpserialsettings;
+        private TabPage tpadvanced;
         private CheckBox chkDefaultZone;
         private CheckBox chkRefreshZonesConfig;
         private CheckBox chkRefreshZonesStart;
-        private TabPage tabPage3;
+        private TabPage tpsettings;
         private CheckBox chkIgnoreNullZone;
         private Label label5;
         private NumericUpDown cboHB1;
@@ -422,5 +564,16 @@
         private Label lblSubAddressOffsetNumber;
         private TextBox SubAddressOffsetNumber;
         private CheckBox chkClassicIsolations;
+        private TabPage tpemail;
+        private Button bteditemailgroups;
+        private Label lbuser;
+        private TextBox tbuser;
+        private Label lbport;
+        private TextBox tbport;
+        private Label lbsmtpserver;
+        private TextBox tbname;
+        private Label lbpassword;
+        private TextBox tbpassword;
+        private CheckBox cbauthorisation;
     }
 }
