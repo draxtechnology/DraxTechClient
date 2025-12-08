@@ -175,7 +175,7 @@ namespace Drax360Client.Panels.Email
                 if (rowIndex < 0 || rowIndex >= group.Addresses.Count) return;
 
                 var addr = group.Addresses[rowIndex];
-                string display = string.IsNullOrWhiteSpace(addr.Email) ? addr.Pin : addr.Email;
+                string display =  addr.Email;
                 var dr = MessageBox.Show("Are you sure you want to delete address '" + display + "'?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dr == DialogResult.Yes)
                 {

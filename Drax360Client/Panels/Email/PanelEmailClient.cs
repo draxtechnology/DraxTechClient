@@ -111,12 +111,12 @@ namespace Drax360Client.Panels.Email
 
             Address addr1 = new Address();
             addr1.Email = "mike.holmes@draxtechnology.com";
-            addr1.Pin = "1234";
+            
             a.Addresses.Add(addr1);
 
             Address addr2 = new Address();
             addr2.Email = "richard@binaryrefinery.com";
-            addr2.Pin = "9876";
+            
             a.Addresses.Add(addr2);
             Groups.Add(a);
 
