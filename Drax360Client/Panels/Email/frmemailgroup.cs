@@ -66,15 +66,7 @@ namespace Drax360Client.Panels.Email
             titleemail.HeaderText = "Email";
             titleemail.Width = 300;
 
-            DataGridViewTextBoxColumn titlepin = new DataGridViewTextBoxColumn();
-            titlepin.Name = "colPin";
-            // FIX: bind to the actual Address property name ("Pin"), not "PIN"
-            titlepin.DataPropertyName = "Pin";
-            titlepin.HeaderText = "PIN";
-            titlepin.Width = 60;
-            titlepin.Visible = false;
-
-
+           
 
             // Button column to delete the current address row
             DataGridViewButtonColumn deleteButton = new DataGridViewButtonColumn();
@@ -85,7 +77,7 @@ namespace Drax360Client.Panels.Email
             deleteButton.Width = 60;
 
             dgaddresses.Columns.Add(titleemail);
-            dgaddresses.Columns.Add(titlepin);
+            
            
             dgaddresses.Columns.Add(deleteButton);
 
@@ -137,10 +129,10 @@ namespace Drax360Client.Panels.Email
             // Safely read cell values and update the underlying Address instance.
             var addr = group.Addresses[e.RowIndex];
             var emailCell = row.Cells["colEmail"].Value;
-            var pinCell = row.Cells["colPin"].Value;
+           
 
             addr.Email = emailCell?.ToString() ?? string.Empty;
-            addr.Pin = pinCell?.ToString() ?? string.Empty;
+           
         }
 
         private void Dgaddresses_CellContentClick(object? sender, DataGridViewCellEventArgs e)
