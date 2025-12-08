@@ -72,8 +72,9 @@ namespace Drax360Client.Panels.Email
             titlepin.DataPropertyName = "Pin";
             titlepin.HeaderText = "PIN";
             titlepin.Width = 60;
+            titlepin.Visible = false;
 
-            
+
 
             // Button column to delete the current address row
             DataGridViewButtonColumn deleteButton = new DataGridViewButtonColumn();

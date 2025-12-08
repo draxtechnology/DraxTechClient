@@ -110,7 +110,7 @@ namespace Drax360Client.Panels.Email
             a.Description = "This is the default group.";
 
             Address addr1 = new Address();
-            addr1.Email = "mrmikedholmes@gmail.com";
+            addr1.Email = "mike.holmes@draxtechnology.com";
             addr1.Pin = "1234";
             a.Addresses.Add(addr1);
 

@@ -248,13 +248,18 @@ namespace Drax360Client.Panels.Email
             // Safely read cell values and update the underlying Address instance.
             var grp = panelemailclient.Groups[e.RowIndex];
             string name = row.Cells["colName"].Value.ToString();
-            bool enabled = (bool) row.Cells["colEnabled"].Value;
-            string description  = row.Cells["colDescription"].Value.ToString();
+            bool enabled = (bool)row.Cells["colEnabled"].Value;
+            string description = row.Cells["colDescription"].Value.ToString();
 
 
             grp.Name = name;
-            grp.Enabled= enabled;
+            grp.Enabled = enabled;
             grp.Description = description;
+        }
+
+        private void btsendtest_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -44,6 +44,7 @@
             btsendtest.TabIndex = 7;
             btsendtest.Text = "Send Test Message";
             btsendtest.UseVisualStyleBackColor = true;
+            btsendtest.Click += btsendtest_Click;
             // 
             // btdelete
             // 
