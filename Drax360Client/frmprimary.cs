@@ -1,8 +1,10 @@
 
 using System.IO.Pipes;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Drax360Client
 {
@@ -82,6 +84,11 @@ namespace Drax360Client
         {
             sendcmd("EnableZone", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
         }
+        private void btAnalogue_Click(object sender, EventArgs e)
+        {
+            sendcmd("Analogue", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
+        }
+
         private void btgetpanel_Click(object sender, EventArgs e)
         {
             string result = sendcmd("GetPanelType");
@@ -192,7 +199,6 @@ namespace Drax360Client
             btSilence.Enabled = panelconnected;
         }
 
-
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -215,5 +221,7 @@ namespace Drax360Client
         {
             sendcmd("ServiceRestart");
         }
+
+
     }
 }
