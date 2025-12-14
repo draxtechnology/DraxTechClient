@@ -59,22 +59,25 @@
             chkRefreshZonesConfig = new CheckBox();
             chkRefreshZonesStart = new CheckBox();
             tpemail = new TabPage();
-            bteditemailgroups = new Button();
-            lbsmtpserver = new Label();
-            tbname = new TextBox();
+            cbauthorisation = new CheckBox();
+            lbpassword = new Label();
+            lbuser = new Label();
+            tbpassword = new TextBox();
+            tbuser = new TextBox();
             lbport = new Label();
             tbport = new TextBox();
-            lbuser = new Label();
-            tbuser = new TextBox();
-            tbpassword = new TextBox();
-            lbpassword = new Label();
-            cbauthorisation = new CheckBox();
+            lbsmtpserver = new Label();
+            tbname = new TextBox();
+            bteditemailgroups = new Button();
+            tprsm = new TabPage();
+            btdiscovery = new Button();
             tabControl1.SuspendLayout();
             tpserialsettings.SuspendLayout();
             tpsettings.SuspendLayout();
             tpadvanced.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)cboHB1).BeginInit();
             tpemail.SuspendLayout();
+            tprsm.SuspendLayout();
             SuspendLayout();
             // 
             // btApply
@@ -231,6 +234,7 @@
             tabControl1.Controls.Add(tpsettings);
             tabControl1.Controls.Add(tpadvanced);
             tabControl1.Controls.Add(tpemail);
+            tabControl1.Controls.Add(tprsm);
             tabControl1.Location = new Point(4, 0);
             tabControl1.Margin = new Padding(3, 2, 3, 2);
             tabControl1.Name = "tabControl1";
@@ -419,31 +423,48 @@
             tpemail.Text = "Email Panel";
             tpemail.UseVisualStyleBackColor = true;
             // 
-            // bteditemailgroups
+            // cbauthorisation
             // 
-            bteditemailgroups.Location = new Point(12, 20);
-            bteditemailgroups.Name = "bteditemailgroups";
-            bteditemailgroups.Size = new Size(75, 23);
-            bteditemailgroups.TabIndex = 0;
-            bteditemailgroups.Text = "Groups";
-            bteditemailgroups.UseVisualStyleBackColor = true;
-            bteditemailgroups.Click += bteditemailgroups_Click;
+            cbauthorisation.AutoSize = true;
+            cbauthorisation.Location = new Point(12, 168);
+            cbauthorisation.Name = "cbauthorisation";
+            cbauthorisation.Size = new Size(98, 19);
+            cbauthorisation.TabIndex = 8;
+            cbauthorisation.Text = "Auhtorisation";
+            cbauthorisation.UseVisualStyleBackColor = true;
             // 
-            // lbsmtpserver
+            // lbpassword
             // 
-            lbsmtpserver.AutoSize = true;
-            lbsmtpserver.Location = new Point(12, 59);
-            lbsmtpserver.Name = "lbsmtpserver";
-            lbsmtpserver.Size = new Size(76, 15);
-            lbsmtpserver.TabIndex = 3;
-            lbsmtpserver.Text = "SMTP Server:";
+            lbpassword.AutoSize = true;
+            lbpassword.Location = new Point(303, 109);
+            lbpassword.Name = "lbpassword";
+            lbpassword.Size = new Size(60, 15);
+            lbpassword.TabIndex = 7;
+            lbpassword.Text = "Password:";
             // 
-            // tbname
+            // lbuser
             // 
-            tbname.Location = new Point(12, 77);
-            tbname.Name = "tbname";
-            tbname.Size = new Size(225, 23);
-            tbname.TabIndex = 2;
+            lbuser.AutoSize = true;
+            lbuser.Location = new Point(303, 59);
+            lbuser.Name = "lbuser";
+            lbuser.Size = new Size(33, 15);
+            lbuser.TabIndex = 7;
+            lbuser.Text = "User:";
+            // 
+            // tbpassword
+            // 
+            tbpassword.Location = new Point(303, 127);
+            tbpassword.Name = "tbpassword";
+            tbpassword.PasswordChar = '*';
+            tbpassword.Size = new Size(225, 23);
+            tbpassword.TabIndex = 6;
+            // 
+            // tbuser
+            // 
+            tbuser.Location = new Point(303, 77);
+            tbuser.Name = "tbuser";
+            tbuser.Size = new Size(225, 23);
+            tbuser.TabIndex = 6;
             // 
             // lbport
             // 
@@ -461,48 +482,51 @@
             tbport.Size = new Size(225, 23);
             tbport.TabIndex = 4;
             // 
-            // lbuser
+            // lbsmtpserver
             // 
-            lbuser.AutoSize = true;
-            lbuser.Location = new Point(303, 59);
-            lbuser.Name = "lbuser";
-            lbuser.Size = new Size(33, 15);
-            lbuser.TabIndex = 7;
-            lbuser.Text = "User:";
+            lbsmtpserver.AutoSize = true;
+            lbsmtpserver.Location = new Point(12, 59);
+            lbsmtpserver.Name = "lbsmtpserver";
+            lbsmtpserver.Size = new Size(76, 15);
+            lbsmtpserver.TabIndex = 3;
+            lbsmtpserver.Text = "SMTP Server:";
             // 
-            // tbuser
+            // tbname
             // 
-            tbuser.Location = new Point(303, 77);
-            tbuser.Name = "tbuser";
-            tbuser.Size = new Size(225, 23);
-            tbuser.TabIndex = 6;
+            tbname.Location = new Point(12, 77);
+            tbname.Name = "tbname";
+            tbname.Size = new Size(225, 23);
+            tbname.TabIndex = 2;
             // 
-            // tbpassword
+            // bteditemailgroups
             // 
-            tbpassword.Location = new Point(303, 127);
-            tbpassword.Name = "tbpassword";
-            tbpassword.PasswordChar = '*';
-            tbpassword.Size = new Size(225, 23);
-            tbpassword.TabIndex = 6;
+            bteditemailgroups.Location = new Point(12, 20);
+            bteditemailgroups.Name = "bteditemailgroups";
+            bteditemailgroups.Size = new Size(75, 23);
+            bteditemailgroups.TabIndex = 0;
+            bteditemailgroups.Text = "Groups";
+            bteditemailgroups.UseVisualStyleBackColor = true;
+            bteditemailgroups.Click += bteditemailgroups_Click;
             // 
-            // lbpassword
+            // tprsm
             // 
-            lbpassword.AutoSize = true;
-            lbpassword.Location = new Point(303, 109);
-            lbpassword.Name = "lbpassword";
-            lbpassword.Size = new Size(60, 15);
-            lbpassword.TabIndex = 7;
-            lbpassword.Text = "Password:";
+            tprsm.Controls.Add(btdiscovery);
+            tprsm.Location = new Point(4, 24);
+            tprsm.Name = "tprsm";
+            tprsm.Size = new Size(693, 268);
+            tprsm.TabIndex = 4;
+            tprsm.Text = "RSM Panel";
+            tprsm.UseVisualStyleBackColor = true;
             // 
-            // cbauthorisation
+            // btdiscovery
             // 
-            cbauthorisation.AutoSize = true;
-            cbauthorisation.Location = new Point(12, 168);
-            cbauthorisation.Name = "cbauthorisation";
-            cbauthorisation.Size = new Size(98, 19);
-            cbauthorisation.TabIndex = 8;
-            cbauthorisation.Text = "Auhtorisation";
-            cbauthorisation.UseVisualStyleBackColor = true;
+            btdiscovery.Location = new Point(15, 13);
+            btdiscovery.Name = "btdiscovery";
+            btdiscovery.Size = new Size(75, 23);
+            btdiscovery.TabIndex = 1;
+            btdiscovery.Text = "Discovery";
+            btdiscovery.UseVisualStyleBackColor = true;
+            btdiscovery.Click += btdiscovery_Click;
             // 
             // frmSetup
             // 
@@ -530,6 +554,7 @@
             ((System.ComponentModel.ISupportInitialize)cboHB1).EndInit();
             tpemail.ResumeLayout(false);
             tpemail.PerformLayout();
+            tprsm.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -575,5 +600,7 @@
         private Label lbpassword;
         private TextBox tbpassword;
         private CheckBox cbauthorisation;
+        private TabPage tprsm;
+        private Button btdiscovery;
     }
 }

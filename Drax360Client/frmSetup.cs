@@ -1,4 +1,5 @@
 ﻿using Drax360Client.Panels.Email;
+using Drax360Client.Panels.RSM;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -68,6 +69,9 @@ namespace Drax360Client
                     break;
 
 
+                case "RSM":
+                    load_rsm();
+                    break;
             }
 
             this.lbStatus.Text = sendcmd($"GETCOMMPORTSTATUS|COM3");
@@ -330,6 +334,15 @@ namespace Drax360Client
 
         }
 
+        private void load_rsm()
+        {
+
+            this.tabControl1.SelectedTab = tprsm;
+
+
+
+        }
+
         private void chkSubAddressOffset_CheckedChanged(object sender, EventArgs e)
         {
             if (chkSubAddressOffset.Checked)
@@ -358,6 +371,12 @@ namespace Drax360Client
         private void label9_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btdiscovery_Click(object sender, EventArgs e)
+        {
+            frmdiscovery fdiscover = new frmdiscovery();
+            fdiscover.ShowDialog();
         }
     }
 }
