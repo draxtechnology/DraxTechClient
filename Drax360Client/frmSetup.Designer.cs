@@ -71,6 +71,7 @@
             bteditemailgroups = new Button();
             tprsm = new TabPage();
             btdiscovery = new Button();
+            frmListen = new Button();
             tabControl1.SuspendLayout();
             tpserialsettings.SuspendLayout();
             tpsettings.SuspendLayout();
@@ -510,6 +511,7 @@
             // 
             // tprsm
             // 
+            tprsm.Controls.Add(frmListen);
             tprsm.Controls.Add(btdiscovery);
             tprsm.Location = new Point(4, 24);
             tprsm.Name = "tprsm";
@@ -527,6 +529,16 @@
             btdiscovery.Text = "Discovery";
             btdiscovery.UseVisualStyleBackColor = true;
             btdiscovery.Click += btdiscovery_Click;
+            // 
+            // frmListen
+            // 
+            frmListen.Location = new Point(15, 63);
+            frmListen.Name = "frmListen";
+            frmListen.Size = new Size(75, 23);
+            frmListen.TabIndex = 2;
+            frmListen.Text = "Listen";
+            frmListen.UseVisualStyleBackColor = true;
+            frmListen.Click += frmListen_Click;
             // 
             // frmSetup
             // 
@@ -602,5 +614,6 @@
         private CheckBox cbauthorisation;
         private TabPage tprsm;
         private Button btdiscovery;
+        private Button frmListen;
     }
 }

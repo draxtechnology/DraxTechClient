@@ -423,7 +423,7 @@ namespace Drax360Client.Panels.RSM
         {
             // send a proper UDP message and await a response using the new async helper
             string msg = makeudpmessage("SET", optSetGet.setgetRESTART + sepCHAR + "554");
-            SendViaUDP(msg)
+            SendViaUDP(msg);
             // fire-and-forget the send (already wrapped inside the helper)
 
             // can use the below to await response in UI

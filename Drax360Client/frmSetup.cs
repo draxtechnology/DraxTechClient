@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TcpListenerApp;
 using static Drax360Client.frmTestBox;
 
 namespace Drax360Client
@@ -63,14 +64,35 @@ namespace Drax360Client
                     load_email_groups();
                     break;
 
-
                 case "GENT":
                     this.tbOffset.Text = sendcmd("SETTINGSGET|SETUP,GIAMX1OFFSET");
                     break;
 
+                case "MOLREYZX":
+                    this.tbOffset.Text = sendcmd("SETTINGSGET|PANEL1,AMX1OFFSET");
+                    break;
+
+                case "MORLEYMAX":
+                    this.tbOffset.Text = sendcmd("SETTINGSGET|PANEL1,AMX1OFFSET");
+                    break;
+
+                case "NOTIFIER":
+                    this.tbOffset.Text = sendcmd("SETTINGSGET|PANEL1,AMX1OFFSET");
+                    break;
+
+                case "PEARL":
+                    this.tbOffset.Text = sendcmd("SETTINGSGET|PANEL1,AMX1OFFSET");
+                    break;
 
                 case "RSM":
                     load_rsm();
+                    break;
+
+                case "SYNCRO":
+                    this.tbOffset.Text = sendcmd("SETTINGSGET|PANEL1,AMX1OFFSET");
+                    break;
+                case "TAKTIS":
+                    this.tbOffset.Text = sendcmd("SETTINGSGET|SETUP,AMX1OFFSET");
                     break;
             }
 
@@ -377,6 +399,12 @@ namespace Drax360Client
         {
             frmdiscovery fdiscover = new frmdiscovery();
             fdiscover.ShowDialog();
+        }
+
+        private void frmListen_Click(object sender, EventArgs e)
+        {
+            TcpListenerForm frmListen = new TcpListenerForm();
+            frmListen.ShowDialog();
         }
     }
 }
