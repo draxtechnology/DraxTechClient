@@ -15,6 +15,7 @@ namespace TcpListenerApp
         private CancellationTokenSource cancellationTokenSource;
         private bool isListening = false;
         private string logFilePath = @"c:\temp\tcp_listener_log.txt";
+        private Button button1;
         private object logLock = new object();
 
         public TcpListenerForm()
@@ -45,70 +46,88 @@ namespace TcpListenerApp
 
         private void InitializeComponent()
         {
-            this.btnStart = new System.Windows.Forms.Button();
-            this.btnStop = new System.Windows.Forms.Button();
-            this.btnClear = new System.Windows.Forms.Button();
-            this.txtData = new System.Windows.Forms.RichTextBox();
-            this.lblStatus = new System.Windows.Forms.Label();
-            this.SuspendLayout();
-
+            btnStart = new Button();
+            btnStop = new Button();
+            btnClear = new Button();
+            txtData = new RichTextBox();
+            lblStatus = new Label();
+            button1 = new Button();
+            SuspendLayout();
+            // 
             // btnStart
-            this.btnStart.Location = new System.Drawing.Point(12, 12);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(100, 30);
-            this.btnStart.TabIndex = 0;
-            this.btnStart.Text = "Start Listener";
-            this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.BtnStart_Click);
-
+            // 
+            btnStart.Location = new Point(12, 12);
+            btnStart.Name = "btnStart";
+            btnStart.Size = new Size(100, 30);
+            btnStart.TabIndex = 0;
+            btnStart.Text = "Start Listener";
+            btnStart.UseVisualStyleBackColor = true;
+            btnStart.Click += BtnStart_Click;
+            // 
             // btnStop
-            this.btnStop.Enabled = false;
-            this.btnStop.Location = new System.Drawing.Point(118, 12);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(100, 30);
-            this.btnStop.TabIndex = 1;
-            this.btnStop.Text = "Stop Listener";
-            this.btnStop.UseVisualStyleBackColor = true;
-            this.btnStop.Click += new System.EventHandler(this.BtnStop_Click);
-
+            // 
+            btnStop.Enabled = false;
+            btnStop.Location = new Point(118, 12);
+            btnStop.Name = "btnStop";
+            btnStop.Size = new Size(100, 30);
+            btnStop.TabIndex = 1;
+            btnStop.Text = "Stop Listener";
+            btnStop.UseVisualStyleBackColor = true;
+            btnStop.Click += BtnStop_Click;
+            // 
             // btnClear
-            this.btnClear.Location = new System.Drawing.Point(224, 12);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(100, 30);
-            this.btnClear.TabIndex = 2;
-            this.btnClear.Text = "Clear Data";
-            this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
-
-            // lblStatus
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(12, 50);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(150, 13);
-            this.lblStatus.TabIndex = 3;
-            this.lblStatus.Text = "Status: Not listening";
-
+            // 
+            btnClear.Location = new Point(224, 12);
+            btnClear.Name = "btnClear";
+            btnClear.Size = new Size(100, 30);
+            btnClear.TabIndex = 2;
+            btnClear.Text = "Clear Data";
+            btnClear.UseVisualStyleBackColor = true;
+            btnClear.Click += BtnClear_Click;
+            // 
             // txtData
-            this.txtData.Location = new System.Drawing.Point(12, 75);
-            this.txtData.Name = "txtData";
-            this.txtData.ReadOnly = true;
-            this.txtData.Size = new System.Drawing.Size(760, 363);
-            this.txtData.TabIndex = 4;
-            this.txtData.Text = "";
-            this.txtData.Font = new System.Drawing.Font("Consolas", 9F);
-
+            // 
+            txtData.Font = new Font("Consolas", 9F);
+            txtData.Location = new Point(12, 75);
+            txtData.Name = "txtData";
+            txtData.ReadOnly = true;
+            txtData.Size = new Size(760, 363);
+            txtData.TabIndex = 4;
+            txtData.Text = "";
+            // 
+            // lblStatus
+            // 
+            lblStatus.AutoSize = true;
+            lblStatus.Location = new Point(12, 50);
+            lblStatus.Name = "lblStatus";
+            lblStatus.Size = new Size(113, 15);
+            lblStatus.TabIndex = 3;
+            lblStatus.Text = "Status: Not listening";
+            // 
+            // button1
+            // 
+            button1.Location = new Point(419, 11);
+            button1.Name = "button1";
+            button1.Size = new Size(82, 31);
+            button1.TabIndex = 5;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // TcpListenerForm
-            this.ClientSize = new System.Drawing.Size(784, 450);
-            this.Controls.Add(this.txtData);
-            this.Controls.Add(this.lblStatus);
-            this.Controls.Add(this.btnClear);
-            this.Controls.Add(this.btnStop);
-            this.Controls.Add(this.btnStart);
-            this.Name = "TcpListenerForm";
-            this.Text = "TCP Listener - Port 1471";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TcpListenerForm_FormClosing);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            // 
+            ClientSize = new Size(784, 450);
+            Controls.Add(button1);
+            Controls.Add(txtData);
+            Controls.Add(lblStatus);
+            Controls.Add(btnClear);
+            Controls.Add(btnStop);
+            Controls.Add(btnStart);
+            Name = "TcpListenerForm";
+            Text = "TCP Listener - Port 1471";
+            FormClosing += TcpListenerForm_FormClosing;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         private System.Windows.Forms.Button btnStart;
@@ -226,10 +245,35 @@ namespace TcpListenerApp
                             asciiData.Append(b >= 32 && b <= 126 ? (char)b : '.');
                         }
 
-                        AppendData($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Received ({bytesRead} bytes)\n");
-                        AppendData($"  HEX: {hexData}\n");
-                        AppendData($"  RAW ASCII: {asciiData}\n");
+                        AppendData($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Received ({bytesRead} bytes)");
                         AppendData($"  DECODED: {decodedData}\n\n");
+
+                        // Send ACK response
+                        string ackResponse = GenerateAckResponse(decodedData);
+                        if (!string.IsNullOrEmpty(ackResponse))
+                        {
+                            byte[] ackBytes = ScrambleAndEncodeMessage(ackResponse);
+
+                            // --- Log the byte values to a file ---
+                            string logPath = @"C:\Temp\CSharp_ACK_Bytes.txt";
+                            using (StreamWriter writer = new StreamWriter(logPath, append: true))
+                            {
+                                writer.WriteLine($"Sending ACK at {DateTime.Now}");
+                                for (int i = 0; i < ackBytes.Length; i++)
+                                {
+                                    writer.WriteLine($"Byte {i}: {ackBytes[i]}");
+                                }
+                                writer.WriteLine("-------------------------");
+                            }
+                            // --- End logging ---
+
+
+                            await stream.WriteAsync(ackBytes, 0, ackBytes.Length, token);
+                            await stream.FlushAsync(token); // <-- important
+                            AppendData($"  SENT ACK: {ackResponse}\n");
+                        }
+
+                        AppendData("\n");
                     }
                 }
             }
@@ -359,6 +403,106 @@ namespace TcpListenerApp
         private void TcpListenerForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             StopListener();
+        }
+
+        private string GenerateAckResponse(string decodedMessage)
+        {
+            // Parse the decoded message to extract: MessageType, ModuleNumber, MessageID
+            // Format: EVTÇ3159Ç1ÇB19810252D...
+            // or: POLÇxxxx...
+
+            // Remove checksum error text if present
+            if (decodedMessage.Contains("[CHECKSUM ERROR"))
+            {
+                decodedMessage = decodedMessage.Substring(0, decodedMessage.IndexOf("[CHECKSUM ERROR")).Trim();
+            }
+
+            string[] parts = decodedMessage.Split('Ç');
+
+            if (parts.Length < 3)
+                return ""; // Not enough parts to generate ACK
+
+            string messageType = parts[0];
+            string messageID = parts[1];
+            string moduleNumber = parts[2];
+
+            // Generate ACK based on message type
+            switch (messageType)
+            {
+                case "EVT":
+                case "ZTX":
+                case "ANA":
+                case "SPX":
+                    // ACK format: ACKÇModuleNumberÇMessageID
+                    return $"ACK\u00C7{moduleNumber}\u00C7{messageID}";
+
+                case "POL":
+                    // PAK format: PAKÇModuleNumberÇMessageIDÇLicenseStatus
+                    // For now, return license status 0 (valid)
+                    return $"PAK\u00C7{moduleNumber}\u00C7{messageID}\u00C70";
+
+                default:
+                    // For unknown messages, send generic ACK
+                    //return $"ACK;{moduleNumber};{messageID}";
+                    return $"ACK\u00C7{moduleNumber}\u00C7{messageID}";
+            }
+        }
+
+
+        private byte[] ScrambleAndEncodeMessage(string message)
+        {
+            // Replace semicolons back from our display format
+            message = message.Replace(";", new string((char)0x3B, 1));
+
+            // Calculate checksum
+            int checksum = 0;
+            foreach (char c in message)
+            {
+                checksum += (int)c;
+            }
+            checksum = (checksum % 200) + 33;
+
+            // Scramble the message (reverse of descramble)
+            // First reverse the string
+            char[] chars = message.ToCharArray();
+            Array.Reverse(chars);
+            string reversed = new string(chars);
+
+            // Then apply the scramble formula
+            List<byte> scrambled = new List<byte>();
+            for (int n = 1; n <= reversed.Length; n++)
+            {
+                int charValue = (int)reversed[n - 1];
+                int encoded = charValue + 3 + (n % 9) + ((n % 5) * 7);
+
+                // Handle wrap-around
+                while (encoded > 255)
+                    encoded -= 256;
+
+                scrambled.Add((byte)encoded);
+            }
+
+            // Add STX header, scrambled data, checksum, and ETX
+            List<byte> fullMessage = new List<byte>();
+            fullMessage.Add(0x02); // STX
+            fullMessage.AddRange(scrambled);
+            fullMessage.Add((byte)checksum);
+            fullMessage.Add(0x03); // ETX
+
+            return fullMessage.ToArray();
+        }
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            //string ackResponse = "ACK;1;3";
+            string ackResponse = "ACK\u00C71\u00C73";
+
+            byte[] ackBytes = ScrambleAndEncodeMessage(ackResponse);
+
+            string mike = "x";
+
         }
     }
 }
