@@ -20,6 +20,10 @@ namespace TcpListenerApp
         public TcpListenerForm()
         {
             InitializeComponent();
+
+            // Register encoding provider for Windows-1252
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             EnsureLogDirectory();
         }
 
@@ -205,14 +209,34 @@ namespace TcpListenerApp
 
                     while (!token.IsCancellationRequested && (bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length, token)) > 0)
                     {
-                        string data = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                        AppendData($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Received ({bytesRead} bytes): {data}\n");
+                        // Create a copy of the received data
+                        byte[] receivedData = new byte[bytesRead];
+                        Array.Copy(buffer, receivedData, bytesRead);
+
+                        // Format as hex
+                        string hexData = BitConverter.ToString(receivedData).Replace("-", " ");
+
+                        // Decode the data (XOR decryption)
+                        string decodedData = DecodeData(receivedData);
+
+                        // Try to decode as ASCII (replace non-printable with '.')
+                        StringBuilder asciiData = new StringBuilder();
+                        foreach (byte b in receivedData)
+                        {
+                            asciiData.Append(b >= 32 && b <= 126 ? (char)b : '.');
+                        }
+
+                        AppendData($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Received ({bytesRead} bytes)\n");
+                        AppendData($"  HEX: {hexData}\n");
+                        AppendData($"  RAW ASCII: {asciiData}\n");
+                        AppendData($"  DECODED: {decodedData}\n\n");
                     }
                 }
             }
             catch (Exception ex)
             {
-                if (!token.IsCancellationRequested)
+                // Only log errors that aren't the expected "connection closed by remote host"
+                if (!token.IsCancellationRequested && !ex.Message.Contains("forcibly closed"))
                 {
                     AppendData($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Error handling client: {ex.Message}\n");
                 }
@@ -266,6 +290,70 @@ namespace TcpListenerApp
                 // Don't show message box here to avoid blocking, just log to console if needed
                 Console.WriteLine($"Error writing to log file: {ex.Message}");
             }
+        }
+
+        private string DecodeData(byte[] data)
+        {
+            if (data.Length < 3)
+                return Encoding.ASCII.GetString(data);
+
+            // VB6 strips STX (0x02) and ETX before descrambling
+            // Find and remove STX (0x02) and ETX (0x03) bytes
+            List<byte> cleanedData = new List<byte>();
+            for (int i = 0; i < data.Length; i++)
+            {
+                if (data[i] != 0x02 && data[i] != 0x03)
+                {
+                    cleanedData.Add(data[i]);
+                }
+            }
+
+            if (cleanedData.Count < 2)
+                return "";
+
+            // Now the data is just the scrambled content + checksum (last byte)
+            int dataLength = cleanedData.Count - 1; // Exclude checksum
+            int checksumByte = cleanedData[cleanedData.Count - 1];
+
+            // Descramble the string
+            StringBuilder descrambled = new StringBuilder();
+            for (int n = 1; n <= dataLength; n++)
+            {
+                int byteValue = cleanedData[n - 1]; // C# is 0-based, VB6 loop is 1-based
+                int decoded = byteValue - 3 - (n % 9) - ((n % 5) * 7);
+
+                // Handle wrap-around for negative values (VB6 byte range is 0-255)
+                while (decoded < 0)
+                    decoded += 256;
+                while (decoded > 255)
+                    decoded -= 256;
+
+                descrambled.Append((char)decoded);
+            }
+
+            // Reverse the string
+            char[] chars = descrambled.ToString().ToCharArray();
+            Array.Reverse(chars);
+            string reversed = new string(chars);
+
+            // Calculate and confirm checksum
+            int calculatedChecksum = 0;
+            for (int n = 0; n < reversed.Length; n++)
+            {
+                calculatedChecksum += (int)reversed[n];
+            }
+            calculatedChecksum = (calculatedChecksum % 200) + 33;
+
+            // Replace semicolons with Ç to match VB6 output
+            string result = reversed.Replace(";", "Ç");
+
+            // Checksum validation (optional display)
+            if (calculatedChecksum != checksumByte)
+            {
+                result += $" [CHECKSUM ERROR: Expected {checksumByte}, Got {calculatedChecksum}]";
+            }
+
+            return result;
         }
 
         private void TcpListenerForm_FormClosing(object sender, FormClosingEventArgs e)
