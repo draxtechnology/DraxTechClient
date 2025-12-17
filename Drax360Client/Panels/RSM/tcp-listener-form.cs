@@ -15,7 +15,6 @@ namespace TcpListenerApp
         private CancellationTokenSource cancellationTokenSource;
         private bool isListening = false;
         private string logFilePath = @"c:\temp\tcp_listener_log.txt";
-        private Button button1;
         private object logLock = new object();
 
         public TcpListenerForm()
@@ -51,7 +50,6 @@ namespace TcpListenerApp
             btnClear = new Button();
             txtData = new RichTextBox();
             lblStatus = new Label();
-            button1 = new Button();
             SuspendLayout();
             // 
             // btnStart
@@ -104,20 +102,9 @@ namespace TcpListenerApp
             lblStatus.TabIndex = 3;
             lblStatus.Text = "Status: Not listening";
             // 
-            // button1
-            // 
-            button1.Location = new Point(419, 11);
-            button1.Name = "button1";
-            button1.Size = new Size(82, 31);
-            button1.TabIndex = 5;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
             // TcpListenerForm
             // 
             ClientSize = new Size(784, 450);
-            Controls.Add(button1);
             Controls.Add(txtData);
             Controls.Add(lblStatus);
             Controls.Add(btnClear);
@@ -179,7 +166,7 @@ namespace TcpListenerApp
             btnStart.Enabled = true;
             btnStop.Enabled = false;
             UpdateStatus("Not listening");
-            AppendData($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] TCP Listener stopped\n");
+            // AppendData($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] TCP Listener stopped\n");
         }
 
         private async void ListenForConnections(CancellationToken token)
@@ -492,17 +479,594 @@ namespace TcpListenerApp
             return fullMessage.ToArray();
         }
 
-
-        private void button1_Click(object sender, EventArgs e)
+        public class RSMMessageParser
         {
+            private const char SEPARATOR_CHAR = (char)199; // Ç character
+            private const int AMX1_OFFSET = 0; // Set your actual offset
 
-            //string ackResponse = "ACK;1;3";
-            string ackResponse = "ACK\u00C71\u00C73";
+            // Field indices (from VB6 mField enum)
+            private enum MessageField
+            {
+                MessageType = 0,
+                MessageID = 1,
+                ModuleNumber = 2,
+                ModuleType = 3,
+                SerialNumber = 4,
+                LoopNum = 5,
+                Address = 6,
+                SubAddress = 7,
+                OnOff = 8,
+                EventType = 9,
+                Extension = 10,
+                Extension2 = 11,
+                DeviceType = 12,
+                Text = 13
+            }
 
-            byte[] ackBytes = ScrambleAndEncodeMessage(ackResponse);
+            public string ParseRSMMessages(string message, string ipAddress, out string moduleNumberReturn, long portNumber)
+            {
+                try
+                {
+                    // Split message by separator character (Ç)
+                    string[] parts = message.Split(SEPARATOR_CHAR);
 
-            string mike = "x";
+                    if (parts.Length < 3)
+                    {
+                        moduleNumberReturn = "";
+                        // RSMStats.IncreaseStat(RSMst.UnknownAcksTX);
+                        return "NAK";
+                    }
 
+                    // Parse common header fields
+                    string messageType = parts[(int)MessageField.MessageType];
+                    long messageID = ParseLong(parts[(int)MessageField.MessageID]);
+                    long moduleNumber = ParseLong(parts[(int)MessageField.ModuleNumber]);
+                    string moduleType = parts[(int)MessageField.ModuleType];
+                    string serialNumber = parts[(int)MessageField.SerialNumber];
+
+                    moduleNumberReturn = moduleNumber.ToString();
+
+                    LogMessage($"RX: {messageType} from {moduleNumber}");
+
+                    // Update RX tracking
+                    UpdateRXTracking(moduleNumber, ipAddress, portNumber);
+
+                    System.Diagnostics.Debug.WriteLine($"Received {messageType}");
+
+                    // Route to appropriate message handler
+                    switch (messageType)
+                    {
+                        case "EVT":
+                            return HandleEventMessage(parts, moduleNumber, moduleType, messageID);
+
+                        case "POL":
+                            return HandlePollMessage(parts, moduleNumber, moduleType, serialNumber, messageID, ipAddress);
+
+                        case "CAK":
+                            return HandleCommandAck(moduleNumber, messageID);
+
+                        case "SAK":
+                            return HandleSetOptionAck(parts, moduleNumber, messageID);
+
+                        case "GAK":
+                            return HandleGetOptionAck(parts, moduleNumber, messageID);
+
+                        case "ZTX":
+                            return HandleZoneText(parts, moduleNumber, messageID);
+
+                        case "ANA":
+                            return HandleAnalogValue(parts, moduleNumber, moduleType, messageID);
+
+                        case "SPX":
+                            return HandleSpecialMessage(parts, moduleNumber, messageID);
+
+                        case "ACK":
+                            return HandleAck(moduleNumber, messageID);
+
+                        case "NAK":
+                            return HandleNak(moduleNumber);
+
+                        default:
+                            return HandleUnknownMessage(moduleNumber, messageID, message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error in ParseRSMMessages: {ex.Message}");
+                    System.Media.SystemSounds.Beep.Play();
+                    moduleNumberReturn = "";
+                    return "NAK";
+                }
+            }
+
+            private string HandleEventMessage(string[] parts, long moduleNumber, string moduleType, long messageID)
+            {
+                try
+                {
+                    // Parse event-specific fields
+                    int loopNum = ParseInt(parts[(int)MessageField.LoopNum]);
+                    int address = ParseInt(parts[(int)MessageField.Address]);
+                    int subAddress = ParseInt(parts[(int)MessageField.SubAddress]);
+                    int onOff = ParseInt(parts[(int)MessageField.OnOff]);
+                    int inputType = ParseInt(parts[(int)MessageField.EventType]);
+                    string deviceText = parts[(int)MessageField.Text].Trim();
+                    int extension = ParseInt(parts[(int)MessageField.Extension]);
+                    int extension2 = ParseInt(parts[(int)MessageField.Extension2]);
+
+                    LogMessage($"EVENT RX: Address: {address} Loop: {loopNum} OnOff: {onOff} Text: {deviceText}");
+
+                    // Truncate device text based on module type
+                    if (moduleType == "AD")
+                    {
+                        deviceText = deviceText.Substring(0, Math.Min(26, deviceText.Length));
+                    }
+                    else
+                    {
+                        deviceText = deviceText.Substring(0, Math.Min(40, deviceText.Length));
+                    }
+
+                    deviceText = MakeStringSafe(deviceText);
+
+                    // Calculate zone
+                    int zone;
+                    if (moduleType == "ZI" || moduleType == "MZ")
+                    {
+                        zone = extension;
+                    }
+                    else
+                    {
+                        zone = extension + (256 * extension2);
+                    }
+
+                    // Get device type
+                    string deviceType = GetDeviceType(parts[(int)MessageField.DeviceType], moduleType, inputType, extension2);
+
+                    // Check for license overrides
+                    CheckLicenseOverrides(ref loopNum, ref address, ref subAddress, ref onOff, ref inputType, ref deviceText, moduleNumber);
+
+                    // Build event number
+                    bool oneShot = false;
+                    long eventNumber = MakeInputNumber(moduleNumber + AMX1_OFFSET, loopNum, address, inputType);
+
+                    if (onOff == 1)
+                    {
+                        eventNumber += 0x80000000;
+                        System.Diagnostics.Debug.WriteLine($"EVENT: {GetReferenceString(eventNumber)} ON");
+                    }
+                    else if (onOff == 2)
+                    {
+                        eventNumber += 0x80000000;
+                        oneShot = true;
+                        System.Diagnostics.Debug.WriteLine($"EVENT: {GetReferenceString(eventNumber)} ON+oneshot");
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"EVENT: {GetReferenceString(eventNumber)} OFF");
+                    }
+
+                    // Add status input descriptive text
+                    AddStatusText(ref deviceText, ref deviceType, loopNum, address, inputType, moduleType, onOff, moduleNumber);
+
+                    // Get zone text
+                    string zoneText = GetZoneText(deviceText, moduleType, moduleNumber, zone, extension, extension2, inputType, address);
+
+                    // Normalize OnOff to boolean
+                    bool isOn = (onOff != 0);
+
+                    // Write to AMX
+                    string transferFile = GetCurrentTransferFile();
+                    LogMessage("WriteNWMData");
+                    WriteNWMData(transferFile, 1, eventNumber, 0, deviceText, MakeStringSafe(deviceType), zoneText, isOn);
+
+                    // Handle one-shot
+                    if (oneShot)
+                    {
+                        NwmForceEvmAttribute(transferFile, eventNumber, 13, 1);
+                    }
+
+                    // Check for isolation list copy
+                    // if (giIsolationsList != 0 && inputType == 4 && loopNum != 0)
+                    // {
+                    //     WriteNWMData(transferFile, 2, eventNumber, 0, deviceText, MakeStringSafe(deviceType), zoneText, isOn);
+                    // }
+
+                    // Flush to AMX if needed
+                    if (GetQueuedData() < 5)
+                    {
+                        FlushAMX1Messages();
+                    }
+
+                    string ackResponse = $"ACK{SEPARATOR_CHAR}{moduleNumber}{SEPARATOR_CHAR}{messageID}";
+                    System.Diagnostics.Debug.WriteLine(ackResponse);
+
+                    // Send next command if available
+                    // CmdQ.SendNextCommandDummy(moduleNumber);
+
+                    return ackResponse;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error handling event: {ex.Message}");
+                    return $"NAK{SEPARATOR_CHAR}{moduleNumber}{SEPARATOR_CHAR}{messageID}";
+                }
+            }
+
+            private string HandlePollMessage(string[] parts, long moduleNumber, string moduleType, string serialNumber, long messageID, string ipAddress)
+            {
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine("Received POL");
+                    // RSMStats.IncreaseStat(RSMst.PollsRX);
+
+                    // Parse poll-specific fields (adjust indices based on your protocol)
+                    long expiryDateDays = parts.Length > 5 ? ParseLong(parts[5]) : 0;
+                    int numberOfPanels = parts.Length > 6 ? ParseInt(parts[6]) : 0;
+                    string moduleOptions = parts.Length > 7 ? parts[7] : "";
+
+                    // Update RSM data
+                    // RSM.ExpiryDate[moduleNumber] = expiryDateDays;
+                    // RSM.PanelsAllowed[moduleNumber] = numberOfPanels;
+                    // RSM.ModuleOptions[moduleNumber] = moduleOptions;
+                    // RSM.ModuleType[moduleNumber] = moduleType;
+
+                    int licenseStatus = 0; // UpdateLicenseInfo(moduleNumber, serialNumber, expiryDateDays, numberOfPanels, moduleOptions);
+
+                    string pakResponse = $"PAK{SEPARATOR_CHAR}{moduleNumber}{SEPARATOR_CHAR}{messageID}{SEPARATOR_CHAR}{licenseStatus}";
+
+                    // RSM.WaitingAck[moduleNumber] = false;
+                    // CmdQ.SendNextCommand(moduleNumber);
+
+                    System.Diagnostics.Debug.WriteLine($"Poll Received from {ipAddress}");
+
+                    return pakResponse;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error handling poll: {ex.Message}");
+                    return $"NAK{SEPARATOR_CHAR}{moduleNumber}{SEPARATOR_CHAR}{messageID}";
+                }
+            }
+
+            private string HandleCommandAck(long moduleNumber, long messageID)
+            {
+                // RSMStats.IncreaseStat(RSMst.CommandAcks);
+                System.Diagnostics.Debug.WriteLine($"Received CAK of {messageID}");
+
+                // CmdQ.Remove(messageID);
+                // RSM.WaitingAck[moduleNumber] = false;
+                // CmdQ.SendNextCommandDummy(moduleNumber);
+
+                return "";
+            }
+
+            private string HandleSetOptionAck(string[] parts, long moduleNumber, long messageID)
+            {
+                // RSMStats.IncreaseStat(RSMst.OptionSetAcks);
+                System.Diagnostics.Debug.WriteLine("Received SAK");
+
+                // CmdQ.Remove(messageID);
+                // CmdQ.SendNextCommandDummy(moduleNumber);
+                // RSM.WaitingAck[moduleNumber] = false;
+
+                return "";
+            }
+
+            private string HandleGetOptionAck(string[] parts, long moduleNumber, long messageID)
+            {
+                System.Diagnostics.Debug.WriteLine("Received GAK");
+                // RSMStats.IncreaseStat(RSMst.OptionGetAcks);
+
+                // Parse and update options based on parts
+                // (Implementation depends on your option structure)
+
+                // CmdQ.Remove(messageID);
+                // RSM.WaitingAck[moduleNumber] = false;
+                // CmdQ.SendNextCommandDummy(moduleNumber);
+
+                return "";
+            }
+
+            private string HandleZoneText(string[] parts, long moduleNumber, long messageID)
+            {
+                // RSMStats.IncreaseStat(RSMst.ZoneTexts);
+
+                int extension = ParseInt(parts[(int)MessageField.Extension]);
+                int extension2 = ParseInt(parts[(int)MessageField.Extension2]);
+                int zone = extension2 + (256 * extension);
+                string text = MakeStringSafe(parts[(int)MessageField.Text]);
+
+                // WriteToIniFile("ZoneText", zone.ToString(), text, $"\\Temp\\RsmZtext\\{moduleNumber}");
+
+                string ackResponse = $"ACK{SEPARATOR_CHAR}{moduleNumber}{SEPARATOR_CHAR}{messageID}";
+                System.Diagnostics.Debug.WriteLine(ackResponse);
+
+                return ackResponse;
+            }
+
+            private string HandleAnalogValue(string[] parts, long moduleNumber, string moduleType, long messageID)
+            {
+                // RSMStats.IncreaseStat(RSMst.AnalogValues);
+
+                int loopNum = ParseInt(parts[(int)MessageField.LoopNum]);
+                int address = ParseInt(parts[(int)MessageField.Address]);
+                int subAddress = ParseInt(parts[(int)MessageField.SubAddress]);
+                string analogValue = parts[(int)MessageField.Text].Trim();
+                string extension = parts[(int)MessageField.Extension];
+
+                string deviceType = GetDeviceType(parts[(int)MessageField.DeviceType], moduleType, 0, 0);
+
+                // SendAnalogValueToAMX(moduleNumber + AMX1_OFFSET, loopNum, address, subAddress, analogValue, extension, deviceType);
+
+                LogMessage($"=== Device Analogue Data Response Sent to AMX From: {moduleNumber + AMX1_OFFSET} {loopNum} {address} : Analogue Value : {analogValue} Mode : {extension}");
+
+                return $"ACK{SEPARATOR_CHAR}{moduleNumber}{SEPARATOR_CHAR}{messageID}";
+            }
+
+            private string HandleSpecialMessage(string[] parts, long moduleNumber, long messageID)
+            {
+                int loopNum = ParseInt(parts[(int)MessageField.LoopNum]);
+                int address = ParseInt(parts[(int)MessageField.Address]);
+                int subAddress = ParseInt(parts[(int)MessageField.SubAddress]);
+                int onOff = ParseInt(parts[(int)MessageField.OnOff]);
+                int inputType = ParseInt(parts[(int)MessageField.EventType]);
+                string deviceText = parts[(int)MessageField.Text].Trim();
+                int extension = ParseInt(parts[(int)MessageField.Extension]);
+
+                string transferFile = GetCurrentTransferFile();
+
+                // Handle different special message types based on extension
+                switch (extension)
+                {
+                    case 1: // evxRST1TO14
+                        for (int n = 1; n <= 14; n++)
+                        {
+                            long eventNumber = MakeInputNumber(moduleNumber + AMX1_OFFSET, loopNum, address, n);
+                            WriteNWMData(transferFile, 1, eventNumber, 0, deviceText, "", "", false);
+                        }
+                        break;
+
+                    case 2: // evxRST0TO14
+                        for (int n = 0; n <= 14; n++)
+                        {
+                            long eventNumber = MakeInputNumber(moduleNumber + AMX1_OFFSET, loopNum, address, n);
+                            WriteNWMData(transferFile, 1, eventNumber, 0, deviceText, "", "", false);
+                        }
+                        break;
+
+                    case 3: // evxRST0TO14NOT4
+                        for (int n = 0; n <= 14; n++)
+                        {
+                            if (n != 4)
+                            {
+                                long eventNumber = MakeInputNumber(moduleNumber + AMX1_OFFSET, loopNum, address, n);
+                                WriteNWMData(transferFile, 1, eventNumber, 0, deviceText, "", "", false);
+                            }
+                        }
+                        break;
+
+                    case 4: // evxRST0TO15
+                        for (int n = 0; n <= 15; n++)
+                        {
+                            long eventNumber = MakeInputNumber(moduleNumber + AMX1_OFFSET, loopNum, address, n);
+                            WriteNWMData(transferFile, 1, eventNumber, 0, deviceText, "", "", false);
+                        }
+                        break;
+                }
+
+                if (GetQueuedData() < 5)
+                {
+                    FlushAMX1Messages();
+                }
+
+                return $"ACK{SEPARATOR_CHAR}{moduleNumber}{SEPARATOR_CHAR}{messageID}";
+            }
+
+            private string HandleAck(long moduleNumber, long messageID)
+            {
+                System.Diagnostics.Debug.WriteLine("Received ACK");
+                // RSMStats.IncreaseStat(RSMst.Acks);
+
+                // CmdQ.Remove(messageID);
+                // RSM.WaitingAck[moduleNumber] = false;
+                // CmdQ.SendNextCommandDummy(moduleNumber);
+
+                return "";
+            }
+
+            private string HandleNak(long moduleNumber)
+            {
+                System.Diagnostics.Debug.WriteLine("Received NAK");
+
+                // RSM.WaitingAck[moduleNumber] = false;
+                // CmdQ.SendNextCommandDummy(moduleNumber);
+
+                return "";
+            }
+
+            private string HandleUnknownMessage(long moduleNumber, long messageID, string message)
+            {
+                System.Diagnostics.Debug.WriteLine("Received ???");
+                // RSMStats.IncreaseStat(RSMst.UnknownAcksTX);
+
+                System.Diagnostics.Debug.WriteLine($"Unknown message: {message.Substring(0, Math.Min(12, message.Length))}");
+
+                // RSM.WaitingAck[moduleNumber] = false;
+                // CmdQ.SendNextCommandDummy(moduleNumber);
+
+                return $"ACK{SEPARATOR_CHAR}{messageID:D5}";
+            }
+
+            // Helper methods - These need to be implemented based on your system
+
+            private void UpdateRXTracking(long moduleNumber, string ipAddress, long portNumber)
+            {
+                // RSM.LastRXTime[moduleNumber] = DateTime.Now;
+                // RSM.ReportedAddress[moduleNumber] = ipAddress;
+                // RSM.LastKnownIP[moduleNumber] = ipAddress;
+                // RSM.RXmessagesIncrement(moduleNumber);
+                // RSM.RequestPort[moduleNumber] = portNumber;
+            }
+
+            private void CheckLicenseOverrides(ref int loopNum, ref int address, ref int subAddress, ref int onOff, ref int inputType, ref string deviceText, long moduleNumber)
+            {
+                // Implement license checking logic
+                // Check RSM.CurrentLicenseStatus and RSM.NodeInUse
+            }
+
+            private void AddStatusText(ref string deviceText, ref string deviceType, int loopNum, int address, int inputType, string moduleType, int onOff, long moduleNumber)
+            {
+                if (loopNum == 0 && inputType == 15)
+                {
+                    if (moduleType == "AD")
+                    {
+                        if (address == 253)
+                        {
+                            deviceType = deviceText;
+                            deviceText = "RSM Module Startup";
+                            System.Diagnostics.Debug.WriteLine($"{DateTime.Now:HH:mm:ss}  ============================ MODULE RESTART =================================");
+                            LogMessage($"Module Restart!! - {moduleNumber}");
+                        }
+                        else if (address == 252)
+                        {
+                            deviceText = onOff != 0 ? "Engineer Present" : "Engineer No Longer Present";
+                        }
+                    }
+                    else
+                    {
+                        switch (address)
+                        {
+                            case 1: deviceText = "Internal Buzzer Muted"; break;
+                            case 2: deviceText = "Alarms Silenced"; break;
+                            case 3: deviceText = "General Disablement"; break;
+                            case 4: deviceText = "Panel in Fire"; break;
+                            case 5: deviceText = "Panel in Fault"; break;
+                            case 6: deviceText = "Panel in Pre-alarm"; break;
+                            case 7: deviceText = "Panel in Test Mode"; break;
+                            case 8: deviceText = "Panel in Delay Mode Period"; break;
+                            case 9: deviceText = "Master Panel RS232 Comms Lost"; break;
+                            case 10:
+                                deviceType = deviceText;
+                                deviceText = "RSM Module Startup";
+                                System.Diagnostics.Debug.WriteLine($"{DateTime.Now:HH:mm:ss}  ============================ MODULE RESTART =================================");
+                                LogMessage($"Module Restart!! - {moduleNumber}");
+                                break;
+                            case 252:
+                                deviceText = onOff != 0 ? "Engineer Present" : "Engineer No Longer Present";
+                                break;
+                        }
+                    }
+                }
+            }
+
+            private string GetZoneText(string deviceText, string moduleType, long moduleNumber, int zone, int extension, int extension2, int inputType, int address)
+            {
+                string zoneText = "";
+
+                if (moduleType == "DX" || moduleType == "PE")
+                {
+                    if (deviceText.Length > 20 && extension == 255 && extension2 == 100)
+                    {
+                        zoneText = MakeStringSafe(deviceText.Substring(20));
+                        deviceText = MakeStringSafe(deviceText.Substring(0, 20).Trim());
+                    }
+
+                    if (inputType == 15 && address == 200)
+                    {
+                        zoneText = "Contact Your Fire Alarm Maintainer";
+                    }
+                }
+                else if (moduleType == "AD")
+                {
+                    zoneText = GetZoneTextFromDatabase(moduleNumber, zone).Substring(0, Math.Min(40, zoneText.Length));
+                    zoneText = MakeStringSafe(zoneText);
+                    if (zoneText == "099 - ")
+                    {
+                        zoneText = "Zone-99";
+                    }
+                }
+                else
+                {
+                    zoneText = GetZoneTextFromDatabase(moduleNumber, zone).Substring(0, Math.Min(40, zoneText.Length));
+                    zoneText = MakeStringSafe(zoneText);
+                }
+
+                return zoneText;
+            }
+
+            private string GetDeviceType(string deviceTypeField, string moduleType, int inputType, int extension2)
+            {
+                if (deviceTypeField.StartsWith("$"))
+                {
+                    return deviceTypeField.Substring(1);
+                }
+
+                // Implement device type lookup based on module type
+                return "Unknown";
+            }
+
+            private string MakeStringSafe(string input)
+            {
+                // Remove or replace unsafe characters
+                return input?.Replace("\0", "").Trim() ?? "";
+            }
+
+            private long MakeInputNumber(long node, int loop, int address, int inputType)
+            {
+                // Combine node, loop, address, and type into a single event number
+                return ((node & 0xFF) << 24) | ((loop & 0xFF) << 16) | ((address & 0xFF) << 8) | (inputType & 0xFF);
+            }
+
+            private string GetReferenceString(long eventNumber)
+            {
+                // Format event number as reference string
+                return $"EVT#{eventNumber:X8}";
+            }
+
+            private string GetZoneTextFromDatabase(long moduleNumber, int zone)
+            {
+                // Retrieve zone text from database/file
+                return "";
+            }
+
+            private string GetCurrentTransferFile()
+            {
+                return "transfer.dat";
+            }
+
+            private void WriteNWMData(string file, int listType, long eventNumber, long param, string deviceText, string deviceType, string zoneText, bool isOn)
+            {
+                // Write event data to file/database
+            }
+
+            private void NwmForceEvmAttribute(string file, long eventNumber, int attribute, int value)
+            {
+                // Force event attribute
+            }
+
+            private int GetQueuedData()
+            {
+                return 0;
+            }
+
+            private void FlushAMX1Messages()
+            {
+                // Flush queued messages to AMX
+            }
+
+            private void LogMessage(string message)
+            {
+                System.Diagnostics.Debug.WriteLine(message);
+            }
+
+            private int ParseInt(string value)
+            {
+                return int.TryParse(value, out int result) ? result : 0;
+            }
+
+            private long ParseLong(string value)
+            {
+                return long.TryParse(value, out long result) ? result : 0;
+            }
         }
     }
 }
