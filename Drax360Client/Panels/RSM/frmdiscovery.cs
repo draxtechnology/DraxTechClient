@@ -219,6 +219,7 @@ namespace Drax360Client.Panels.RSM
         {
             try
             {
+                
                 using (UdpClient udpServer = new UdpClient(AddressFamily.InterNetwork))
                 {
                     // Allow reuse so broadcasts reach multiple listeners and to avoid bind issues

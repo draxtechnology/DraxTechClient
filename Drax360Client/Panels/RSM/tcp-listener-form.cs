@@ -196,8 +196,8 @@ namespace TcpListenerApp
         {
             string clientIP = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
 
-            // Only accept connections from 192.168.3.1
-            if (clientIP != "192.168.3.1")
+            // Only accept connections from given IPs
+            if (clientIP != "192.168.3.1"    && clientIP != "192.168.3.199")
             {
                 AppendData($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Rejected connection from {clientIP} (only accepting from 192.168.3.1)\n");
                 client.Close();
