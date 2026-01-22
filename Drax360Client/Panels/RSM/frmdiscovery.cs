@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Drax360Client.Panels.RSM
 {
@@ -219,7 +220,7 @@ namespace Drax360Client.Panels.RSM
         {
             try
             {
-                
+
                 using (UdpClient udpServer = new UdpClient(AddressFamily.InterNetwork))
                 {
                     // Allow reuse so broadcasts reach multiple listeners and to avoid bind issues
@@ -433,103 +434,94 @@ namespace Drax360Client.Panels.RSM
 
         #region to convert later
         /*
-         Private Sub vsfDiscover_AfterEdit(ByVal row As Long, ByVal Col As Long)
-    Dim TxString As String
-    Dim Node As Long
-    Dim AbortEntry As Boolean
-    
-    On Error GoTo vsfDiscover_AfterEdit_ERROR
-
-    TxString = ""
-    mbDiscoveryEdit = False
-    
-    'check for valid serial num
-    If vsfDiscover.Cell(flexcpText, disRow.SerialNumber) = "" Then
-        Exit Sub
-    End If
-    
-    Node = Val(vsfDiscover.Cell(flexcpText, 0, 1))
-    AbortEntry = False
-    Select Case row
-        Case disRow.ModuleNumber
-            'module number
-            If Node > 0 And RSM.InUse(Node) Then
-                If myMsgBox(WrapText("This module number is already in use! If you proceed the current programming for the node may be lost. Do you wish to continue?", 50), vbExclamation + vbYesNo, "WARNING") <> vbYes Then
-                    AbortEntry = True
-                End If
-            End If
-            If Not AbortEntry Then
-                TxString = MakeUDPMessage("SET", CStr(optSetGet.setgetModuleNumber) + Chr$(sepCHAR) + vsfDiscover.Cell(flexcpText, row, 1))
-            End If
-        Case disRow.DHCPName
-            'dhcp name
-            If Len(vsfDiscover.Cell(flexcpText, row, 1)) > 24 Then
-                 myMsgBox "Only 24 characters maximum!", vbCritical + vbOK, "ERROR"
-                AbortEntry = True
-            Else
-                TxString = MakeUDPMessage("SET", CStr(optSetGet.setgetDHCPName) + Chr$(sepCHAR) + vsfDiscover.Cell(flexcpText, row, 1))
-            End If
-        Case disRow.IpAddress
-            'ip address
-            If Not IsItDotNotation(vsfDiscover.Cell(flexcpText, row, 1)) Then
-                myMsgBox vsfDiscover.Cell(flexcpText, row, 1) + " is not a valid IP address!", vbCritical + vbOK, "ERROR"
-                AbortEntry = True
-            Else
-                TxString = MakeUDPMessage("SET", CStr(optSetGet.setgetIPAddress) + Chr$(sepCHAR) + vsfDiscover.Cell(flexcpText, row, 1))
-            End If
-         Case disRow.SubnetMask
-            If Not IsItDotNotation(vsfDiscover.Cell(flexcpText, row, 1)) Then
-                myMsgBox vsfDiscover.Cell(flexcpText, row, 1) + " is not a valid subnet mask!", vbCritical + vbOK, "ERROR"
-                AbortEntry = True
-            Else
-                TxString = MakeUDPMessage("SET", CStr(optSetGet.setgetSubnetMask) + Chr$(sepCHAR) + vsfDiscover.Cell(flexcpText, row, 1))
-            End If
-         Case disRow.Gateway
-            If Not IsItDotNotation(vsfDiscover.Cell(flexcpText, row, 1)) Then
-                myMsgBox vsfDiscover.Cell(flexcpText, row, 1) + " is not a valid gateway address!", vbCritical + vbOK, "ERROR"
-                AbortEntry = True
-            Else
-                TxString = MakeUDPMessage("SET", CStr(optSetGet.setgetGateway) + Chr$(sepCHAR) + vsfDiscover.Cell(flexcpText, row, 1))
-            End If
-         Case disRow.Report1
-            If Not IsItDotNotation(vsfDiscover.Cell(flexcpText, row, 1)) Then
-                TxString = MakeUDPMessage("SET", CStr(optSetGet.setgetName1) + Chr$(sepCHAR) + vsfDiscover.Cell(flexcpText, row, 1))
-            Else
-                TxString = MakeUDPMessage("SET", CStr(optSetGet.setgetReport1) + Chr$(sepCHAR) + vsfDiscover.Cell(flexcpText, row, 1))
-            End If
-         Case disRow.Report2
-            If Not IsItDotNotation(vsfDiscover.Cell(flexcpText, row, 1)) Then
-                TxString = MakeUDPMessage("SET", CStr(optSetGet.setgetName2) + Chr$(sepCHAR) + vsfDiscover.Cell(flexcpText, row, 1))
-            Else
-                TxString = MakeUDPMessage("SET", CStr(optSetGet.setgetReport2) + Chr$(sepCHAR) + vsfDiscover.Cell(flexcpText, row, 1))
-            End If
-       Case Else
-            'do nothing
-    End Select
-
-    'Now send if it worked out OK
-    If TxString <> "" Then
-        'clear the current settings
-        ClearDiscoverGrid
-        SendViaUDP TxString
-    End If
-    
-    'or restore the original text
-    If AbortEntry Then
-        vsfDiscover.Cell(flexcpText, row, 1) = BeforeEditText
-    End If
-    
-vsfDiscover_AfterEdit_EXIT:
-    On Error GoTo 0
-    Exit Sub
-
-vsfDiscover_AfterEdit_ERROR:
-    ErrorBeep "Error " & Err.Number & " (" & Err.Description & ") in procedure vsfDiscover_AfterEdit of Form frmRSMDiscovery"       'noslz
-    Resume Next
-    
-End Sub
          
-         */
-        #endregion
-    }
+         private void vsfDiscover_AfterEdit(long row, long col)
+         {
+             // Equivalent local variables from VB
+             string txString = string.Empty;
+             long Node = 0;
+             bool AbortEntry = false;
+
+             try
+             {
+                 txString = string.Empty;
+                 // mbDiscoveryEdit = false; // preserve original flag usage if present
+
+                 // check for valid serial num
+                 // if (string.IsNullOrEmpty(vsfDiscover.Cell(flexcpText, disRow.SerialNumber, 1))) { return; }
+                 // Node = Convert.ToInt64(vsfDiscover.Cell(flexcpText, 0, 1));
+                 // AbortEntry = false;
+
+                 // Example conversion of select-case to switch
+                 switch (row)
+                 {
+                     case  0: // replace 0 with the actual enum/int for disRow.ModuleNumber
+                         // module number
+                         // if (Node > 0 && RSM.InUse(Node)) { if (myMsgBox(... ) != vbYes) { AbortEntry = true; } }
+                         /* RPJ
+                           if (!AbortEntry)
+                         {
+                             // TxString = MakeUDPMessage("SET", CStr(optSetGet.setgetModuleNumber) + Chr$(sepCHAR) + vsfDiscover.Cell(flexcpText, row, 1))
+                             txString = makeudpmessage("SET", ((int) optSetGet.setgetModuleNumber).ToString() + sepCHAR + /*vsfDiscover.Cell(... row,1)*/ //string.Empty);
+                         }
+    /* RPJ
+                         break;
+    
+                     case 1: // replace 1 with the actual enum/int for disRow.DHCPName
+                         // dhcp name
+                         // if (vsfDiscover.Cell(...).Length > 24) { myMsgBox("Only 24 characters maximum!"); AbortEntry = true; } else { TxString = MakeUDPMessage("SET", ...); }
+                         break;
+
+                     case 2: // replace 2 with the actual enum/int for disRow.IPAddress
+                         // ip address - validate dot notation then send
+                         break;
+
+                     case  3: // replace 3 with the actual enum/int for disRow.SubnetMask
+                         // subnet mask
+                         break;
+
+                     case  4: // replace 4 with the actual enum/int for disRow.Gateway
+                         // gateway
+                         break;
+
+                     case  5: // replace 5 with the actual enum/int for disRow.Report1
+                         // report1 or name1 depending on content
+                         break;
+
+                     case  6: // replace 6 with the actual enum/int for disRow.Report2
+                         // report2 or name2 depending on content
+                         break;
+
+                     default:
+                         // do nothing
+                         break;
+                 }
+
+// Now send if it worked out OK
+if (!string.IsNullOrEmpty(txString))
+{
+    // ClearDiscoverGrid(); // clear the current settings
+    SendViaUDP(txString);
+}
+
+// or restore the original text
+if (AbortEntry)
+{
+    // vsfDiscover.Cell(flexcpText, row, 1) = BeforeEditText;
+}
+             }
+             catch (Exception ex)
+             {
+                 // ErrorBeep("Error " + ex.Number + " (" + ex.Message + ") in procedure vsfDiscover_AfterEdit of Form frmRSMDiscovery");
+                 // In VB the code used Resume Next and On Error handling; here we catch and log.
+                 Console.WriteLine("Error in vsfDiscover_AfterEdit: " + ex.Message);
+             }
+         }
+
+         // Notes:
+         // - Placeholders (disRow.* numeric values, vsfDiscover.Cell access, RSM.InUse, myMsgBox, WrapText, BeforeEditText)
+         //   need to be replaced with actual project types and methods when converting to executable C#.
+         // - This block intentionally remains commented to serve as a reference translation from VB -> C#.
+        */
+    #endregion
 }
