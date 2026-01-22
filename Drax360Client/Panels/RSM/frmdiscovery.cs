@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography;
 using System.Text;
@@ -246,32 +248,45 @@ namespace Drax360Client.Panels.RSM
                                 // Log raw bytes for troubleshooting
                                 Console.WriteLine($"[Server] Packet from {remoteEP} ({receivedData.Length} bytes) RAW: {BitConverter.ToString(receivedData)}");
 
-                                // Try ASCII first (matches SendViaUDP), fallback to UTF8 if different
-                                string asciiMessage = Encoding.ASCII.GetString(receivedData);
-                                Console.WriteLine($"[Server] ASCII decode: '{asciiMessage}'");
-
-                                // If message is wrapped with STX/ETX try to descramble and display inner payload
-                                if (!string.IsNullOrEmpty(asciiMessage) && asciiMessage.Length >= 2 && asciiMessage[0] == stxCHAR && asciiMessage[asciiMessage.Length - 1] == etxCHAR)
+                                byte[] descr = descramblebyte(receivedData);
+                                Console.WriteLine($"[Server] Descrambled: '{descr}'");
+                                if (descr.Length > 0)
                                 {
-                                    string inner = asciiMessage.Substring(1, asciiMessage.Length - 2);
-                                    Console.WriteLine($"[Server] Detected STX/ETX. Inner (scrambled) RAW: {BitConverter.ToString(Encoding.ASCII.GetBytes(inner))}");
-                                    string descr = descramblestring(inner);
-                                    Console.WriteLine($"[Server] Descrambled: '{descr}'");
+                                    parseresult(descr);
+
+
+
+                                    // Try ASCII first (matches SendViaUDP), fallback to UTF8 if different
+                                    string asciiMessage = Encoding.ASCII.GetString(receivedData);
+                                    Console.WriteLine($"[Server] ASCII decode: '{asciiMessage}'");
+
+                                    // If message is wrapped with STX/ETX try to descramble and display inner payload
+                                    /*if (!string.IsNullOrEmpty(asciiMessage) && asciiMessage.Length >= 2 && asciiMessage[0] == stxCHAR && asciiMessage[asciiMessage.Length - 1] == etxCHAR)
+                                    {
+                                        string inner = asciiMessage.Substring(1, asciiMessage.Length - 2);
+                                        Console.WriteLine($"[Server] Detected STX/ETX. Inner (scrambled) RAW: {BitConverter.ToString(Encoding.ASCII.GetBytes(inner))}");
+                                        string descr = descramblestring(inner);
+                                        Console.WriteLine($"[Server] Descrambled: '{descr}'");
+                                        if (!string.IsNullOrEmpty(descr)) {
+                                            parseresult(descr);
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        // Also try UTF8 decode to be safe
+                                        string utf8Message = Encoding.UTF8.GetString(receivedData);
+                                        if (utf8Message != asciiMessage)
+                                        {
+                                            Console.WriteLine($"[Server] UTF8 decode: '{utf8Message}'");
+                                        }
+                                    }*/
                                 }
                                 else
                                 {
-                                    // Also try UTF8 decode to be safe
-                                    string utf8Message = Encoding.UTF8.GetString(receivedData);
-                                    if (utf8Message != asciiMessage)
-                                    {
-                                        Console.WriteLine($"[Server] UTF8 decode: '{utf8Message}'");
-                                    }
+                                    // Cancellation requested
+                                    break;
                                 }
-                            }
-                            else
-                            {
-                                // Cancellation requested
-                                break;
                             }
                         }
                         catch (OperationCanceledException)
@@ -296,6 +311,85 @@ namespace Drax360Client.Panels.RSM
             {
                 Console.WriteLine($"[Server] Error initializing listener: {ex}");
             }
+        }
+
+        private static void parseresult(byte[] descr)
+        {
+            string[] mparts = SplitByteArrayToStrings(descr, (byte)199, Encoding.UTF8).ToArray();
+
+            switch (mparts[0])
+            {
+                case "DIS":
+
+                    break;
+
+                default:
+                    string xxx = mparts[0];
+
+                    break;
+
+            }
+
+        }
+
+        public static List<string> SplitByteArrayToStrings(byte[] data, byte delimiter, Encoding encoding)
+
+        {
+
+            if (data == null)
+
+                throw new ArgumentNullException(nameof(data));
+
+            if (encoding == null)
+
+                throw new ArgumentNullException(nameof(encoding));
+
+            List<string> result = new List<string>();
+
+            int start = 0;
+
+            for (int i = 0; i < data.Length; i++)
+
+            {
+
+                if (data[i] == delimiter)
+
+                {
+
+                    // Extract segment
+
+                    int length = i - start;
+
+                    if (length > 0) // Avoid empty strings unless needed
+
+                    {
+
+                        string segment = encoding.GetString(data, start, length);
+
+                        result.Add(segment);
+
+                    }
+
+                    start = i + 1; // Move past delimiter
+
+                }
+
+            }
+
+            // Add last segment if any
+
+            if (start < data.Length)
+
+            {
+
+                string segment = encoding.GetString(data, start, data.Length - start);
+
+                result.Add(segment);
+
+            }
+
+            return result;
+
         }
 
         // Converted from VB: ScrambleString
@@ -349,35 +443,150 @@ namespace Drax360Client.Panels.RSM
             }
 
             // Save checksum (last char)
-            int checksumChar = sString[sString.Length - 1];
+            int checksumChar = sString[sString.Length -1];
 
             // Descramble the string portion (excluding checksum)
             var sb = new StringBuilder(pLs);
             for (int n = 1; n <= pLs; n++)
             {
+                if (n > 127)
+                {
+                    string mike = "x";
+                }
                 int enc = sString[n - 1];
                 int dec = enc - 3 - (n % 9) - ((n % 5) * 7);
+                
+
                 sb.Append((char)dec);
             }
 
             // Reverse to original order
             char[] arr = sb.ToString().ToCharArray();
-            Array.Reverse(arr);
-            string result = new string(arr);
+            //Array.Reverse(arr);
+            //string result = new string(arr);
+
+            int counter = 0;
+            int pCsum = 0;
+
+            byte[] result = new byte[pLs];
+            for (int i = pLs-1; i >=0 ; i--)
+            {
+                result[counter] = (byte) sb[i];
+                counter++;
+            }
+
+            StringBuilder result2 = ReverseStringBuilder(sb);
+
+
 
             // Finally, calc and confirm the checksum byte
-            int pCsum = 0;
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < result2.Length; i++)
             {
-                pCsum += result[i];
-            }
-            pCsum = (pCsum % 200) + 33;
-            if (pCsum != checksumChar)
-            {
-                return string.Empty;
+                pCsum += (byte)result2[i];
             }
 
+            pCsum = (pCsum % 200) + 33;
+        //    if (pCsum != checksumChar)   // TODO
+        //    {
+        //        return string.Empty;
+        //    }
+
+            
+            byte[] asciiBytes = Encoding.ASCII.GetBytes(result2.ToString());
+            // Convert bytes back to ASCII string
+            //
+             return Encoding.ASCII.GetString(asciiBytes);
+
+
+        }
+
+        private static byte[] descramblebyte(byte[] bytesreceived)
+        {
+            int pCsum = 0;
+            List<byte> toprocess = new List<byte>();
+            foreach(byte enc in bytesreceived)
+            {
+
+                // ignore stxhar or etxchar
+
+                if (enc == 2 || enc == 3)
+                {
+                    continue;
+                }
+                toprocess.Add(enc);
+            }
+            byte[] sString = toprocess.ToArray();
+            
+
+            int checksumChar = sString[sString.Length - 1];
+
+
+
+            int masterlength = sString.Length - 1;
+
+
+            // Descramble the string portion (excluding checksum)
+            byte[] sb = new byte[masterlength];
+
+            int bytecount = 0;
+            for (int n = 0; n < masterlength; n++)
+            {
+                if (n > 127)
+                {
+                    string mike = "x";
+                }
+                int enc = sString[n];
+                int m = n + 1;
+                int dec = enc - 3 - (m % 9) - ((m % 5) * 7);
+
+                if (dec == 199)
+                {
+                    string mike = "x";
+                }
+                sb[bytecount] = (byte)dec;
+
+                pCsum += dec;
+                bytecount++;
+            }
+
+           
+            int counter = 0;
+
+          
+
+            byte[] result = new byte[masterlength];
+            for (int i = masterlength - 1; i >= 0; i--)
+            {
+                result[counter] = sb[i];
+                counter++;
+            }
+
+            pCsum = (pCsum % 200) + 33;
+            //    if (pCsum != checksumChar)   // TODO
+            //    {
+            //        return string.Empty;
+            //    }
+
             return result;
+
+
+        }
+
+        public static StringBuilder ReverseStringBuilder(StringBuilder sb)
+        {
+            if (sb == null)
+                throw new ArgumentNullException(nameof(sb), "StringBuilder cannot be null.");
+
+            int length = sb.Length;
+            for (int i = 0, j = length - 1; i < j; i++, j--)
+            {
+                // Swap characters at positions i and j
+                char temp = sb[i];
+                sb[i] = sb[j];
+                sb[j] = temp;
+            }
+
+            return sb;
         }
 
         // Send probe and await a single response (used by UI test button)
@@ -432,6 +641,8 @@ namespace Drax360Client.Panels.RSM
             //_ = SendProbeAndAwaitResponseAsync(msg);
         }
 
+  
+
         #region to convert later
         /*
          
@@ -463,7 +674,7 @@ namespace Drax360Client.Panels.RSM
                          {
                              // TxString = MakeUDPMessage("SET", CStr(optSetGet.setgetModuleNumber) + Chr$(sepCHAR) + vsfDiscover.Cell(flexcpText, row, 1))
                              txString = makeudpmessage("SET", ((int) optSetGet.setgetModuleNumber).ToString() + sepCHAR + /*vsfDiscover.Cell(... row,1)*/ //string.Empty);
-                         }
+    }
     /* RPJ
                          break;
     
