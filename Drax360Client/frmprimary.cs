@@ -222,6 +222,9 @@ namespace Drax360Client
             sendcmd("ServiceRestart");
         }
 
-
+        private void btMute_Click(object sender, EventArgs e)
+        {
+            sendcmd("MuteBuzzers", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
+        }
     }
 }
