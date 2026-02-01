@@ -1,5 +1,6 @@
-﻿using Drax360Client.Panels.Email;
-using Drax360Client.Panels.RSM;
+﻿
+using DraxClient.Panels.Email;
+using DraxClient.Panels.RSM;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,9 +12,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TcpListenerApp;
-using static Drax360Client.frmTestBox;
+using static DraxClient.frmTestBox;
 
-namespace Drax360Client
+
+namespace DraxClient
 {
     public partial class frmSetup : Form
     {

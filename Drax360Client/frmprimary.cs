@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
-namespace Drax360Client
+namespace DraxClient
 {
     public partial class frmprimary : Form
     {

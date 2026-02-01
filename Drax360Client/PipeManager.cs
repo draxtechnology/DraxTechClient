@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Drax360Client
+namespace DraxClient
 {
     public static class PipeManager
     {

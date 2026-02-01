@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Drax360Client.Panels.Email
+namespace DraxClient.Panels.Email
 {
     public partial class frmemailgroup : Form
     {

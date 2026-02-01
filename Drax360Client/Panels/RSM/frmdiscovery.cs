@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DraxClient.Panels.Email;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,6 +7,7 @@ using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.ConstrainedExecution;
@@ -17,7 +19,7 @@ using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Drax360Client.Panels.RSM
+namespace DraxClient.Panels.RSM
 {
     // Converted VB-style enum block into C# enums.
     public enum optSetGet
@@ -107,13 +109,53 @@ namespace Drax360Client.Panels.RSM
     }
 
     public partial class frmdiscovery : Form
+
     {
 
+        #region enums
+
+        private enum mdiscover
+        {
+            MessageType = 0,
+            MessageID,
+            ModuleNumber,
+            SerialNumber,
+            ModuleType,
+            MACAddress,
+            //DHCPName,
+            IpAddress,
+            SubnetMask,
+            Gateway,
+            ReportIP1,
+            ReportIP2,   //currently unused
+            ReportIP3,   //currently unused
+            ReportIP4,   //currently unused
+            SwVersion,
+        }
+
+
+        #endregion
+        #region constants
         private const int kudpport = 1471; // Port for discovery
         private const char sepCHAR = (char)199;
         private const char stxCHAR = (char)2;
         private const char etxCHAR = (char)3;
+        #endregion
 
+
+        #region private variables
+        private bool editmode = false;
+        private string settingModuleNumber = string.Empty;
+        private string settingModuleType = string.Empty;
+        private string settingSerialNumber = string.Empty;
+        private string settingMACAddress = string.Empty;
+        private string settingDHCPName = string.Empty;
+        private string settingIpAddress = string.Empty;
+        private string settingSubnetMask = string.Empty;
+        private string settingGateway = string.Empty;
+        
+
+        #endregion
         // Message id counter used by MakeUDPMessage
         private static int _messageCounter;
 
@@ -121,13 +163,15 @@ namespace Drax360Client.Panels.RSM
         private CancellationTokenSource _cts;
         private Task? _listenerTask;
 
+        // Capture the UI SynchronizationContext so background threads can marshal UI updates reliably
+        private readonly SynchronizationContext _uiContext;
+
         public frmdiscovery()
         {
             InitializeComponent();
 
-            // Start listener using async ReceiveAsync loop on a background task
-            _cts = new CancellationTokenSource();
-            _listenerTask = Task.Run(() => StartListenerAsync(_cts.Token));
+           
+
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -218,7 +262,7 @@ namespace Drax360Client.Panels.RSM
         }
 
         // Async listener using ReceiveAsync (non-blocking, cancellable)
-        private static async Task StartListenerAsync(CancellationToken ct)
+        private async Task StartListenerAsync(CancellationToken ct)
         {
             try
             {
@@ -313,27 +357,115 @@ namespace Drax360Client.Panels.RSM
             }
         }
 
-        private static void parseresult(byte[] descr)
+        private void parseresult(byte[] descr)
         {
-           string[] mparts = SplitByteArrayToStrings(descr, (byte)199, Encoding.UTF8).ToArray();
-
-    
+            string[] mparts = SplitByteArrayToStrings(descr, (byte)199, Encoding.UTF8).ToArray();
 
             switch (mparts[0])
             {
                 case "DIS":
+                    if (editmode)
+                    {
+                       return;
+                    }
 
+                    editmode = true;
+
+
+                    settingModuleNumber = mparts[(int) mdiscover.ModuleNumber];
+                    settingModuleType = ExpandModuleType(mparts[(int)mdiscover.ModuleType]);
+                    settingSerialNumber = mparts[(int) mdiscover.SerialNumber];
+                    settingMACAddress = GetHexMacAddress(mparts[(int)mdiscover.MACAddress]);
+
+                    settingDHCPName = "";// mparts[(int)mdiscover.DHCPName];
+                    settingIpAddress = mparts[(int)mdiscover.IpAddress];
+                    settingSubnetMask = mparts[(int)mdiscover.SubnetMask];
+                    settingGateway = mparts[(int)mdiscover.Gateway];
+
+                    /*
+                    vsfDiscover.Cell(flexcpText, disRow.ModuleNumber, 1) = mParts(mDiscover.ModuleNumber)
+             vsfDiscover.Cell(flexcpText, disRow.ModuleType, 1) = ExpandModuleType(mParts(mDiscover.ModuleType))
+             vsfDiscover.Cell(flexcpText, disRow.SerialNumber, 1) = mParts(mDiscover.SerialNumber)
+             sHexMacAddress = GetHexMacAddress(mParts(mDiscover.MACAddress))
+'             GetHexMacAddress
+             vsfDiscover.Cell(flexcpText, disRow.MACAddress, 1) = sHexMacAddress 'mParts(mDiscover.MACAddress)
+             vsfDiscover.Cell(flexcpText, disRow.DHCPName, 1) = mParts(mDiscover.DHCPName)
+             vsfDiscover.Cell(flexcpText, disRow.IpAddress, 1) = mParts(mDiscover.IpAddress)
+             vsfDiscover.Cell(flexcpText, disRow.SubnetMask, 1) = mParts(mDiscover.SubnetMask)
+             vsfDiscover.Cell(flexcpText, disRow.Gateway, 1) = mParts(mDiscover.Gateway)
+             vsfDiscover.Cell(flexcpText, disRow.Report1, 1) = mParts(mDiscover.ReportIP1)
+             vsfDiscover.Cell(flexcpText, disRow.Report2, 1) = mParts(mDiscover.ReportIP2)
+             vsfDiscover.Cell(flexcpText, disRow.SwVersion, 1) = mParts(mDiscover.SwVersion)
+                    */
+
+
+                    // Ensure UI updates run on the main thread
+                    if (this.InvokeRequired)
+                    {
+                        this.BeginInvoke((Action)(() => buttonhandler()));
+                    }
+                    else
+                    {
+                        buttonhandler();
+                    }
                     break;
 
                 default:
                     string xxx = mparts[0];
-
                     break;
-
             }
 
         }
 
+        private string ExpandModuleType(string abbreviatedType)
+        {
+            if (string.IsNullOrEmpty(abbreviatedType))
+                return "?";
+
+            switch (abbreviatedType)
+            {
+                case "MZ": return "Morley ZXe";
+                case "4I": return "4 Input";
+                case "12": return "12 Input";
+                case "IO": return "4 I/P, 2 O/P";
+                case "AD": return "Advanced MX";
+                case "KE": return "Kentec";
+                case "DX": return "Morley DX";
+                case "NO": return "Notifier ID3000";
+                case "GE": return "Gent Fire";
+                case "CO": return "Coopers Fire/Easicheck";
+                case "PE": return "Notifier Pearl";
+                case "ZI": return "Ziton";
+                default: return "?";
+            }
+        }
+
+        private string GetHexMacAddress(string v)
+        {
+            return v;
+        }
+
+        private void buttonhandler()
+        {
+            pbdiscoveryimage.Visible = !editmode;
+
+            if (editmode)
+            {
+
+                tbmodulenumber.Text = settingModuleNumber;
+                tbmoduletype.Text = settingModuleType;
+                tbserialnumber.Text = settingSerialNumber;
+                tbmacaddress.Text = settingMACAddress;
+
+                tbdhcpname.Text = settingDHCPName;
+                tbipaddress.Text = settingIpAddress;
+                tbsubnetmask.Text = settingSubnetMask;
+                tbgateway.Text = settingGateway;
+                
+            }
+            pnleditoptions.Visible = editmode;
+
+        }
         public static List<string> SplitByteArrayToStrings(byte[] data, byte delimiter, Encoding encoding)
 
         {
@@ -435,7 +567,7 @@ namespace Drax360Client.Panels.RSM
         {
             int pCsum = 0;
             List<byte> toprocess = new List<byte>();
-            foreach(byte enc in bytesreceived)
+            foreach (byte enc in bytesreceived)
             {
 
                 // ignore stxhar or etxchar
@@ -447,7 +579,7 @@ namespace Drax360Client.Panels.RSM
                 toprocess.Add(enc);
             }
             byte[] sString = toprocess.ToArray();
-            
+
 
             int checksumChar = sString[sString.Length - 1];
 
@@ -472,10 +604,10 @@ namespace Drax360Client.Panels.RSM
                 bytecount++;
             }
 
-           
+
             int revcounter = 0;
 
-          
+
 
             byte[] result = new byte[masterlength];
             for (int i = masterlength - 1; i >= 0; i--)
@@ -490,7 +622,7 @@ namespace Drax360Client.Panels.RSM
                 throw new Exception("Checksum mismatch");
                 return new byte[0];
             }
-            return  result;
+            return result;
 
 
         }
@@ -537,7 +669,7 @@ namespace Drax360Client.Panels.RSM
                         if (decoded.Length >= 2 && decoded[0] == stxCHAR && decoded[decoded.Length - 1] == etxCHAR)
                         {
                             // MIKE TODO
-                           // decoded = descramblestring(decoded.Substring(1, decoded.Length - 2));
+                            // decoded = descramblestring(decoded.Substring(1, decoded.Length - 2));
                         }
 
                         MessageBox.Show($"Response from {res.RemoteEndPoint}: {decoded}", "Probe result", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -559,15 +691,33 @@ namespace Drax360Client.Panels.RSM
             // send a proper UDP message and await a response using the new async helper
             string msg = makeudpmessage("SET", optSetGet.setgetRESTART + sepCHAR + "554");
 
-           
+
             SendViaUDP(msg);
             // fire-and-forget the send (already wrapped inside the helper)
 
             // can use the below to await response in UI
             //_ = SendProbeAndAwaitResponseAsync(msg);
+
+            editmode = false;
+            buttonhandler();
         }
 
-  
+        private void frmdiscovery_Load(object sender, EventArgs e)
+        {
+            buttonhandler();
+
+            // Start listener using async ReceiveAsync loop on a background task
+            _cts = new CancellationTokenSource();
+            _listenerTask = Task.Run(() => StartListenerAsync(_cts.Token));
+        }
+
+        private void btstopeditmode_Click(object sender, EventArgs e)
+        {
+            editmode = !editmode;
+            buttonhandler();
+        }
+
+
 
         #region to convert later
         /*

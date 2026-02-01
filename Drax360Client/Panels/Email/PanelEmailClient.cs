@@ -6,13 +6,13 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Drax360Client.Panels.Email
+namespace DraxClient.Panels.Email
 {
     internal class PanelEmailClient
     {
         private readonly object _fileLock = new();
         private static readonly string FileName = "emailgroups.json";
-        private static readonly string StorageDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Drax360Client");
+        private static readonly string StorageDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DraxClient");
         private static readonly string StorageFilePath = Path.Combine(StorageDirectory, FileName);
 
         public List<Group> Groups = new List<Group>();

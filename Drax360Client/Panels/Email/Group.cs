@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Drax360Client.Panels.Email
+namespace DraxClient.Panels.Email
 {
     public class Group
     {

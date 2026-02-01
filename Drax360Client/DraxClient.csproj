@@ -7,7 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <FileVersion>1.0.0.12</FileVersion>
+    <FileVersion>1.0.0.14</FileVersion>
     <AssemblyName>DraxClient</AssemblyName>
   </PropertyGroup>
 

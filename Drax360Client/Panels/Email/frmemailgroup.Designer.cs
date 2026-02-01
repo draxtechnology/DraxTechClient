@@ -1,4 +1,4 @@
-﻿namespace Drax360Client.Panels.Email
+﻿namespace DraxClient.Panels.Email
 {
     partial class frmemailgroup
     {

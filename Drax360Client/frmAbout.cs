@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Drax360Client
+namespace DraxClient
 {
     public partial class frmAbout : Form
     {

@@ -1,4 +1,4 @@
-﻿namespace Drax360Client
+﻿namespace DraxClient
 {
     partial class frmprimary
     {

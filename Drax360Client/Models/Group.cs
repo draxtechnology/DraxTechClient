@@ -1,4 +1,6 @@
-using Drax360Client.Panels.Email;
+
+
+using DraxClient.Panels.Email;
 
 public class Group
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Drax360Client
+namespace DraxClient
 {
     public class HiddenAppContext : ApplicationContext
     {

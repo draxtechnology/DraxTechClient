@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace Drax360Client
+namespace DraxClient
 {
     internal static class Program
     {
@@ -13,8 +13,8 @@ namespace Drax360Client
             private frmprimary _mainForm;
             public HiddenAppContext()
             {
-                var _mainForm = new frmprimary();
-                //var _mainForm = new frmSetup();
+                //var _mainForm = new frmprimary();
+                var _mainForm = new frmSetup();
 
                 // Force the creation of the form's handle
                 var handle = _mainForm.Handle;
