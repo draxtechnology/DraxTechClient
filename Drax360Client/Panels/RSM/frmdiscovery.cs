@@ -419,9 +419,6 @@ namespace DraxClient.Panels.RSM
 
         private string ExpandModuleType(string abbreviatedType)
         {
-            if (string.IsNullOrEmpty(abbreviatedType))
-                return "?";
-
             switch (abbreviatedType)
             {
                 case "MZ": return "Morley ZXe";
