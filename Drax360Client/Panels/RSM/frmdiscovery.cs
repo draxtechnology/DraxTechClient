@@ -315,7 +315,9 @@ namespace Drax360Client.Panels.RSM
 
         private static void parseresult(byte[] descr)
         {
-            string[] mparts = SplitByteArrayToStrings(descr, (byte)199, Encoding.UTF8).ToArray();
+           string[] mparts = SplitByteArrayToStrings(descr, (byte)199, Encoding.UTF8).ToArray();
+
+    
 
             switch (mparts[0])
             {
@@ -428,77 +430,6 @@ namespace Drax360Client.Panels.RSM
             return sb.ToString();
         }
 
-        // Converted from VB: DescrambleString
-        private static string descramblestring(string sString)
-        {
-            if (string.IsNullOrEmpty(sString) || sString.Length < 2)
-            {
-                return string.Empty;
-            }
-
-            int pLs = sString.Length - 1; // exclude checksum char
-            if (pLs < 1)
-            {
-                return string.Empty;
-            }
-
-            // Save checksum (last char)
-            int checksumChar = sString[sString.Length -1];
-
-            // Descramble the string portion (excluding checksum)
-            var sb = new StringBuilder(pLs);
-            for (int n = 1; n <= pLs; n++)
-            {
-                if (n > 127)
-                {
-                    string mike = "x";
-                }
-                int enc = sString[n - 1];
-                int dec = enc - 3 - (n % 9) - ((n % 5) * 7);
-                
-
-                sb.Append((char)dec);
-            }
-
-            // Reverse to original order
-            char[] arr = sb.ToString().ToCharArray();
-            //Array.Reverse(arr);
-            //string result = new string(arr);
-
-            int counter = 0;
-            int pCsum = 0;
-
-            byte[] result = new byte[pLs];
-            for (int i = pLs-1; i >=0 ; i--)
-            {
-                result[counter] = (byte) sb[i];
-                counter++;
-            }
-
-            StringBuilder result2 = ReverseStringBuilder(sb);
-
-
-
-            // Finally, calc and confirm the checksum byte
-            for (int i = 0; i < result2.Length; i++)
-            {
-                pCsum += (byte)result2[i];
-            }
-
-            pCsum = (pCsum % 200) + 33;
-        //    if (pCsum != checksumChar)   // TODO
-        //    {
-        //        return string.Empty;
-        //    }
-
-            
-            byte[] asciiBytes = Encoding.ASCII.GetBytes(result2.ToString());
-            // Convert bytes back to ASCII string
-            //
-             return Encoding.ASCII.GetString(asciiBytes);
-
-
-        }
 
         private static byte[] descramblebyte(byte[] bytesreceived)
         {
@@ -531,18 +462,10 @@ namespace Drax360Client.Panels.RSM
             int bytecount = 0;
             for (int n = 0; n < masterlength; n++)
             {
-                if (n > 127)
-                {
-                    string mike = "x";
-                }
                 int enc = sString[n];
                 int m = n + 1;
                 int dec = enc - 3 - (m % 9) - ((m % 5) * 7);
 
-                if (dec == 199)
-                {
-                    string mike = "x";
-                }
                 sb[bytecount] = (byte)dec;
 
                 pCsum += dec;
@@ -550,24 +473,24 @@ namespace Drax360Client.Panels.RSM
             }
 
            
-            int counter = 0;
+            int revcounter = 0;
 
           
 
             byte[] result = new byte[masterlength];
             for (int i = masterlength - 1; i >= 0; i--)
             {
-                result[counter] = sb[i];
-                counter++;
+                result[revcounter] = sb[i];
+                revcounter++;
             }
 
             pCsum = (pCsum % 200) + 33;
-            //    if (pCsum != checksumChar)   // TODO
-            //    {
-            //        return string.Empty;
-            //    }
-
-            return result;
+            if (pCsum != checksumChar)   // TODO
+            {
+                throw new Exception("Checksum mismatch");
+                return new byte[0];
+            }
+            return  result;
 
 
         }
@@ -613,7 +536,8 @@ namespace Drax360Client.Panels.RSM
                         string decoded = asciiMessage;
                         if (decoded.Length >= 2 && decoded[0] == stxCHAR && decoded[decoded.Length - 1] == etxCHAR)
                         {
-                            decoded = descramblestring(decoded.Substring(1, decoded.Length - 2));
+                            // MIKE TODO
+                           // decoded = descramblestring(decoded.Substring(1, decoded.Length - 2));
                         }
 
                         MessageBox.Show($"Response from {res.RemoteEndPoint}: {decoded}", "Probe result", MessageBoxButtons.OK, MessageBoxIcon.Information);

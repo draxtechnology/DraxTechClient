@@ -11,8 +11,8 @@ namespace Drax360Client
     public partial class frmprimary : Form
     {
         #region constants
-        const string kpipenamesend = "Drax360PipeSend";
-        const string kpipenamereturn = "Drax360PipeReturn";
+        const string kpipenamesend = "DraxTechnologyPipeSend";
+        const string kpipenamereturn = "DraxTechnologyPipeReturn";
         const char kpipedelim = '|';
 
         #endregion
@@ -222,6 +222,9 @@ namespace Drax360Client
             sendcmd("ServiceRestart");
         }
 
-
+        private void btMute_Click(object sender, EventArgs e)
+        {
+            sendcmd("MuteBuzzers", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
+        }
     }
 }
