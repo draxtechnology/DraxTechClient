@@ -8,6 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <FileVersion>1.0.0.12</FileVersion>
+    <AssemblyName>DraxClient</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

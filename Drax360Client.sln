@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.11.35327.3
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Drax360Client", "Drax360Client\Drax360Client.csproj", "{FFE1AAA5-4EEA-46AC-8925-848BCE8AF37F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DraxClient", "Drax360Client\DraxClient.csproj", "{FFE1AAA5-4EEA-46AC-8925-848BCE8AF37F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Read AMX File", "Read AMX File\Read AMX File.csproj", "{76D5697B-B0D9-4C9B-BCAF-83A3450D9DE7}"
 EndProject

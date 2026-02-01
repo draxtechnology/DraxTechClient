@@ -61,6 +61,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -77,6 +85,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -183,7 +199,7 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Drax360 Client"
+        "ProductName" = "8:Drax Client"
         "ProductCode" = "8:{6080F80D-F7F5-4FC3-A539-003E15263A35}"
         "PackageCode" = "8:{AAECFBB2-23CD-4B65-B065-D338C76130BD}"
         "UpgradeCode" = "8:{BCDEEC3D-DD83-44D7-9AC4-783B277ECBC5}"
@@ -193,12 +209,12 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Drax360"
+        "Manufacturer" = "8:Drax"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Drax360 Client"
+        "Title" = "8:Drax Client"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Drax360"
+        "ARPCONTACT" = "8:Drax"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
@@ -762,7 +778,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_410FE2CFB1DA4AD9AF9929CC761D6F2E"
             {
-            "SourcePath" = "8:..\\Drax360Client\\obj\\Debug\\net8.0-windows\\Drax360Client.dll"
+            "SourcePath" = "8:..\\Drax360Client\\obj\\Debug\\net8.0-windows\\DraxClient.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B2A2C12F7DDE4AADAB2E3CB3B2FCFF75"
@@ -874,7 +890,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_92EB2B96C39E44D6B64CD7E2F4AE6643"
             {
-            "SourcePath" = "8:..\\Drax360Client\\obj\\Debug\\net8.0-windows\\Drax360Client.dll"
+            "SourcePath" = "8:..\\Drax360Client\\obj\\Debug\\net8.0-windows\\DraxClient.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B2A2C12F7DDE4AADAB2E3CB3B2FCFF75"
