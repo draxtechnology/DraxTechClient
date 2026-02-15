@@ -72,6 +72,7 @@
             tprsm = new TabPage();
             frmListen = new Button();
             btdiscovery = new Button();
+            btdevices = new Button();
             tabControl1.SuspendLayout();
             tpserialsettings.SuspendLayout();
             tpsettings.SuspendLayout();
@@ -511,6 +512,7 @@
             // 
             // tprsm
             // 
+            tprsm.Controls.Add(btdevices);
             tprsm.Controls.Add(frmListen);
             tprsm.Controls.Add(btdiscovery);
             tprsm.Location = new Point(4, 24);
@@ -539,6 +541,16 @@
             btdiscovery.Text = "Discovery";
             btdiscovery.UseVisualStyleBackColor = true;
             btdiscovery.Click += btdiscovery_Click;
+            // 
+            // btdevices
+            // 
+            btdevices.Location = new Point(126, 13);
+            btdevices.Name = "btdevices";
+            btdevices.Size = new Size(75, 23);
+            btdevices.TabIndex = 3;
+            btdevices.Text = "Devices";
+            btdevices.UseVisualStyleBackColor = true;
+            btdevices.Click += btdevices_Click;
             // 
             // frmSetup
             // 
@@ -615,5 +627,6 @@
         private TabPage tprsm;
         private Button btdiscovery;
         private Button frmListen;
+        private Button btdevices;
     }
 }

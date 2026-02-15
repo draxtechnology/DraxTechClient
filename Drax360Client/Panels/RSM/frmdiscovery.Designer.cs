@@ -261,6 +261,7 @@
             btsavechanges.TabIndex = 4;
             btsavechanges.Text = "Save Changes";
             btsavechanges.UseVisualStyleBackColor = true;
+            btsavechanges.Click += btsavechanges_Click;
             // 
             // frmdiscovery
             // 

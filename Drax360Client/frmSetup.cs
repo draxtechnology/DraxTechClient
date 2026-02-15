@@ -409,5 +409,10 @@ namespace DraxClient
             frmListen.ShowDialog();
         }
 
+        private void btdevices_Click(object sender, EventArgs e)
+        {
+            frmdevices fdev = new frmdevices();
+            fdev.ShowDialog();
+        }
     }
 }

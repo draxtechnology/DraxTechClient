@@ -153,7 +153,7 @@ namespace DraxClient.Panels.RSM
         private string settingIpAddress = string.Empty;
         private string settingSubnetMask = string.Empty;
         private string settingGateway = string.Empty;
-        
+
 
         #endregion
         // Message id counter used by MakeUDPMessage
@@ -170,7 +170,7 @@ namespace DraxClient.Panels.RSM
         {
             InitializeComponent();
 
-           
+
 
         }
 
@@ -366,15 +366,15 @@ namespace DraxClient.Panels.RSM
                 case "DIS":
                     if (editmode)
                     {
-                       return;
+                        return;
                     }
 
                     editmode = true;
 
 
-                    settingModuleNumber = mparts[(int) mdiscover.ModuleNumber];
+                    settingModuleNumber = mparts[(int)mdiscover.ModuleNumber];
                     settingModuleType = ExpandModuleType(mparts[(int)mdiscover.ModuleType]);
-                    settingSerialNumber = mparts[(int) mdiscover.SerialNumber];
+                    settingSerialNumber = mparts[(int)mdiscover.SerialNumber];
                     settingMACAddress = GetHexMacAddress(mparts[(int)mdiscover.MACAddress]);
 
                     settingDHCPName = "";// mparts[(int)mdiscover.DHCPName];
@@ -458,7 +458,7 @@ namespace DraxClient.Panels.RSM
                 tbipaddress.Text = settingIpAddress;
                 tbsubnetmask.Text = settingSubnetMask;
                 tbgateway.Text = settingGateway;
-                
+
             }
             pnleditoptions.Visible = editmode;
 
@@ -712,6 +712,11 @@ namespace DraxClient.Panels.RSM
         {
             editmode = !editmode;
             buttonhandler();
+        }
+
+        private void btsavechanges_Click(object sender, EventArgs e)
+        {
+
         }
 
 
