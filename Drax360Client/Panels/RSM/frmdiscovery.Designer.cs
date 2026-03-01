@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmdiscovery));
             pbdiscoveryimage = new PictureBox();
-            bttesttop = new Button();
+            btcancel = new Button();
             lbdhcpname = new Label();
             tbdhcpname = new TextBox();
             pnleditoptions = new Panel();
@@ -64,15 +64,15 @@
             pbdiscoveryimage.TabIndex = 0;
             pbdiscoveryimage.TabStop = false;
             // 
-            // bttesttop
+            // btcancel
             // 
-            bttesttop.Location = new Point(0, 270);
-            bttesttop.Name = "bttesttop";
-            bttesttop.Size = new Size(113, 40);
-            bttesttop.TabIndex = 1;
-            bttesttop.Text = "Cancel";
-            bttesttop.UseVisualStyleBackColor = true;
-            bttesttop.Click += bttesttop_Click;
+            btcancel.Location = new Point(0, 270);
+            btcancel.Name = "btcancel";
+            btcancel.Size = new Size(113, 40);
+            btcancel.TabIndex = 1;
+            btcancel.Text = "Cancel";
+            btcancel.UseVisualStyleBackColor = true;
+            btcancel.Click += btcancel_Click;
             // 
             // lbdhcpname
             // 
@@ -88,6 +88,7 @@
             // tbdhcpname
             // 
             tbdhcpname.Location = new Point(133, 128);
+            tbdhcpname.MaxLength = 24;
             tbdhcpname.Name = "tbdhcpname";
             tbdhcpname.Size = new Size(187, 23);
             tbdhcpname.TabIndex = 3;
@@ -111,7 +112,7 @@
             pnleditoptions.Controls.Add(btrestoretodefaults);
             pnleditoptions.Controls.Add(btsavechanges);
             pnleditoptions.Controls.Add(lbdhcpname);
-            pnleditoptions.Controls.Add(bttesttop);
+            pnleditoptions.Controls.Add(btcancel);
             pnleditoptions.Controls.Add(tbdhcpname);
             pnleditoptions.Location = new Point(21, 12);
             pnleditoptions.Name = "pnleditoptions";
@@ -133,6 +134,7 @@
             // 
             tbmacaddress.Location = new Point(133, 96);
             tbmacaddress.Name = "tbmacaddress";
+            tbmacaddress.ReadOnly = true;
             tbmacaddress.Size = new Size(187, 23);
             tbmacaddress.TabIndex = 19;
             // 
@@ -169,6 +171,7 @@
             // 
             tbmoduletype.Location = new Point(133, 34);
             tbmoduletype.Name = "tbmoduletype";
+            tbmoduletype.ReadOnly = true;
             tbmoduletype.Size = new Size(187, 23);
             tbmoduletype.TabIndex = 15;
             // 
@@ -252,6 +255,7 @@
             btrestoretodefaults.TabIndex = 5;
             btrestoretodefaults.Text = "Restore To Defaults";
             btrestoretodefaults.UseVisualStyleBackColor = true;
+            btrestoretodefaults.Click += btrestoretodefaults_Click;
             // 
             // btsavechanges
             // 
@@ -282,7 +286,7 @@
         #endregion
 
         private PictureBox pbdiscoveryimage;
-        private Button bttesttop;
+        private Button btcancel;
         private Label lbdhcpname;
         private TextBox tbdhcpname;
         private Panel pnleditoptions;

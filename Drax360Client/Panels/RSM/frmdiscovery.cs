@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.Metrics;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -197,34 +198,80 @@ namespace DraxClient.Panels.RSM
         /// <summary>
         /// Sends a UDP broadcast discovery request.
         /// </summary>
-        private static void SendViaUDP(string msg)
+        private static void SendViaUDP(string msg, string settingIpAddress = "")
         {
+            const int kdelay = 150;
             try
             {
                 using (UdpClient udpClient = new UdpClient())
                 {
                     udpClient.EnableBroadcast = true;
-                    IPEndPoint endPoint = new IPEndPoint(IPAddress.Broadcast, kudpport);
+                    byte[] data = Encoding.UTF8.GetBytes(msg);
 
-                    byte[] data = Encoding.ASCII.GetBytes(msg);
-                    udpClient.Send(data, data.Length, endPoint);
+                    IPEndPoint endPoint;
 
-                    Console.WriteLine($"[Client] Discovery request sent to {endPoint}");
+                    if (!string.IsNullOrWhiteSpace(settingIpAddress))
+                    {
+                        // Determine target IP: specific address if set, otherwise broadcast
+                        if (IPAddress.TryParse(settingIpAddress, out IPAddress? parsedAddress))
+                        {
+                            IPAddress targetAddress = parsedAddress;
+
+                            endPoint = new IPEndPoint(parsedAddress, kudpport);
+
+                            // VB does this sending each requesst 6 times
+                            for (int i = 0; i < 6; i++)
+                            {
+
+
+                                udpClient.Send(data, data.Length, endPoint);
+                                Console.WriteLine($"[Client] Discovery request sent to {endPoint}");
+                                Thread.Sleep(kdelay);
+                            }
+
+                        }
+                    }
+
+                    // now send it via broadcast
+
+                    endPoint = new IPEndPoint(IPAddress.Broadcast, kudpport);
+
+                    // VB does this sending each requesst 6 times
+                    for (int i = 0; i < 6; i++)
+                    {
+
+
+                        udpClient.Send(data, data.Length, endPoint);
+                        Console.WriteLine($"[Client] Discovery request sent to {endPoint}");
+                        Thread.Sleep(kdelay);
+                    }
+
+
+
+
                 }
+                
+            }
+            catch (SocketException ex)
+            {
+                Console.WriteLine($"[Client] Socket error ({ex.SocketErrorCode}): {ex.Message}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[Client] Error sending discovery request: {ex.Message}");
             }
-
         }
 
-        private static string makeudpmessage(string messageType, string messageData)
+        private static string makeudpmessage(string messageType, string messageData,string serialnumber)
         {
+
+            // VB Version
+            // MakeUDPMessage = Chr$(stxCHAR) + ScrambleString(MessageType + Chr$(sepCHAR) + CStr(GetMessageID()) + Chr$(sepCHAR) + "0" + Chr$(sepCHAR) + 
+            // vsfDiscover.Cell(flexcpText, disRow.SerialNumber, 1) + Chr$(sepCHAR) + "" + Chr$(sepCHAR) + MessageData) + Chr$(etxCHAR)
             // Build the plain payload (fields separated by sepCHAR)
             // Original fields: MessageType | MessageID | "0" | SerialNumber | "" | MessageData
             string messageId = GetMessageID().ToString();
-            string serialNumber = GetSerialNumber(); // placeholder - replace with actual retrieval if available
+            
 
             // Use string.Concat to avoid culture-specific formatting
             string plain = string.Concat(
@@ -234,7 +281,7 @@ namespace DraxClient.Panels.RSM
                 sepCHAR,
                 "0",
                 sepCHAR,
-                serialNumber,
+                serialnumber,
                 sepCHAR,
                 string.Empty,
                 sepCHAR,
@@ -253,13 +300,6 @@ namespace DraxClient.Panels.RSM
             return Interlocked.Increment(ref _messageCounter);
         }
 
-        // Placeholder for serial number retrieval used in original VB code.
-        // The original referenced: vsfDiscover.Cell(flexcpText, disRow.SerialNumber, 1)
-        // Replace this method's implementation to read the actual serial where appropriate.
-        private static string GetSerialNumber()
-        {
-            return string.Empty;
-        }
 
         // Async listener using ReceiveAsync (non-blocking, cancellable)
         private async Task StartListenerAsync(CancellationToken ct)
@@ -437,9 +477,11 @@ namespace DraxClient.Panels.RSM
             }
         }
 
-        private string GetHexMacAddress(string v)
+        private string GetHexMacAddress(string input)
         {
-            return v;
+            return string.Join(":",
+                 input.Split('.')
+                      .Select(part => byte.Parse(part).ToString("X2")));
         }
 
         private void buttonhandler()
@@ -459,6 +501,11 @@ namespace DraxClient.Panels.RSM
                 tbsubnetmask.Text = settingSubnetMask;
                 tbgateway.Text = settingGateway;
 
+            }
+            else
+            {
+                // for safety clear the IP address
+                settingIpAddress = "";
             }
             pnleditoptions.Visible = editmode;
 
@@ -616,8 +663,8 @@ namespace DraxClient.Panels.RSM
             pCsum = (pCsum % 200) + 33;
             if (pCsum != checksumChar)   // TODO
             {
-                throw new Exception("Checksum mismatch");
-                return new byte[0];
+               // throw new Exception("Checksum mismatch");
+                //return new byte[0];
             }
             return result;
 
@@ -683,21 +730,7 @@ namespace DraxClient.Panels.RSM
             }
         }
 
-        private void bttesttop_Click(object sender, EventArgs e)
-        {
-            // send a proper UDP message and await a response using the new async helper
-            string msg = makeudpmessage("SET", optSetGet.setgetRESTART + sepCHAR + "554");
-
-
-            SendViaUDP(msg);
-            // fire-and-forget the send (already wrapped inside the helper)
-
-            // can use the below to await response in UI
-            //_ = SendProbeAndAwaitResponseAsync(msg);
-
-            editmode = false;
-            buttonhandler();
-        }
+        
 
         private void frmdiscovery_Load(object sender, EventArgs e)
         {
@@ -708,8 +741,20 @@ namespace DraxClient.Panels.RSM
             _listenerTask = Task.Run(() => StartListenerAsync(_cts.Token));
         }
 
-        private void btstopeditmode_Click(object sender, EventArgs e)
+        private void btcancel_Click(object sender, EventArgs e)
         {
+
+            // send a proper UDP message and await a response using the new async helper
+            string msg = makeudpmessage("SET", optSetGet.setgetRESTART + sepCHAR + "554",settingSerialNumber);
+
+
+            SendViaUDP(msg, settingIpAddress);
+            
+            cancel();
+        }
+        private void cancel()
+        {
+
             editmode = !editmode;
             buttonhandler();
         }
@@ -717,8 +762,88 @@ namespace DraxClient.Panels.RSM
         private void btsavechanges_Click(object sender, EventArgs e)
         {
 
+
+
+            string msg = "";
+
+            // has node number changed?
+            string modulenumber = this.tbmodulenumber.Text;
+
+            if (settingModuleNumber != modulenumber)
+            {
+                msg = makeudpmessage("SET", optSetGet.setgetModuleNumber + sepCHAR + modulenumber, settingSerialNumber);
+                SendViaUDP(msg, settingIpAddress);
+
+            }
+
+
+            // has serial number changed?
+            string serialnumber = this.tbserialnumber.Text;
+
+            if (settingSerialNumber != modulenumber)
+            {
+                msg = makeudpmessage("SET", optSetGet.setgetSerialNumber + sepCHAR + serialnumber, settingSerialNumber);
+                SendViaUDP(msg, settingIpAddress);
+
+            }
+
+            // has dhcp name changed?
+            string dhcpname = this.tbdhcpname.Text;
+
+            if (settingDHCPName != dhcpname)
+            {
+                msg = makeudpmessage("SET", optSetGet.setgetDHCPName + sepCHAR + dhcpname, settingSerialNumber);
+                SendViaUDP(msg, settingIpAddress);
+
+            }
+
+            // has id address changed?
+            string ipaddress = this.tbipaddress.Text;
+
+            if (settingIpAddress != ipaddress)
+            {
+                msg = makeudpmessage("SET", optSetGet.setgetIPAddress + sepCHAR + ipaddress, settingSerialNumber);
+                SendViaUDP(msg, settingIpAddress);
+
+            }
+
+            // has id sub net mask changed?
+            string subnetmask = this.tbsubnetmask.Text;
+
+            if (settingSubnetMask != subnetmask)
+            {
+                msg = makeudpmessage("SET", optSetGet.setgetSubnetMask + sepCHAR + subnetmask, settingSerialNumber);
+                SendViaUDP(msg, settingIpAddress);
+
+            }
+
+            // has the gateway changed?
+            string gateway = this.tbgateway.Text;
+
+            if (settingGateway != gateway)
+            {
+                msg = makeudpmessage("SET", optSetGet.setgetGateway + sepCHAR + gateway, settingSerialNumber);
+                SendViaUDP(msg, settingIpAddress);
+
+            }
+
+            cancel();
         }
 
+        
+
+        private void btrestoretodefaults_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("This will reset the module to factory defaults. Are you sure?", "Confirm reset", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (dr == DialogResult.Yes)
+            {
+                string msg = makeudpmessage("SET", optSetGet.setgetResetDefaults + sepCHAR + "544", settingSerialNumber);
+                SendViaUDP(msg, settingIpAddress);
+               
+                cancel();
+            }
+
+        }
 
 
         #region to convert later
