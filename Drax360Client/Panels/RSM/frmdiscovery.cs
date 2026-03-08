@@ -26,32 +26,32 @@ namespace DraxClient.Panels.RSM
     public enum optSetGet
     {
         setgetModuleNumber = 1,
-        setgetDHCPName,
-        setgetIPAddress,
-        setgetSubnetMask,
-        setgetGateway,
-        setgetReport1,
-        setgetReport2,
-        setgetReport3,
-        setgetReport4,
-        setgetName1,
-        setgetName2,
-        setgetName3,
-        setgetName4,
-        setgetPort,
-        setgetPortlistening,
-        setgetPortUDP,
-        setgetConnectionTimeout,
-        setgetLicense,           // must meet certain requirements
-        setgetPanelNumbers,      // string of 8 values for panels 1-8
-        setgetEngineerTimeout,
-        setgetDiscoveryTimeout,
-        setgetAMXPollInterval,
-        setgetSerialNumber,      // Must work in a certain way to set
-        setgetRSMOptions,
-        setGetRSMActivated,      // non-zero once the module has been online; activation logic described in original comment
-        setgetSoftwareVersion,
-        setgetReverseInputs,     // set is done with a CMD, but response is a GAK
+        setgetDHCPName = 2 ,
+        setgetIPAddress = 3 ,
+        setgetSubnetMask = 4,
+        setgetGateway = 5,
+        setgetReport1 = 6,
+        setgetReport2 = 7,
+        setgetReport3 = 8,
+        setgetReport4 = 9 ,
+        setgetName1 = 10,
+        setgetName2 = 11,
+        setgetName3 = 12,
+        setgetName4 = 13,
+        setgetPort = 14,
+        setgetPortlistening = 15,
+        setgetPortUDP = 16,
+        setgetConnectionTimeout = 17,
+        setgetLicense = 18,           // must meet certain requirements
+        setgetPanelNumbers = 19,      // string of 8 values for panels 1-8
+        setgetEngineerTimeout = 20,
+        setgetDiscoveryTimeout = 21,
+        setgetAMXPollInterval = 22,
+        setgetSerialNumber = 23,      // Must work in a certain way to set
+        setgetRSMOptions = 24,
+        setGetRSMActivated = 25,      // non-zero once the module has been online; activation logic described in original comment
+        setgetSoftwareVersion = 26,
+        setgetReverseInputs = 27,     // set is done with a CMD, but response is a GAK
 
         setgetResetDefaults = 198,   // needs a parameter of "544" for it to be actioned
         setgetRESTART = 199         // needs a parameter of "544" for it to be actioned
@@ -245,13 +245,9 @@ namespace DraxClient.Panels.RSM
                         Console.WriteLine($"[Client] Discovery request sent to {endPoint}");
                         Thread.Sleep(kdelay);
                     }
-
-
-
-
                 }
-                
             }
+
             catch (SocketException ex)
             {
                 Console.WriteLine($"[Client] Socket error ({ex.SocketErrorCode}): {ex.Message}");
@@ -287,6 +283,13 @@ namespace DraxClient.Panels.RSM
                 sepCHAR,
                 messageData
             );
+            /*
+              VB at the top example:
+              SET Ç 13 Ç 0 Ç C12860CE34 ÇÇ 3Ç 192.168.3.198
+              SET Ç 4  Ç 0 Ç C1A0275FE3 ÇÇ 3Ç 192.168.3.197
+            */
+
+
 
             string scrambled = scramblestring(plain);
 
@@ -745,7 +748,7 @@ namespace DraxClient.Panels.RSM
         {
 
             // send a proper UDP message and await a response using the new async helper
-            string msg = makeudpmessage("SET", optSetGet.setgetRESTART + sepCHAR + "554",settingSerialNumber);
+            string msg = makeudpmessage("SET", (int) optSetGet.setgetRESTART + sepCHAR + "554",settingSerialNumber);
 
 
             SendViaUDP(msg, settingIpAddress);
@@ -771,7 +774,7 @@ namespace DraxClient.Panels.RSM
 
             if (settingModuleNumber != modulenumber)
             {
-                msg = makeudpmessage("SET", optSetGet.setgetModuleNumber + sepCHAR + modulenumber, settingSerialNumber);
+                msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetModuleNumber , sepCHAR , modulenumber), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
 
             }
@@ -780,9 +783,9 @@ namespace DraxClient.Panels.RSM
             // has serial number changed?
             string serialnumber = this.tbserialnumber.Text;
 
-            if (settingSerialNumber != modulenumber)
+            if (settingSerialNumber != serialnumber)
             {
-                msg = makeudpmessage("SET", optSetGet.setgetSerialNumber + sepCHAR + serialnumber, settingSerialNumber);
+                msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetSerialNumber , sepCHAR , serialnumber), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
 
             }
@@ -792,7 +795,7 @@ namespace DraxClient.Panels.RSM
 
             if (settingDHCPName != dhcpname)
             {
-                msg = makeudpmessage("SET", optSetGet.setgetDHCPName + sepCHAR + dhcpname, settingSerialNumber);
+                msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetDHCPName, sepCHAR , dhcpname), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
 
             }
@@ -802,7 +805,8 @@ namespace DraxClient.Panels.RSM
 
             if (settingIpAddress != ipaddress)
             {
-                msg = makeudpmessage("SET", optSetGet.setgetIPAddress + sepCHAR + ipaddress, settingSerialNumber);
+                
+                msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetIPAddress, sepCHAR, ipaddress), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
 
             }
@@ -812,7 +816,7 @@ namespace DraxClient.Panels.RSM
 
             if (settingSubnetMask != subnetmask)
             {
-                msg = makeudpmessage("SET", optSetGet.setgetSubnetMask + sepCHAR + subnetmask, settingSerialNumber);
+                msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetSubnetMask , sepCHAR , subnetmask), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
 
             }
@@ -822,7 +826,7 @@ namespace DraxClient.Panels.RSM
 
             if (settingGateway != gateway)
             {
-                msg = makeudpmessage("SET", optSetGet.setgetGateway + sepCHAR + gateway, settingSerialNumber);
+                msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetGateway , sepCHAR , gateway), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
 
             }
@@ -837,7 +841,7 @@ namespace DraxClient.Panels.RSM
             DialogResult dr = MessageBox.Show("This will reset the module to factory defaults. Are you sure?", "Confirm reset", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dr == DialogResult.Yes)
             {
-                string msg = makeudpmessage("SET", optSetGet.setgetResetDefaults + sepCHAR + "544", settingSerialNumber);
+                string msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetResetDefaults , sepCHAR , "544"), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
                
                 cancel();
