@@ -195,59 +195,58 @@ namespace DraxClient.Panels.RSM
             base.OnFormClosing(e);
         }
 
+        // Helper: map string to single-byte-per-char (VB/legacy behaviour)
+        private static byte[] MessageToRawBytes(string msg)
+        {
+            if (string.IsNullOrEmpty(msg)) return Array.Empty<byte>();
+            return msg.Select(c => (byte)c).ToArray();
+        }
+
+        // Helper: convert raw bytes to a single-byte-per-char string for logging/inspection
+        private static string RawBytesToString(byte[] bytes)
+        {
+            if (bytes == null || bytes.Length == 0) return string.Empty;
+            return new string(bytes.Select(b => (char)b).ToArray());
+        }
+
         /// <summary>
         /// Sends a UDP broadcast discovery request.
+        /// Uses single-byte mapping for chars to preserve legacy VB message format.
         /// </summary>
         private static void SendViaUDP(string msg, string settingIpAddress = "")
         {
             const int kdelay = 150;
             try
             {
+                byte[] data = MessageToRawBytes(msg);
+
                 using (UdpClient udpClient = new UdpClient())
                 {
                     udpClient.EnableBroadcast = true;
-                    byte[] data = Encoding.UTF8.GetBytes(msg);
 
-                    IPEndPoint endPoint;
-
-                    if (!string.IsNullOrWhiteSpace(settingIpAddress))
+                    // If specific IP provided, try sending direct first (6 times as VB)
+                    if (!string.IsNullOrWhiteSpace(settingIpAddress) &&
+                        IPAddress.TryParse(settingIpAddress, out IPAddress? parsedAddress))
                     {
-                        // Determine target IP: specific address if set, otherwise broadcast
-                        if (IPAddress.TryParse(settingIpAddress, out IPAddress? parsedAddress))
+                        var endPoint = new IPEndPoint(parsedAddress, kudpport);
+                        for (int i = 0; i < 6; i++)
                         {
-                            IPAddress targetAddress = parsedAddress;
-
-                            endPoint = new IPEndPoint(parsedAddress, kudpport);
-
-                            // VB does this sending each requesst 6 times
-                            for (int i = 0; i < 6; i++)
-                            {
-
-
-                                udpClient.Send(data, data.Length, endPoint);
-                                Console.WriteLine($"[Client] Discovery request sent to {endPoint}");
-                                Thread.Sleep(kdelay);
-                            }
-
+                            udpClient.Send(data, data.Length, endPoint);
+                            Console.WriteLine($"[Client] Discovery request sent to {endPoint}");
+                            Thread.Sleep(kdelay);
                         }
                     }
 
-                    // now send it via broadcast
-
-                    endPoint = new IPEndPoint(IPAddress.Broadcast, kudpport);
-
-                    // VB does this sending each requesst 6 times
+                    // Always also broadcast (matches original behavior)
+                    var broadcastEP = new IPEndPoint(IPAddress.Broadcast, kudpport);
                     for (int i = 0; i < 6; i++)
                     {
-
-
-                        udpClient.Send(data, data.Length, endPoint);
-                        Console.WriteLine($"[Client] Discovery request sent to {endPoint}");
+                        udpClient.Send(data, data.Length, broadcastEP);
+                        Console.WriteLine($"[Client] Discovery request sent to {broadcastEP}");
                         Thread.Sleep(kdelay);
                     }
                 }
             }
-
             catch (SocketException ex)
             {
                 Console.WriteLine($"[Client] Socket error ({ex.SocketErrorCode}): {ex.Message}");
@@ -336,38 +335,21 @@ namespace DraxClient.Panels.RSM
                                 Console.WriteLine($"[Server] Packet from {remoteEP} ({receivedData.Length} bytes) RAW: {BitConverter.ToString(receivedData)}");
 
                                 byte[] descr = descramblebyte(receivedData);
-                                Console.WriteLine($"[Server] Descrambled: '{descr}'");
+                                Console.WriteLine($"[Server] Descrambled (raw): {BitConverter.ToString(descr)}");
+                                Console.WriteLine($"[Server] Descrambled (text): '{RawBytesToString(descr)}'");
+
                                 if (descr.Length > 0)
                                 {
                                     parseresult(descr);
 
-
-
-                                    // Try ASCII first (matches SendViaUDP), fallback to UTF8 if different
+                                    // Try ASCII first (matches old code), fallback to Latin1 single-byte mapping for inspection
                                     string asciiMessage = Encoding.ASCII.GetString(receivedData);
+                                    string latin1 = RawBytesToString(receivedData);
                                     Console.WriteLine($"[Server] ASCII decode: '{asciiMessage}'");
-
-                                    // If message is wrapped with STX/ETX try to descramble and display inner payload
-                                    /*if (!string.IsNullOrEmpty(asciiMessage) && asciiMessage.Length >= 2 && asciiMessage[0] == stxCHAR && asciiMessage[asciiMessage.Length - 1] == etxCHAR)
+                                    if (latin1 != asciiMessage)
                                     {
-                                        string inner = asciiMessage.Substring(1, asciiMessage.Length - 2);
-                                        Console.WriteLine($"[Server] Detected STX/ETX. Inner (scrambled) RAW: {BitConverter.ToString(Encoding.ASCII.GetBytes(inner))}");
-                                        string descr = descramblestring(inner);
-                                        Console.WriteLine($"[Server] Descrambled: '{descr}'");
-                                        if (!string.IsNullOrEmpty(descr)) {
-                                            parseresult(descr);
-                                        }
-
+                                        Console.WriteLine($"[Server] Latin1 decode: '{latin1}'");
                                     }
-                                    else
-                                    {
-                                        // Also try UTF8 decode to be safe
-                                        string utf8Message = Encoding.UTF8.GetString(receivedData);
-                                        if (utf8Message != asciiMessage)
-                                        {
-                                            Console.WriteLine($"[Server] UTF8 decode: '{utf8Message}'");
-                                        }
-                                    }*/
                                 }
                                 else
                                 {
@@ -701,7 +683,8 @@ namespace DraxClient.Panels.RSM
                 {
                     udpClient.EnableBroadcast = true;
                     var ep = new IPEndPoint(IPAddress.Broadcast, kudpport);
-                    byte[] bytes = Encoding.ASCII.GetBytes(probeMessage);
+
+                    byte[] bytes = MessageToRawBytes(probeMessage);
 
                     // send probe
                     await udpClient.SendAsync(bytes, bytes.Length, ep);
@@ -711,12 +694,23 @@ namespace DraxClient.Panels.RSM
                     if (await Task.WhenAny(receiveTask, Task.Delay(timeoutMs)) == receiveTask)
                     {
                         var res = receiveTask.Result;
-                        string asciiMessage = Encoding.ASCII.GetString(res.Buffer);
-                        string decoded = asciiMessage;
+
+                        // Convert raw reply bytes to single-byte string for inspection
+                        string raw = RawBytesToString(res.Buffer);
+                        string decoded = raw;
+
+                        // If message wrapped with STX/ETX try descramble path
                         if (decoded.Length >= 2 && decoded[0] == stxCHAR && decoded[decoded.Length - 1] == etxCHAR)
                         {
-                            // MIKE TODO
-                            // decoded = descramblestring(decoded.Substring(1, decoded.Length - 2));
+                            try
+                            {
+                                byte[] descr = descramblebyte(res.Buffer);
+                                decoded = RawBytesToString(descr);
+                            }
+                            catch (Exception ex)
+                            {
+                                decoded = $"<descramble failed: {ex.Message}>";
+                            }
                         }
 
                         MessageBox.Show($"Response from {res.RemoteEndPoint}: {decoded}", "Probe result", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -733,7 +727,7 @@ namespace DraxClient.Panels.RSM
             }
         }
 
-        
+
 
         private void frmdiscovery_Load(object sender, EventArgs e)
         {
@@ -748,7 +742,7 @@ namespace DraxClient.Panels.RSM
         {
 
             // send a proper UDP message and await a response using the new async helper
-            string msg = makeudpmessage("SET", (int) optSetGet.setgetRESTART + sepCHAR + "554",settingSerialNumber);
+            string msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetRESTART , sepCHAR , "554"),settingSerialNumber);
 
 
             SendViaUDP(msg, settingIpAddress);
@@ -834,7 +828,7 @@ namespace DraxClient.Panels.RSM
             cancel();
         }
 
-        
+
 
         private void btrestoretodefaults_Click(object sender, EventArgs e)
         {
