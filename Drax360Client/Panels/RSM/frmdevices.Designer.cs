@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmdevices));
             btdiscover = new Button();
             btdelete = new Button();
             btedit = new Button();
@@ -97,6 +98,7 @@
             Controls.Add(btdelete);
             Controls.Add(btedit);
             Controls.Add(dgdevices);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmdevices";
             Text = "RSM Devices";
             ((System.ComponentModel.ISupportInitialize)dgdevices).EndInit();

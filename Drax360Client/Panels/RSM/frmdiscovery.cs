@@ -154,7 +154,9 @@ namespace DraxClient.Panels.RSM
         private string settingIpAddress = string.Empty;
         private string settingSubnetMask = string.Empty;
         private string settingGateway = string.Empty;
-
+        private string settingReporting1 = string.Empty;
+        private string settingReporting2 = string.Empty;
+        private string settingSoftwareVer = string.Empty;
 
         #endregion
         // Message id counter used by MakeUDPMessage
@@ -170,9 +172,6 @@ namespace DraxClient.Panels.RSM
         public frmdiscovery()
         {
             InitializeComponent();
-
-
-
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -257,7 +256,7 @@ namespace DraxClient.Panels.RSM
             }
         }
 
-        private static string makeudpmessage(string messageType, string messageData,string serialnumber)
+        private static string makeudpmessage(string messageType, string messageData, string serialnumber)
         {
 
             // VB Version
@@ -266,7 +265,7 @@ namespace DraxClient.Panels.RSM
             // Build the plain payload (fields separated by sepCHAR)
             // Original fields: MessageType | MessageID | "0" | SerialNumber | "" | MessageData
             string messageId = GetMessageID().ToString();
-            
+
 
             // Use string.Concat to avoid culture-specific formatting
             string plain = string.Concat(
@@ -406,6 +405,9 @@ namespace DraxClient.Panels.RSM
                     settingIpAddress = mparts[(int)mdiscover.IpAddress];
                     settingSubnetMask = mparts[(int)mdiscover.SubnetMask];
                     settingGateway = mparts[(int)mdiscover.Gateway];
+                    settingReporting1 = mparts[(int)mdiscover.ReportIP1];
+                    settingReporting2 = mparts[(int)mdiscover.ReportIP2];
+                    settingSoftwareVer = mparts[(int)mdiscover.SwVersion];
 
                     /*
                     vsfDiscover.Cell(flexcpText, disRow.ModuleNumber, 1) = mParts(mDiscover.ModuleNumber)
@@ -485,6 +487,9 @@ namespace DraxClient.Panels.RSM
                 tbipaddress.Text = settingIpAddress;
                 tbsubnetmask.Text = settingSubnetMask;
                 tbgateway.Text = settingGateway;
+                tbreportto1.Text = settingReporting1;
+                tbreportto2.Text = settingReporting2;
+                tbsoftwarever.Text = settingSoftwareVer;
 
             }
             else
@@ -648,7 +653,7 @@ namespace DraxClient.Panels.RSM
             pCsum = (pCsum % 200) + 33;
             if (pCsum != checksumChar)   // TODO
             {
-               // throw new Exception("Checksum mismatch");
+                // throw new Exception("Checksum mismatch");
                 //return new byte[0];
             }
             return result;
@@ -736,17 +741,21 @@ namespace DraxClient.Panels.RSM
             // Start listener using async ReceiveAsync loop on a background task
             _cts = new CancellationTokenSource();
             _listenerTask = Task.Run(() => StartListenerAsync(_cts.Token));
+
+            progressBar1.Style = ProgressBarStyle.Marquee;
+            progressBar1.MarqueeAnimationSpeed = 30;
+            progressBar1.Visible = false;
         }
 
         private void btcancel_Click(object sender, EventArgs e)
         {
 
             // send a proper UDP message and await a response using the new async helper
-            string msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetRESTART , sepCHAR , "554"),settingSerialNumber);
+            string msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetRESTART, sepCHAR, "554"), settingSerialNumber);
 
 
             SendViaUDP(msg, settingIpAddress);
-            
+
             cancel();
         }
         private void cancel()
@@ -758,30 +767,26 @@ namespace DraxClient.Panels.RSM
 
         private void btsavechanges_Click(object sender, EventArgs e)
         {
-
-
-
             string msg = "";
+            Cursor.Current = Cursors.WaitCursor;
+            progressBar1.Visible = true;
 
             // has node number changed?
             string modulenumber = this.tbmodulenumber.Text;
 
             if (settingModuleNumber != modulenumber)
             {
-                msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetModuleNumber , sepCHAR , modulenumber), settingSerialNumber);
+                msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetModuleNumber, sepCHAR, modulenumber), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
-
             }
-
 
             // has serial number changed?
             string serialnumber = this.tbserialnumber.Text;
 
             if (settingSerialNumber != serialnumber)
             {
-                msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetSerialNumber , sepCHAR , serialnumber), settingSerialNumber);
+                msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetSerialNumber, sepCHAR, serialnumber), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
-
             }
 
             // has dhcp name changed?
@@ -789,20 +794,17 @@ namespace DraxClient.Panels.RSM
 
             if (settingDHCPName != dhcpname)
             {
-                msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetDHCPName, sepCHAR , dhcpname), settingSerialNumber);
+                msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetDHCPName, sepCHAR, dhcpname), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
-
             }
 
-            // has id address changed?
+            // has ip address changed?
             string ipaddress = this.tbipaddress.Text;
 
             if (settingIpAddress != ipaddress)
             {
-                
-                msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetIPAddress, sepCHAR, ipaddress), settingSerialNumber);
+                msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetIPAddress, sepCHAR, ipaddress), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
-
             }
 
             // has id sub net mask changed?
@@ -810,9 +812,8 @@ namespace DraxClient.Panels.RSM
 
             if (settingSubnetMask != subnetmask)
             {
-                msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetSubnetMask , sepCHAR , subnetmask), settingSerialNumber);
+                msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetSubnetMask, sepCHAR, subnetmask), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
-
             }
 
             // has the gateway changed?
@@ -820,29 +821,55 @@ namespace DraxClient.Panels.RSM
 
             if (settingGateway != gateway)
             {
-                msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetGateway , sepCHAR , gateway), settingSerialNumber);
+                msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetGateway, sepCHAR, gateway), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
-
             }
 
-            cancel();
+            // has the Reporting 1 changed?
+            string reporting1 = this.tbreportto1.Text;
+
+            if (settingReporting1 != reporting1)
+            {
+                msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetReport1, sepCHAR, reporting1), settingSerialNumber);
+                SendViaUDP(msg, settingIpAddress);
+            }
+
+            // has the Reporting 2 changed?
+            string reporting2 = this.tbreportto2.Text;
+
+            if (settingReporting2 != reporting2)
+            {
+                msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetReport2, sepCHAR, reporting2), settingSerialNumber);
+                SendViaUDP(msg, settingIpAddress);
+            }
+
+            btcancel_Click(sender, e);
+            Cursor.Current = Cursors.Default;
+            progressBar1.Visible = false;
         }
-
-
 
         private void btrestoretodefaults_Click(object sender, EventArgs e)
         {
             DialogResult dr = MessageBox.Show("This will reset the module to factory defaults. Are you sure?", "Confirm reset", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dr == DialogResult.Yes)
             {
-                string msg = makeudpmessage("SET", string.Concat((int) optSetGet.setgetResetDefaults , sepCHAR , "544"), settingSerialNumber);
+                string msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetResetDefaults, sepCHAR, "544"), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
-               
+
                 cancel();
             }
 
         }
 
+        private void tbipaddress_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btclose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
 
         #region to convert later
         /*

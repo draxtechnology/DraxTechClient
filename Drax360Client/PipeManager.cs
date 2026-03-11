@@ -10,7 +10,7 @@ namespace DraxClient
     public static class PipeManager
     {
         private static Form? _mainForm;
-        private const string PipeNameReturn = "Drax360PipeReturn";
+        private const string PipeNameReturn = "DraxTechnologyPipeReturn";
         private const char PipeDelimiter = '|';
 
         private static NamedPipeServerStream? _pipeServer;

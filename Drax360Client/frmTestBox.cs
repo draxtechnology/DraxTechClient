@@ -18,9 +18,9 @@ namespace DraxClient
     public partial class frmTestBox : Form
     {
         #region constants
-        const string kpipename = "Drax360Pipe";
-        const string kpipenamesend = "Drax360PipeSend";
-        const string kpipenamereturn = "Drax360PipeReturn";
+        const string kpipename = "DraxTechnologyPipe";
+        const string kpipenamesend = "DraxTechnologyPipeSend";
+        const string kpipenamereturn = "DraxTechnologyPipeReturn";
         const char kpipedelim = '|';
 
         private int _port;

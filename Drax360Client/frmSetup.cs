@@ -19,7 +19,7 @@ namespace DraxClient
 {
     public partial class frmSetup : Form
     {
-        const string kpipenamesend = "Drax360PipeSend";
+        const string kpipenamesend = "DraxTechnologyPipeSend";
         const char kpipedelim = '|';
 
 

@@ -43,17 +43,18 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 14F);
-            label1.Location = new Point(165, 138);
+            label1.Location = new Point(144, 104);
             label1.Name = "label1";
-            label1.Size = new Size(391, 32);
+            label1.Size = new Size(309, 25);
             label1.TabIndex = 0;
             label1.Text = "Drax Technology Network Manager";
             // 
             // btok
             // 
-            btok.Location = new Point(680, 346);
+            btok.Location = new Point(595, 260);
+            btok.Margin = new Padding(3, 2, 3, 2);
             btok.Name = "btok";
-            btok.Size = new Size(108, 52);
+            btok.Size = new Size(94, 39);
             btok.TabIndex = 1;
             btok.Text = "OK";
             btok.UseVisualStyleBackColor = true;
@@ -62,9 +63,9 @@
             // lblversion
             // 
             lblversion.AutoSize = true;
-            lblversion.Location = new Point(724, 421);
+            lblversion.Location = new Point(634, 316);
             lblversion.Name = "lblversion";
-            lblversion.Size = new Size(37, 20);
+            lblversion.Size = new Size(27, 15);
             lblversion.TabIndex = 3;
             lblversion.Text = "xxxx";
             lblversion.TextAlign = ContentAlignment.TopCenter;
@@ -72,11 +73,11 @@
             // lbcopyright
             // 
             lbcopyright.AutoSize = true;
-            lbcopyright.Location = new Point(165, 195);
+            lbcopyright.Location = new Point(144, 146);
             lbcopyright.Name = "lbcopyright";
-            lbcopyright.Size = new Size(180, 20);
+            lbcopyright.Size = new Size(141, 15);
             lbcopyright.TabIndex = 4;
-            lbcopyright.Text = "Copyright Drax Ltd - 2025";
+            lbcopyright.Text = "Copyright Drax Ltd - 2026";
             // 
             // timer1
             // 
@@ -87,24 +88,26 @@
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(606, 12);
+            pictureBox1.Location = new Point(530, 9);
+            pictureBox1.Margin = new Padding(3, 2, 3, 2);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(182, 58);
+            pictureBox1.Size = new Size(159, 44);
             pictureBox1.TabIndex = 5;
             pictureBox1.TabStop = false;
             // 
             // frmAbout
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Window;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(700, 338);
             Controls.Add(pictureBox1);
             Controls.Add(lbcopyright);
             Controls.Add(lblversion);
             Controls.Add(btok);
             Controls.Add(label1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "frmAbout";

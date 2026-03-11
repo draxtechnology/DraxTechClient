@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmtempdiscovery));
             tbname = new TextBox();
             lblname = new Label();
             btnok = new Button();
@@ -100,6 +101,7 @@
             Controls.Add(btnok);
             Controls.Add(lblname);
             Controls.Add(tbname);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmtempdiscovery";
             Text = "frmtempdiscovery";
             Load += frmtempdiscovery_Load;
