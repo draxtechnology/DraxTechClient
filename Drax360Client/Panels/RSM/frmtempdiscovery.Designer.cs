@@ -102,6 +102,8 @@
             Controls.Add(lblname);
             Controls.Add(tbname);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frmtempdiscovery";
             Text = "frmtempdiscovery";
             Load += frmtempdiscovery_Load;
