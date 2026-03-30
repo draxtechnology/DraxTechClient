@@ -118,20 +118,20 @@ namespace DraxClient.Panels.RSM
         private enum mdiscover
         {
             MessageType = 0,
-            MessageID,
-            ModuleNumber,
-            SerialNumber,
-            ModuleType,
-            MACAddress,
-            //DHCPName,
-            IpAddress,
-            SubnetMask,
-            Gateway,
-            ReportIP1,
-            ReportIP2,   //currently unused
-            ReportIP3,   //currently unused
-            ReportIP4,   //currently unused
-            SwVersion,
+            MessageID = 1,
+            ModuleNumber = 2,
+            SerialNumber =3,
+            ModuleType = 4,
+            MACAddress = 5,
+            DHCPName = 6,
+            IpAddress = 7,
+            SubnetMask = 8,
+            Gateway = 9 ,
+            ReportIP1 = 10,
+            ReportIP2 = 11,   //currently unused
+            ReportIP3 = 12,   //currently unused
+            ReportIP4 = 13,   //currently unused
+            SwVersion = 14,
         }
 
 
@@ -150,6 +150,7 @@ namespace DraxClient.Panels.RSM
         private string settingModuleType = string.Empty;
         private string settingSerialNumber = string.Empty;
         private string settingMACAddress = string.Empty;
+        private string settingName = string.Empty;
         private string settingDHCPName = string.Empty;
         private string settingIpAddress = string.Empty;
         private string settingSubnetMask = string.Empty;
@@ -401,8 +402,8 @@ namespace DraxClient.Panels.RSM
                     settingModuleType = ExpandModuleType(mparts[(int)mdiscover.ModuleType]);
                     settingSerialNumber = mparts[(int)mdiscover.SerialNumber];
                     settingMACAddress = GetHexMacAddress(mparts[(int)mdiscover.MACAddress]);
-
-                    settingDHCPName = OurDevice.Name; // this is coming from the device name - its not stored.
+             
+                    settingDHCPName = mparts[(int)mdiscover.DHCPName];
                     settingIpAddress = mparts[(int)mdiscover.IpAddress];
                     settingSubnetMask = mparts[(int)mdiscover.SubnetMask];
                     settingGateway = mparts[(int)mdiscover.Gateway];
@@ -483,7 +484,7 @@ namespace DraxClient.Panels.RSM
                 tbmoduletype.Text = settingModuleType;
                 tbserialnumber.Text = settingSerialNumber;
                 tbmacaddress.Text = settingMACAddress;
-
+                tbname.Text = settingName;
                 tbdhcpname.Text = settingDHCPName;
                 tbipaddress.Text = settingIpAddress;
                 tbsubnetmask.Text = settingSubnetMask;
@@ -742,6 +743,7 @@ namespace DraxClient.Panels.RSM
             if (!IsNew)
             {
                 settingIpAddress = OurDevice.IP;
+                settingName= OurDevice.Name;
             }
 
             // Start listener using async ReceiveAsync loop on a background task
@@ -776,6 +778,20 @@ namespace DraxClient.Panels.RSM
             string msg = "";
             Cursor.Current = Cursors.WaitCursor;
             progressBar1.Visible = true;
+            OurDevice.Name = tbname.Text; // Update our device's Name
+
+            // has ip address changed?
+            string ipaddress = this.tbipaddress.Text;
+            OurDevice.IP = ipaddress; // Update our device's IP
+
+            if (settingIpAddress != ipaddress)
+            {
+                msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetIPAddress, sepCHAR, ipaddress), settingSerialNumber);
+                SendViaUDP(msg, settingIpAddress);
+
+
+            }
+
 
             // has node number changed?
             string modulenumber = this.tbmodulenumber.Text;
@@ -797,25 +813,16 @@ namespace DraxClient.Panels.RSM
 
             // has dhcp name changed?
             string dhcpname = this.tbdhcpname.Text;
-            OurDevice.Name = dhcpname; // Update our device's Name
+            
 
             if (settingDHCPName != dhcpname)
             {
-               // msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetDHCPName, sepCHAR, dhcpname), settingSerialNumber);
-               // SendViaUDP(msg, settingIpAddress);
-               
-            }
-
-            // has ip address changed?
-            string ipaddress = this.tbipaddress.Text;
-            OurDevice.IP = ipaddress; // Update our device's IP
-
-            if (settingIpAddress != ipaddress)
-            {
-                msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetIPAddress, sepCHAR, ipaddress), settingSerialNumber);
+                msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetDHCPName, sepCHAR, dhcpname), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
-                
+
             }
+
+            
 
             // has id sub net mask changed?
             string subnetmask = this.tbsubnetmask.Text;

@@ -58,6 +58,8 @@
             btrestoretodefaults = new Button();
             btsavechanges = new Button();
             btclose = new Button();
+            lblname = new Label();
+            tbname = new TextBox();
             ((System.ComponentModel.ISupportInitialize)pbdiscoveryimage).BeginInit();
             pnleditoptions.SuspendLayout();
             SuspendLayout();
@@ -74,7 +76,7 @@
             // 
             // btcancel
             // 
-            btcancel.Location = new Point(0, 387);
+            btcancel.Location = new Point(0, 393);
             btcancel.Name = "btcancel";
             btcancel.Size = new Size(113, 40);
             btcancel.TabIndex = 1;
@@ -86,7 +88,7 @@
             // 
             lbdhcpname.AutoSize = true;
             lbdhcpname.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lbdhcpname.Location = new Point(13, 139);
+            lbdhcpname.Location = new Point(13, 170);
             lbdhcpname.Name = "lbdhcpname";
             lbdhcpname.Size = new Size(78, 15);
             lbdhcpname.TabIndex = 2;
@@ -95,7 +97,7 @@
             // 
             // tbdhcpname
             // 
-            tbdhcpname.Location = new Point(128, 136);
+            tbdhcpname.Location = new Point(128, 167);
             tbdhcpname.MaxLength = 24;
             tbdhcpname.Name = "tbdhcpname";
             tbdhcpname.Size = new Size(187, 23);
@@ -103,6 +105,8 @@
             // 
             // pnleditoptions
             // 
+            pnleditoptions.Controls.Add(lblname);
+            pnleditoptions.Controls.Add(tbname);
             pnleditoptions.Controls.Add(progressBar1);
             pnleditoptions.Controls.Add(label3);
             pnleditoptions.Controls.Add(tbsoftwarever);
@@ -136,7 +140,7 @@
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(175, 433);
+            progressBar1.Location = new Point(175, 439);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(113, 23);
             progressBar1.TabIndex = 26;
@@ -145,7 +149,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label3.Location = new Point(13, 337);
+            label3.Location = new Point(13, 368);
             label3.Name = "label3";
             label3.Size = new Size(78, 15);
             label3.TabIndex = 24;
@@ -154,7 +158,7 @@
             // 
             // tbsoftwarever
             // 
-            tbsoftwarever.Location = new Point(128, 329);
+            tbsoftwarever.Location = new Point(128, 360);
             tbsoftwarever.Name = "tbsoftwarever";
             tbsoftwarever.ReadOnly = true;
             tbsoftwarever.Size = new Size(187, 23);
@@ -164,7 +168,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label2.Location = new Point(13, 304);
+            label2.Location = new Point(13, 335);
             label2.Name = "label2";
             label2.Size = new Size(100, 15);
             label2.TabIndex = 22;
@@ -173,7 +177,7 @@
             // 
             // tbreportto2
             // 
-            tbreportto2.Location = new Point(128, 296);
+            tbreportto2.Location = new Point(128, 327);
             tbreportto2.Name = "tbreportto2";
             tbreportto2.Size = new Size(187, 23);
             tbreportto2.TabIndex = 23;
@@ -182,7 +186,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label1.Location = new Point(13, 271);
+            label1.Location = new Point(13, 302);
             label1.Name = "label1";
             label1.Size = new Size(100, 15);
             label1.TabIndex = 20;
@@ -191,7 +195,7 @@
             // 
             // tbreportto1
             // 
-            tbreportto1.Location = new Point(128, 267);
+            tbreportto1.Location = new Point(128, 298);
             tbreportto1.Name = "tbreportto1";
             tbreportto1.Size = new Size(187, 23);
             tbreportto1.TabIndex = 21;
@@ -274,7 +278,7 @@
             // 
             lbgateway.AutoSize = true;
             lbgateway.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lbgateway.Location = new Point(13, 238);
+            lbgateway.Location = new Point(13, 269);
             lbgateway.Name = "lbgateway";
             lbgateway.Size = new Size(59, 15);
             lbgateway.TabIndex = 10;
@@ -283,7 +287,7 @@
             // 
             // tbgateway
             // 
-            tbgateway.Location = new Point(128, 235);
+            tbgateway.Location = new Point(128, 266);
             tbgateway.Name = "tbgateway";
             tbgateway.Size = new Size(187, 23);
             tbgateway.TabIndex = 11;
@@ -292,7 +296,7 @@
             // 
             lbsubnetmask.AutoSize = true;
             lbsubnetmask.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lbsubnetmask.Location = new Point(13, 205);
+            lbsubnetmask.Location = new Point(13, 236);
             lbsubnetmask.Name = "lbsubnetmask";
             lbsubnetmask.Size = new Size(82, 15);
             lbsubnetmask.TabIndex = 8;
@@ -301,7 +305,7 @@
             // 
             // tbsubnetmask
             // 
-            tbsubnetmask.Location = new Point(128, 202);
+            tbsubnetmask.Location = new Point(128, 233);
             tbsubnetmask.Name = "tbsubnetmask";
             tbsubnetmask.Size = new Size(187, 23);
             tbsubnetmask.TabIndex = 9;
@@ -310,7 +314,7 @@
             // 
             lbipaddress.AutoSize = true;
             lbipaddress.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lbipaddress.Location = new Point(13, 172);
+            lbipaddress.Location = new Point(13, 203);
             lbipaddress.Name = "lbipaddress";
             lbipaddress.Size = new Size(68, 15);
             lbipaddress.TabIndex = 6;
@@ -319,14 +323,14 @@
             // 
             // tbipaddress
             // 
-            tbipaddress.Location = new Point(128, 169);
+            tbipaddress.Location = new Point(128, 200);
             tbipaddress.Name = "tbipaddress";
             tbipaddress.Size = new Size(187, 23);
             tbipaddress.TabIndex = 7;
             // 
             // btrestoretodefaults
             // 
-            btrestoretodefaults.Location = new Point(350, 387);
+            btrestoretodefaults.Location = new Point(350, 393);
             btrestoretodefaults.Name = "btrestoretodefaults";
             btrestoretodefaults.Size = new Size(113, 40);
             btrestoretodefaults.TabIndex = 5;
@@ -336,7 +340,7 @@
             // 
             // btsavechanges
             // 
-            btsavechanges.Location = new Point(175, 387);
+            btsavechanges.Location = new Point(175, 393);
             btsavechanges.Name = "btsavechanges";
             btsavechanges.Size = new Size(113, 40);
             btsavechanges.TabIndex = 4;
@@ -353,6 +357,25 @@
             btclose.Text = "Close";
             btclose.UseVisualStyleBackColor = true;
             btclose.Click += btclose_Click;
+            // 
+            // lblname
+            // 
+            lblname.AutoSize = true;
+            lblname.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblname.Location = new Point(13, 139);
+            lblname.Name = "lblname";
+            lblname.Size = new Size(43, 15);
+            lblname.TabIndex = 27;
+            lblname.Text = "Name:";
+            lblname.TextAlign = ContentAlignment.TopRight;
+            // 
+            // tbname
+            // 
+            tbname.Location = new Point(128, 136);
+            tbname.MaxLength = 24;
+            tbname.Name = "tbname";
+            tbname.Size = new Size(187, 23);
+            tbname.TabIndex = 28;
             // 
             // frmdiscovery
             // 
@@ -406,5 +429,7 @@
         private TextBox tbsoftwarever;
         private ProgressBar progressBar1;
         private Button btclose;
+        private Label lblname;
+        private TextBox tbname;
     }
 }
