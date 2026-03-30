@@ -168,7 +168,8 @@ namespace DraxClient.Panels.RSM
 
         // Capture the UI SynchronizationContext so background threads can marshal UI updates reliably
         private readonly SynchronizationContext _uiContext;
-
+        public Device OurDevice { get; set; }
+        public bool IsNew { get; set; }
         public frmdiscovery()
         {
             InitializeComponent();
@@ -401,7 +402,7 @@ namespace DraxClient.Panels.RSM
                     settingSerialNumber = mparts[(int)mdiscover.SerialNumber];
                     settingMACAddress = GetHexMacAddress(mparts[(int)mdiscover.MACAddress]);
 
-                    settingDHCPName = "";// mparts[(int)mdiscover.DHCPName];
+                    settingDHCPName = OurDevice.Name; // this is coming from the device name - its not stored.
                     settingIpAddress = mparts[(int)mdiscover.IpAddress];
                     settingSubnetMask = mparts[(int)mdiscover.SubnetMask];
                     settingGateway = mparts[(int)mdiscover.Gateway];
@@ -738,6 +739,11 @@ namespace DraxClient.Panels.RSM
         {
             buttonhandler();
 
+            if (!IsNew)
+            {
+                settingIpAddress = OurDevice.IP;
+            }
+
             // Start listener using async ReceiveAsync loop on a background task
             _cts = new CancellationTokenSource();
             _listenerTask = Task.Run(() => StartListenerAsync(_cts.Token));
@@ -791,20 +797,24 @@ namespace DraxClient.Panels.RSM
 
             // has dhcp name changed?
             string dhcpname = this.tbdhcpname.Text;
+            OurDevice.Name = dhcpname; // Update our device's Name
 
             if (settingDHCPName != dhcpname)
             {
-                msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetDHCPName, sepCHAR, dhcpname), settingSerialNumber);
-                SendViaUDP(msg, settingIpAddress);
+               // msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetDHCPName, sepCHAR, dhcpname), settingSerialNumber);
+               // SendViaUDP(msg, settingIpAddress);
+               
             }
 
             // has ip address changed?
             string ipaddress = this.tbipaddress.Text;
+            OurDevice.IP = ipaddress; // Update our device's IP
 
             if (settingIpAddress != ipaddress)
             {
                 msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetIPAddress, sepCHAR, ipaddress), settingSerialNumber);
                 SendViaUDP(msg, settingIpAddress);
+                
             }
 
             // has id sub net mask changed?
@@ -843,9 +853,16 @@ namespace DraxClient.Panels.RSM
                 SendViaUDP(msg, settingIpAddress);
             }
 
-            btcancel_Click(sender, e);
+            // bake in changes - not sure if this is needed but it matches the original flow where the UI is updated with the new values before sending the restart command
+            msg = makeudpmessage("SET", string.Concat((int)optSetGet.setgetRESTART, sepCHAR, "554"), settingSerialNumber);
+
+
+            SendViaUDP(msg, settingIpAddress);
+
+
             Cursor.Current = Cursors.Default;
             progressBar1.Visible = false;
+            this.DialogResult = DialogResult.OK;
         }
 
         private void btrestoretodefaults_Click(object sender, EventArgs e)
@@ -868,7 +885,7 @@ namespace DraxClient.Panels.RSM
 
         private void btclose_Click(object sender, EventArgs e)
         {
-            Close();
+            this.DialogResult = DialogResult.Cancel;
         }
 
         #region to convert later

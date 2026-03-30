@@ -189,7 +189,10 @@ namespace DraxClient.Panels.RSM
             bool hasSelection = index >= 0 && index < Devices.Count;
             if (!hasSelection) return;
 
-            frmtempdiscovery frm = new frmtempdiscovery(Devices[index]);
+            
+            frmdiscovery frm = new frmdiscovery();
+            frm.OurDevice = Devices[index];
+            frm.IsNew = false;
 
             var res = frm.ShowDialog();
             if (res != DialogResult.OK) return;
@@ -232,20 +235,14 @@ namespace DraxClient.Panels.RSM
 
 
 
+       
+
+        // used as a placeholder for the actual discovery form, which is not yet implemented. This will allow us to test the flow of opening the discovery form and reloading devices without having the actual discovery logic in place.
         private void btdiscover_Click(object sender, EventArgs e)
         {
             frmdiscovery frm = new frmdiscovery();
-            var res = frm.ShowDialog();
-            if (res == DialogResult.OK)
-            {
-                // reload devices
-            }
-        }
-
-        // used as a placeholder for the actual discovery form, which is not yet implemented. This will allow us to test the flow of opening the discovery form and reloading devices without having the actual discovery logic in place.
-        private void bttempdiscovery_Click(object sender, EventArgs e)
-        {
-            frmtempdiscovery frm = new frmtempdiscovery(new Device());
+            frm.OurDevice = new Device();
+            frm.IsNew = true;
 
             var res = frm.ShowDialog();
             if (res == DialogResult.OK)

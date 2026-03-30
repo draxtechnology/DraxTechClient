@@ -72,7 +72,6 @@
             tbpassword = new TextBox();
             cbauthorisation = new CheckBox();
             tprsm = new TabPage();
-            btdiscovery = new Button();
             frmListen = new Button();
             btdevices = new Button();
             tabPage1 = new TabPage();
@@ -238,13 +237,13 @@
             // 
             cbComport.BackColor = SystemColors.Window;
             cbComport.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbComport.FlatStyle = FlatStyle.Popup;
             cbComport.FormattingEnabled = true;
             cbComport.Location = new Point(19, 73);
             cbComport.Name = "cbComport";
             cbComport.Size = new Size(140, 23);
             cbComport.TabIndex = 0;
             cbComport.SelectedIndexChanged += cbComport_SelectedIndexChanged;
-            cbComport.FlatStyle = FlatStyle.Popup;
             // 
             // label2
             // 
@@ -573,7 +572,6 @@
             // tprsm
             // 
             tprsm.BackColor = Color.FromArgb(245, 246, 250);
-            tprsm.Controls.Add(btdiscovery);
             tprsm.Controls.Add(frmListen);
             tprsm.Controls.Add(btdevices);
             tprsm.Location = new Point(4, 24);
@@ -583,18 +581,9 @@
             tprsm.TabIndex = 4;
             tprsm.Text = "RSM";
             // 
-            // btdiscovery
-            // 
-            btdiscovery.Location = new Point(16, 16);
-            btdiscovery.Name = "btdiscovery";
-            btdiscovery.Size = new Size(100, 30);
-            btdiscovery.TabIndex = 0;
-            btdiscovery.Text = "Discovery";
-            btdiscovery.Click += btdiscovery_Click;
-            // 
             // frmListen
             // 
-            frmListen.Location = new Point(124, 16);
+            frmListen.Location = new Point(8, 16);
             frmListen.Name = "frmListen";
             frmListen.Size = new Size(100, 30);
             frmListen.TabIndex = 1;
@@ -603,7 +592,7 @@
             // 
             // btdevices
             // 
-            btdevices.Location = new Point(232, 16);
+            btdevices.Location = new Point(114, 16);
             btdevices.Name = "btdevices";
             btdevices.Size = new Size(100, 30);
             btdevices.TabIndex = 2;
@@ -754,7 +743,6 @@
         private TextBox tbpassword;
         private CheckBox cbauthorisation;
         private TabPage tprsm;
-        private Button btdiscovery;
         private Button frmListen;
         private Button btdevices;
         private TabPage tabPage1;

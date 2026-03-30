@@ -129,7 +129,7 @@
             pnleditoptions.Controls.Add(lbdhcpname);
             pnleditoptions.Controls.Add(btcancel);
             pnleditoptions.Controls.Add(tbdhcpname);
-            pnleditoptions.Location = new Point(21, 12);
+            pnleditoptions.Location = new Point(12, 2);
             pnleditoptions.Name = "pnleditoptions";
             pnleditoptions.Size = new Size(478, 470);
             pnleditoptions.TabIndex = 4;
@@ -359,6 +359,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(500, 474);
+            ControlBox = false;
             Controls.Add(pnleditoptions);
             Controls.Add(pbdiscoveryimage);
             Controls.Add(btclose);

@@ -29,23 +29,12 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmdevices));
-            btdiscover = new Button();
             btdelete = new Button();
             btedit = new Button();
             dgdevices = new DataGridView();
-            bttempdiscovery = new Button();
+            btdiscovery = new Button();
             ((System.ComponentModel.ISupportInitialize)dgdevices).BeginInit();
             SuspendLayout();
-            // 
-            // btdiscover
-            // 
-            btdiscover.Location = new Point(374, 415);
-            btdiscover.Name = "btdiscover";
-            btdiscover.Size = new Size(75, 23);
-            btdiscover.TabIndex = 13;
-            btdiscover.Text = "Discover";
-            btdiscover.UseVisualStyleBackColor = true;
-            btdiscover.Click += btdiscover_Click;
             // 
             // btdelete
             // 
@@ -78,23 +67,22 @@
             dgdevices.TabIndex = 9;
             dgdevices.SelectionChanged += dgdevices_SelectionChanged;
             // 
-            // bttempdiscovery
+            // btdiscovery
             // 
-            bttempdiscovery.Location = new Point(486, 415);
-            bttempdiscovery.Name = "bttempdiscovery";
-            bttempdiscovery.Size = new Size(139, 23);
-            bttempdiscovery.TabIndex = 14;
-            bttempdiscovery.Text = "Temp Discover";
-            bttempdiscovery.UseVisualStyleBackColor = true;
-            bttempdiscovery.Click += bttempdiscovery_Click;
+            btdiscovery.Location = new Point(486, 415);
+            btdiscovery.Name = "btdiscovery";
+            btdiscovery.Size = new Size(139, 23);
+            btdiscovery.TabIndex = 14;
+            btdiscovery.Text = "Discover New";
+            btdiscovery.UseVisualStyleBackColor = true;
+            btdiscovery.Click += btdiscover_Click;
             // 
             // frmdevices
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(bttempdiscovery);
-            Controls.Add(btdiscover);
+            Controls.Add(btdiscovery);
             Controls.Add(btdelete);
             Controls.Add(btedit);
             Controls.Add(dgdevices);
@@ -111,6 +99,6 @@
         private Button btdelete;
         private Button btedit;
         private DataGridView dgdevices;
-        private Button bttempdiscovery;
+        private Button btdiscovery;
     }
 }
