@@ -46,43 +46,46 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(29, 39);
+            label1.Location = new Point(25, 29);
             label1.Name = "label1";
-            label1.Size = new Size(46, 20);
+            label1.Size = new Size(36, 15);
             label1.TabIndex = 0;
             label1.Text = "Node";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(163, 39);
+            label2.Location = new Point(143, 29);
             label2.Name = "label2";
-            label2.Size = new Size(43, 20);
+            label2.Size = new Size(34, 15);
             label2.TabIndex = 2;
             label2.Text = "Loop";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(293, 39);
+            label3.Location = new Point(256, 29);
             label3.Name = "label3";
-            label3.Size = new Size(54, 20);
+            label3.Size = new Size(42, 15);
             label3.TabIndex = 4;
             label3.Text = "Device";
             // 
             // cbType
             // 
             cbType.FormattingEnabled = true;
-            cbType.Location = new Point(35, 100);
+            cbType.Location = new Point(31, 75);
+            cbType.Margin = new Padding(3, 2, 3, 2);
             cbType.Name = "cbType";
-            cbType.Size = new Size(151, 28);
+            cbType.Size = new Size(133, 23);
             cbType.TabIndex = 6;
+            cbType.SelectedIndexChanged += cbType_SelectedIndexChanged;
             // 
             // btOn
             // 
-            btOn.Location = new Point(212, 99);
+            btOn.Location = new Point(186, 76);
+            btOn.Margin = new Padding(3, 2, 3, 2);
             btOn.Name = "btOn";
-            btOn.Size = new Size(94, 29);
+            btOn.Size = new Size(82, 22);
             btOn.TabIndex = 7;
             btOn.Text = "ON";
             btOn.UseVisualStyleBackColor = true;
@@ -90,9 +93,10 @@
             // 
             // btReset
             // 
-            btReset.Location = new Point(339, 97);
+            btReset.Location = new Point(297, 75);
+            btReset.Margin = new Padding(3, 2, 3, 2);
             btReset.Name = "btReset";
-            btReset.Size = new Size(76, 31);
+            btReset.Size = new Size(66, 23);
             btReset.TabIndex = 8;
             btReset.Text = "RESET";
             btReset.UseVisualStyleBackColor = true;
@@ -100,30 +104,33 @@
             // 
             // tbNode
             // 
-            tbNode.Location = new Point(81, 32);
+            tbNode.Location = new Point(71, 24);
+            tbNode.Margin = new Padding(3, 2, 3, 2);
             tbNode.Name = "tbNode";
-            tbNode.Size = new Size(62, 27);
+            tbNode.Size = new Size(54, 23);
             tbNode.TabIndex = 9;
             // 
             // tbLoop
             // 
-            tbLoop.Location = new Point(212, 32);
+            tbLoop.Location = new Point(186, 24);
+            tbLoop.Margin = new Padding(3, 2, 3, 2);
             tbLoop.Name = "tbLoop";
-            tbLoop.Size = new Size(62, 27);
+            tbLoop.Size = new Size(54, 23);
             tbLoop.TabIndex = 10;
             // 
             // tbDevice
             // 
-            tbDevice.Location = new Point(354, 32);
+            tbDevice.Location = new Point(310, 24);
+            tbDevice.Margin = new Padding(3, 2, 3, 2);
             tbDevice.Name = "tbDevice";
-            tbDevice.Size = new Size(61, 27);
+            tbDevice.Size = new Size(53, 23);
             tbDevice.TabIndex = 11;
             // 
             // frmTestBox
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(448, 162);
+            ClientSize = new Size(392, 122);
             Controls.Add(tbDevice);
             Controls.Add(tbLoop);
             Controls.Add(tbNode);
@@ -134,6 +141,7 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "frmTestBox";

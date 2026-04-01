@@ -172,5 +172,10 @@ namespace DraxClient
         {
             Console.WriteLine("frmTestBox Load event fired.");
         }
+
+        private void cbType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

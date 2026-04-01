@@ -364,7 +364,7 @@ namespace DraxClient
             // Debug / data-logging checkbox
             result = "0";
             if (_panelType == "ADVANCED") result = sendcmd("SETTINGSGET|MAIN,DesignTime");
-            else if (_panelType == "GENT") result = sendcmd("SETTINGSGET|MAIN,DataLogging");
+            else if (_panelType == "GENT") result = sendcmd("SETTINGSGET|SETUP,DataLogging");
             this.debug.Checked = result == "1" || result == "True";
 
             // Advanced-only controls
