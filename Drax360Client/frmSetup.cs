@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Printing;
 using System.IO.Pipes;
 using System.Linq;
 using System.Text;
@@ -277,9 +278,6 @@ namespace DraxClient
                 if (item.Value == result) { cbComport.SelectedItem = item; break; }
             }
 
-            this.tbDataBits.Text = sendcmd("SETTINGSGET|SETUP,DataBits");
-            this.tbBaudRate.Text = sendcmd("SETTINGSGET|SETUP,BaudRate");
-
             // Offset / panel-type-specific
             switch (_panelType)
             {
@@ -291,6 +289,21 @@ namespace DraxClient
                     break;
                 case "GENT":
                     this.tbOffset.Text = sendcmd("SETTINGSGET|SETUP,GIAMX1OFFSET");
+                    result = sendcmd("SETTINGSGET|SETUP,OutStationFaultsGenFault");
+                    this.chkOutStationFaults.Checked = result == "1" || result == "True";
+
+                    result = sendcmd("SETTINGSGET|SETUP,DisplayChkSumFails");
+                    this.chkDisplayChkSumFails.Checked = result == "1" || result == "True";
+
+                    result = sendcmd("SETTINGSGET|SETUP,DisablePanelText");
+                    this.chkDisablePanelText.Checked = result == "1" || result == "True";
+
+                    result = sendcmd("SETTINGSGET|SETUP,DisplayUnknownEvents");
+                    this.chkDisplayUnknown.Checked = result == "1" || result == "True";
+
+                    result = sendcmd("SETTINGSGET|SETUP,UseExtendedTextIfOver");
+                    this.chkExtendedText.Checked = result == "1" || result == "True";
+
                     break;
                 case "MOLREYZX":
                 case "MORLEYMAX":
@@ -308,11 +321,35 @@ namespace DraxClient
             }
 
             // Status
-            string status = sendcmd("GETCOMMPORTSTATUS|COM3");
+            string status = sendcmd("GETCOMMPORTSTATUS|" + cbComport.Text);
             bool connected = status.ToLower() == "connected";
             this.lbStatus.Text = connected ? "Connected" : "Disconnected";
             this.lbStatus.ForeColor = connected ? clrGreen : clrRed;
             UpdateStatusDot(connected);
+
+            // Data Bits
+            cbDataBits.Items.Add(new ComboBoxItem { Text = "8", Value = "8" });
+            cbDataBits.Items.Add(new ComboBoxItem { Text = "7", Value = "7" });
+            result = sendcmd("SETTINGSGET|SETUP,DataBits");
+            foreach (ComboBoxItem item in cbDataBits.Items)
+            {
+                if (item.Value == result) { cbDataBits.SelectedItem = item; break; }
+            }
+
+            // Baud Raute
+            cbBaudRate.Items.Add(new ComboBoxItem { Text = "300", Value = "300" });
+            cbBaudRate.Items.Add(new ComboBoxItem { Text = "600", Value = "600" });
+            cbBaudRate.Items.Add(new ComboBoxItem { Text = "1200", Value = "600" });
+            cbBaudRate.Items.Add(new ComboBoxItem { Text = "2400", Value = "1200" });
+            cbBaudRate.Items.Add(new ComboBoxItem { Text = "4800", Value = "4800" });
+            cbBaudRate.Items.Add(new ComboBoxItem { Text = "9600", Value = "9600" });
+            cbBaudRate.Items.Add(new ComboBoxItem { Text = "19200", Value = "19200" });
+            cbBaudRate.Items.Add(new ComboBoxItem { Text = "38400", Value = "38400" });
+            result = sendcmd("SETTINGSGET|SETUP,BaudRate");
+            foreach (ComboBoxItem item in cbBaudRate.Items)
+            {
+                if (item.Value == result) { cbBaudRate.SelectedItem = item; break; }
+            }
 
             // Parity
             cbParity.Items.Add(new ComboBoxItem { Text = "Even", Value = "Even" });
@@ -388,48 +425,45 @@ namespace DraxClient
         // ── Event handlers (original, unchanged) ─────────────────────────────
         private void btApply_Click(object sender, EventArgs e)
         {
-            sendcmd("SETTINGSSAVE");
+            savesettings();
             sendcmd("ServiceRestart");
         }
 
         private void btok_Click(object sender, EventArgs e)
         {
-            sendcmd("SETTINGSSAVE");
+            savesettings();
             sendcmd("ServiceRestart");
             this.Close();
         }
 
-        private void btcancel_Click(object sender, EventArgs e) => this.Close();
-
-        private void cbComport_SelectedIndexChanged(object sender, EventArgs e)
+        private void savesettings()
         {
             if (cbComport.SelectedItem is ComboBoxItem item)
                 sendcmd($"SETTINGSSET|PANEL1,COMMPORT,{item.Value}");
+
+            sendcmd($"SETTINGSSET|SETUP,DATALOGGING,{(debug.Checked ? "1" : "0")}");
+            sendcmd($"SETTINGSSET|SETUP,BAUDRATE,{this.cbBaudRate.Text}");
+            sendcmd($"SETTINGSSET|SETUP,DATABITS,{this.cbDataBits.Text}");
+            sendcmd($"SETTINGSSET|SETUP,PARITY,{this.cbParity.Text}");
+            sendcmd($"SETTINGSSET|SETUP,GIAMX1OFFSET,{this.tbOffset.Text}");
+            if (_panelType == "GENT")
+            {
+                sendcmd($"SETTINGSSET|SETUP,OutStationFaultsGenFault,{(chkOutStationFaults.Checked ? "1" : "0")}");
+                sendcmd($"SETTINGSSET|SETUP,DisplayChkSumFails,{(chkDisplayChkSumFails.Checked ? "1" : "0")}");
+                sendcmd($"SETTINGSSET|SETUP,DisablePanelText,{(chkDisablePanelText.Checked ? "1" : "0")}");
+                sendcmd($"SETTINGSSET|SETUP,DisplayUnknownEvents,{(chkDisplayUnknown.Checked ? "1" : "0")}");
+                sendcmd($"SETTINGSSET|SETUP,UseExtendedTextIfOver,{(chkExtendedText.Checked ? "1" : "0")}");
+            }
+            sendcmd("SETTINGSSAVE");
         }
 
-        private void debug_CheckedChanged(object sender, EventArgs e)
-            => sendcmd($"SETTINGSSET|SETUP,DATALOGGING,{(debug.Checked ? "1" : "0")}");
-
-        private void tbBaudRate_TextChanged(object sender, EventArgs e)
-            => sendcmd($"SETTINGSSET|SETUP,BAUDRATE,{this.tbBaudRate.Text}");
-
-        private void tbDataBits_TextChanged(object sender, EventArgs e)
-            => sendcmd($"SETTINGSSET|SETUP,DATABITS,{this.tbDataBits.Text}");
-
-        private void cbParity_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cbParity.SelectedItem is ComboBoxItem item)
-                sendcmd($"SETTINGSSET|SETUP,PARITY,{item.Value}");
-        }
-
-        private void tbOffset_TextChanged(object sender, EventArgs e)
-            => sendcmd($"SETTINGSSET|SETUP,GIAMX1OFFSET,{this.tbOffset.Text}");
+        private void btcancel_Click(object sender, EventArgs e) => this.Close();
 
         private void frmSetup_Load(object sender, EventArgs e)
             => sendcmd("SETTINGSRELOAD");
 
         private void load_email_groups() => this.tpGent.SelectedTab = tpemail;
-        private void load_rsm() => this.tpGent.SelectedTab = tprsm;
+        private void load_rsm() => this.tpGent.SelectedTab = tpserialsettings;
 
         private void chkSubAddressOffset_CheckedChanged(object sender, EventArgs e)
         {
@@ -473,6 +507,11 @@ namespace DraxClient
             gp.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
             gp.CloseFigure();
             return gp;
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

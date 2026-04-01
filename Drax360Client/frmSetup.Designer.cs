@@ -31,22 +31,21 @@
             btok = new Button();
             tpGent = new TabControl();
             tpserialsettings = new TabPage();
+            cbDataBits = new ComboBox();
+            cbBaudRate = new ComboBox();
+            label1 = new Label();
+            label7 = new Label();
+            cbComport = new ComboBox();
             pnlStatusBar = new Panel();
             pnlStatusDot = new Panel();
             lbStatus = new Label();
-            pnlSerialCard = new Panel();
-            label7 = new Label();
-            label1 = new Label();
-            cbComport = new ComboBox();
-            label2 = new Label();
-            tbBaudRate = new TextBox();
             label3 = new Label();
-            tbDataBits = new TextBox();
-            label4 = new Label();
-            cbParity = new ComboBox();
             lblCalibration = new Label();
+            label2 = new Label();
             label6 = new Label();
             tbOffset = new TextBox();
+            cbParity = new ComboBox();
+            label4 = new Label();
             tpsettings = new TabPage();
             debug = new CheckBox();
             tpadvanced = new TabPage();
@@ -72,6 +71,7 @@
             tbpassword = new TextBox();
             cbauthorisation = new CheckBox();
             tprsm = new TabPage();
+            btdiscovery = new Button();
             frmListen = new Button();
             btdevices = new Button();
             tabPage1 = new TabPage();
@@ -84,7 +84,6 @@
             tpGent.SuspendLayout();
             tpserialsettings.SuspendLayout();
             pnlStatusBar.SuspendLayout();
-            pnlSerialCard.SuspendLayout();
             tpsettings.SuspendLayout();
             tpadvanced.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)cboHB1).BeginInit();
@@ -154,17 +153,73 @@
             // tpserialsettings
             // 
             tpserialsettings.BackColor = Color.FromArgb(245, 246, 250);
+            tpserialsettings.Controls.Add(cbDataBits);
+            tpserialsettings.Controls.Add(cbBaudRate);
+            tpserialsettings.Controls.Add(label1);
+            tpserialsettings.Controls.Add(label7);
+            tpserialsettings.Controls.Add(cbComport);
             tpserialsettings.Controls.Add(pnlStatusBar);
-            tpserialsettings.Controls.Add(pnlSerialCard);
+            tpserialsettings.Controls.Add(label3);
             tpserialsettings.Controls.Add(lblCalibration);
+            tpserialsettings.Controls.Add(label2);
             tpserialsettings.Controls.Add(label6);
             tpserialsettings.Controls.Add(tbOffset);
+            tpserialsettings.Controls.Add(cbParity);
+            tpserialsettings.Controls.Add(label4);
             tpserialsettings.Location = new Point(4, 24);
             tpserialsettings.Name = "tpserialsettings";
             tpserialsettings.Padding = new Padding(16, 14, 16, 8);
             tpserialsettings.Size = new Size(747, 310);
             tpserialsettings.TabIndex = 0;
             tpserialsettings.Text = "Serial Settings";
+            // 
+            // cbDataBits
+            // 
+            cbDataBits.FormattingEnabled = true;
+            cbDataBits.Location = new Point(16, 184);
+            cbDataBits.Name = "cbDataBits";
+            cbDataBits.Size = new Size(140, 23);
+            cbDataBits.TabIndex = 6;
+            // 
+            // cbBaudRate
+            // 
+            cbBaudRate.FormattingEnabled = true;
+            cbBaudRate.Location = new Point(217, 122);
+            cbBaudRate.Name = "cbBaudRate";
+            cbBaudRate.Size = new Size(140, 23);
+            cbBaudRate.TabIndex = 5;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(16, 104);
+            label1.Name = "label1";
+            label1.Size = new Size(69, 15);
+            label1.TabIndex = 0;
+            label1.Tag = "fieldlabel";
+            label1.Text = "Comm Port";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.ForeColor = SystemColors.ControlDarkDark;
+            label7.Location = new Point(16, 66);
+            label7.Name = "label7";
+            label7.Size = new Size(132, 15);
+            label7.TabIndex = 4;
+            label7.Tag = "fieldlabel";
+            label7.Text = "PORT CONFIGURATION";
+            // 
+            // cbComport
+            // 
+            cbComport.BackColor = SystemColors.Window;
+            cbComport.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbComport.FlatStyle = FlatStyle.Popup;
+            cbComport.FormattingEnabled = true;
+            cbComport.Location = new Point(16, 122);
+            cbComport.Name = "cbComport";
+            cbComport.Size = new Size(140, 23);
+            cbComport.TabIndex = 0;
             // 
             // pnlStatusBar
             // 
@@ -193,113 +248,15 @@
             lbStatus.TabIndex = 0;
             lbStatus.Text = "Disconnected";
             // 
-            // pnlSerialCard
-            // 
-            pnlSerialCard.BackColor = Color.White;
-            pnlSerialCard.Controls.Add(label7);
-            pnlSerialCard.Controls.Add(label1);
-            pnlSerialCard.Controls.Add(cbComport);
-            pnlSerialCard.Controls.Add(label2);
-            pnlSerialCard.Controls.Add(tbBaudRate);
-            pnlSerialCard.Controls.Add(label3);
-            pnlSerialCard.Controls.Add(tbDataBits);
-            pnlSerialCard.Controls.Add(label4);
-            pnlSerialCard.Controls.Add(cbParity);
-            pnlSerialCard.Location = new Point(16, 58);
-            pnlSerialCard.Name = "pnlSerialCard";
-            pnlSerialCard.Padding = new Padding(16, 12, 16, 12);
-            pnlSerialCard.Size = new Size(660, 180);
-            pnlSerialCard.TabIndex = 1;
-            pnlSerialCard.Tag = "card";
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.ForeColor = SystemColors.ControlDarkDark;
-            label7.Location = new Point(19, 12);
-            label7.Name = "label7";
-            label7.Size = new Size(132, 15);
-            label7.TabIndex = 4;
-            label7.Tag = "fieldlabel";
-            label7.Text = "PORT CONFIGURATION";
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(19, 55);
-            label1.Name = "label1";
-            label1.Size = new Size(69, 15);
-            label1.TabIndex = 0;
-            label1.Tag = "fieldlabel";
-            label1.Text = "Comm Port";
-            // 
-            // cbComport
-            // 
-            cbComport.BackColor = SystemColors.Window;
-            cbComport.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbComport.FlatStyle = FlatStyle.Popup;
-            cbComport.FormattingEnabled = true;
-            cbComport.Location = new Point(19, 73);
-            cbComport.Name = "cbComport";
-            cbComport.Size = new Size(140, 23);
-            cbComport.TabIndex = 0;
-            cbComport.SelectedIndexChanged += cbComport_SelectedIndexChanged;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(250, 55);
-            label2.Name = "label2";
-            label2.Size = new Size(60, 15);
-            label2.TabIndex = 1;
-            label2.Tag = "fieldlabel";
-            label2.Text = "Baud Rate";
-            // 
-            // tbBaudRate
-            // 
-            tbBaudRate.Location = new Point(250, 73);
-            tbBaudRate.Name = "tbBaudRate";
-            tbBaudRate.Size = new Size(140, 23);
-            tbBaudRate.TabIndex = 1;
-            tbBaudRate.TextChanged += tbBaudRate_TextChanged;
-            // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(19, 117);
+            label3.Location = new Point(16, 166);
             label3.Name = "label3";
             label3.Size = new Size(53, 15);
             label3.TabIndex = 2;
             label3.Tag = "fieldlabel";
             label3.Text = "Data Bits";
-            // 
-            // tbDataBits
-            // 
-            tbDataBits.Location = new Point(19, 135);
-            tbDataBits.Name = "tbDataBits";
-            tbDataBits.Size = new Size(140, 23);
-            tbDataBits.TabIndex = 2;
-            tbDataBits.TextChanged += tbDataBits_TextChanged;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(250, 117);
-            label4.Name = "label4";
-            label4.Size = new Size(37, 15);
-            label4.TabIndex = 3;
-            label4.Tag = "fieldlabel";
-            label4.Text = "Parity";
-            // 
-            // cbParity
-            // 
-            cbParity.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbParity.FormattingEnabled = true;
-            cbParity.Location = new Point(250, 135);
-            cbParity.Name = "cbParity";
-            cbParity.Size = new Size(140, 23);
-            cbParity.TabIndex = 3;
-            cbParity.SelectedIndexChanged += cbParity_SelectedIndexChanged;
             // 
             // lblCalibration
             // 
@@ -310,6 +267,16 @@
             lblCalibration.TabIndex = 2;
             lblCalibration.Tag = "section";
             lblCalibration.Text = "CALIBRATION";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(217, 104);
+            label2.Name = "label2";
+            label2.Size = new Size(60, 15);
+            label2.TabIndex = 1;
+            label2.Tag = "fieldlabel";
+            label2.Text = "Baud Rate";
             // 
             // label6
             // 
@@ -327,7 +294,26 @@
             tbOffset.Name = "tbOffset";
             tbOffset.Size = new Size(140, 23);
             tbOffset.TabIndex = 4;
-            tbOffset.TextChanged += tbOffset_TextChanged;
+            // 
+            // cbParity
+            // 
+            cbParity.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbParity.FormattingEnabled = true;
+            cbParity.Location = new Point(217, 184);
+            cbParity.Name = "cbParity";
+            cbParity.Size = new Size(140, 23);
+            cbParity.TabIndex = 3;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(217, 166);
+            label4.Name = "label4";
+            label4.Size = new Size(37, 15);
+            label4.TabIndex = 3;
+            label4.Tag = "fieldlabel";
+            label4.Text = "Parity";
+            label4.Click += label4_Click;
             // 
             // tpsettings
             // 
@@ -348,7 +334,6 @@
             debug.Size = new Size(122, 19);
             debug.TabIndex = 0;
             debug.Text = "Enable Debug Log";
-            debug.CheckedChanged += debug_CheckedChanged;
             // 
             // tpadvanced
             // 
@@ -572,6 +557,7 @@
             // tprsm
             // 
             tprsm.BackColor = Color.FromArgb(245, 246, 250);
+            tprsm.Controls.Add(btdiscovery);
             tprsm.Controls.Add(frmListen);
             tprsm.Controls.Add(btdevices);
             tprsm.Location = new Point(4, 24);
@@ -581,9 +567,18 @@
             tprsm.TabIndex = 4;
             tprsm.Text = "RSM";
             // 
+            // btdiscovery
+            // 
+            btdiscovery.Location = new Point(16, 16);
+            btdiscovery.Name = "btdiscovery";
+            btdiscovery.Size = new Size(100, 30);
+            btdiscovery.TabIndex = 0;
+            btdiscovery.Text = "Discovery";
+            btdiscovery.Click += btdiscovery_Click;
+            // 
             // frmListen
             // 
-            frmListen.Location = new Point(8, 16);
+            frmListen.Location = new Point(124, 16);
             frmListen.Name = "frmListen";
             frmListen.Size = new Size(100, 30);
             frmListen.TabIndex = 1;
@@ -592,7 +587,7 @@
             // 
             // btdevices
             // 
-            btdevices.Location = new Point(114, 16);
+            btdevices.Location = new Point(232, 16);
             btdevices.Name = "btdevices";
             btdevices.Size = new Size(100, 30);
             btdevices.TabIndex = 2;
@@ -679,8 +674,6 @@
             tpserialsettings.PerformLayout();
             pnlStatusBar.ResumeLayout(false);
             pnlStatusBar.PerformLayout();
-            pnlSerialCard.ResumeLayout(false);
-            pnlSerialCard.PerformLayout();
             tpsettings.ResumeLayout(false);
             tpsettings.PerformLayout();
             tpadvanced.ResumeLayout(false);
@@ -700,7 +693,6 @@
         private Panel pnlFooter;
         private Panel pnlStatusBar;
         private Panel pnlStatusDot;
-        private Panel pnlSerialCard;
         private Label lblCalibration;
         private Button btApply;
         private Button btok;
@@ -708,10 +700,8 @@
         private ComboBox cbComport;
         private Label label1;
         private Label lbStatus;
-        private TextBox tbBaudRate;
         private Label label2;
         private Label label3;
-        private TextBox tbDataBits;
         private Label label4;
         private ComboBox cbParity;
         private CheckBox debug;
@@ -743,6 +733,7 @@
         private TextBox tbpassword;
         private CheckBox cbauthorisation;
         private TabPage tprsm;
+        private Button btdiscovery;
         private Button frmListen;
         private Button btdevices;
         private TabPage tabPage1;
@@ -752,5 +743,7 @@
         private CheckBox chkDisplayChkSumFails;
         private CheckBox chkOutStationFaults;
         private Label label7;
+        private ComboBox cbDataBits;
+        private ComboBox cbBaudRate;
     }
 }
