@@ -58,7 +58,7 @@ namespace DraxClient
             this.Padding = new Padding(0);
 
             // Tab control
-            StyleTabControl(tpGent);
+            StyleTabControl(tabPage);
 
             // Labels – section headers get bold+muted treatment in Paint
             StyleSectionLabels();
@@ -266,11 +266,33 @@ namespace DraxClient
         // ── Data loading (original constructor logic, cleaned up) ─────────────
         private void LoadFormData()
         {
+            tabPage.TabPages.Remove(tprsm);
+            tabPage.TabPages.Remove(tpemail);
+            tabPage.TabPages.Remove(tpadvanced);
+            tabPage.TabPages.Remove(tbGent);
             // COM ports
             for (int i = 1; i <= 10; i++)
                 cbComport.Items.Add(new ComboBoxItem { Text = $"COM{i}", Value = i.ToString() });
 
             _panelType = sendcmd("GetPanelType");
+            switch (_panelType)
+            {
+                case "GENT":
+                    tabPage.TabPages.Add(tbGent);
+                    break;
+
+                case "ADVANCED":
+                    tabPage.TabPages.Add(tpadvanced);
+                    break;
+
+                case "RSM":
+                    tabPage.TabPages.Add(tprsm);
+                    break;
+
+                case "EMAIL":
+                    tabPage.TabPages.Add(tpemail);
+                    break;
+            }
 
             string result = sendcmd("SETTINGSGET|PANEL1,COMMPORT");
             foreach (ComboBoxItem item in cbComport.Items)
@@ -462,8 +484,8 @@ namespace DraxClient
         private void frmSetup_Load(object sender, EventArgs e)
             => sendcmd("SETTINGSRELOAD");
 
-        private void load_email_groups() => this.tpGent.SelectedTab = tpemail;
-        private void load_rsm() => this.tpGent.SelectedTab = tpserialsettings;
+        private void load_email_groups() => this.tabPage.SelectedTab = tpemail;
+        private void load_rsm() => this.tabPage.SelectedTab = tpserialsettings;
 
         private void chkSubAddressOffset_CheckedChanged(object sender, EventArgs e)
         {

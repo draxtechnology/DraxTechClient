@@ -29,16 +29,15 @@
             btcancel = new Button();
             btApply = new Button();
             btok = new Button();
-            tpGent = new TabControl();
+            tabPage = new TabControl();
             tpserialsettings = new TabPage();
+            pnlStatusDot = new Panel();
             cbDataBits = new ComboBox();
+            lbStatus = new Label();
             cbBaudRate = new ComboBox();
             label1 = new Label();
             label7 = new Label();
             cbComport = new ComboBox();
-            pnlStatusBar = new Panel();
-            pnlStatusDot = new Panel();
-            lbStatus = new Label();
             label3 = new Label();
             lblCalibration = new Label();
             label2 = new Label();
@@ -74,22 +73,22 @@
             btdiscovery = new Button();
             frmListen = new Button();
             btdevices = new Button();
-            tabPage1 = new TabPage();
+            tbGent = new TabPage();
             chkExtendedText = new CheckBox();
             chkDisplayUnknown = new CheckBox();
             chkDisablePanelText = new CheckBox();
             chkDisplayChkSumFails = new CheckBox();
             chkOutStationFaults = new CheckBox();
+            progressBar1 = new ProgressBar();
             pnlFooter.SuspendLayout();
-            tpGent.SuspendLayout();
+            tabPage.SuspendLayout();
             tpserialsettings.SuspendLayout();
-            pnlStatusBar.SuspendLayout();
             tpsettings.SuspendLayout();
             tpadvanced.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)cboHB1).BeginInit();
             tpemail.SuspendLayout();
             tprsm.SuspendLayout();
-            tabPage1.SuspendLayout();
+            tbGent.SuspendLayout();
             SuspendLayout();
             // 
             // pnlFooter
@@ -99,16 +98,16 @@
             pnlFooter.Controls.Add(btApply);
             pnlFooter.Controls.Add(btok);
             pnlFooter.Dock = DockStyle.Bottom;
-            pnlFooter.Location = new Point(0, 338);
+            pnlFooter.Location = new Point(0, 325);
             pnlFooter.Name = "pnlFooter";
             pnlFooter.Padding = new Padding(0, 10, 12, 10);
-            pnlFooter.Size = new Size(755, 52);
+            pnlFooter.Size = new Size(719, 52);
             pnlFooter.TabIndex = 1;
             // 
             // btcancel
             // 
             btcancel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btcancel.Location = new Point(614, 11);
+            btcancel.Location = new Point(578, 11);
             btcancel.Name = "btcancel";
             btcancel.Size = new Size(80, 30);
             btcancel.TabIndex = 2;
@@ -118,7 +117,7 @@
             // btApply
             // 
             btApply.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btApply.Location = new Point(526, 11);
+            btApply.Location = new Point(490, 11);
             btApply.Name = "btApply";
             btApply.Size = new Size(80, 30);
             btApply.TabIndex = 1;
@@ -128,37 +127,39 @@
             // btok
             // 
             btok.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btok.Location = new Point(438, 11);
+            btok.Location = new Point(402, 11);
             btok.Name = "btok";
             btok.Size = new Size(80, 30);
             btok.TabIndex = 0;
             btok.Text = "OK";
             btok.Click += btok_Click;
             // 
-            // tpGent
+            // tabPage
             // 
-            tpGent.Controls.Add(tpserialsettings);
-            tpGent.Controls.Add(tpsettings);
-            tpGent.Controls.Add(tpadvanced);
-            tpGent.Controls.Add(tpemail);
-            tpGent.Controls.Add(tprsm);
-            tpGent.Controls.Add(tabPage1);
-            tpGent.Dock = DockStyle.Fill;
-            tpGent.Location = new Point(0, 0);
-            tpGent.Name = "tpGent";
-            tpGent.SelectedIndex = 0;
-            tpGent.Size = new Size(755, 338);
-            tpGent.TabIndex = 0;
+            tabPage.Controls.Add(tpserialsettings);
+            tabPage.Controls.Add(tpsettings);
+            tabPage.Controls.Add(tpadvanced);
+            tabPage.Controls.Add(tpemail);
+            tabPage.Controls.Add(tprsm);
+            tabPage.Controls.Add(tbGent);
+            tabPage.Dock = DockStyle.Fill;
+            tabPage.Location = new Point(0, 0);
+            tabPage.Name = "tabPage";
+            tabPage.SelectedIndex = 0;
+            tabPage.Size = new Size(719, 325);
+            tabPage.TabIndex = 0;
             // 
             // tpserialsettings
             // 
             tpserialsettings.BackColor = Color.FromArgb(245, 246, 250);
+            tpserialsettings.Controls.Add(progressBar1);
+            tpserialsettings.Controls.Add(pnlStatusDot);
             tpserialsettings.Controls.Add(cbDataBits);
+            tpserialsettings.Controls.Add(lbStatus);
             tpserialsettings.Controls.Add(cbBaudRate);
             tpserialsettings.Controls.Add(label1);
             tpserialsettings.Controls.Add(label7);
             tpserialsettings.Controls.Add(cbComport);
-            tpserialsettings.Controls.Add(pnlStatusBar);
             tpserialsettings.Controls.Add(label3);
             tpserialsettings.Controls.Add(lblCalibration);
             tpserialsettings.Controls.Add(label2);
@@ -169,9 +170,17 @@
             tpserialsettings.Location = new Point(4, 24);
             tpserialsettings.Name = "tpserialsettings";
             tpserialsettings.Padding = new Padding(16, 14, 16, 8);
-            tpserialsettings.Size = new Size(747, 310);
+            tpserialsettings.Size = new Size(711, 297);
             tpserialsettings.TabIndex = 0;
             tpserialsettings.Text = "Serial Settings";
+            // 
+            // pnlStatusDot
+            // 
+            pnlStatusDot.BackColor = Color.Transparent;
+            pnlStatusDot.Location = new Point(20, 24);
+            pnlStatusDot.Name = "pnlStatusDot";
+            pnlStatusDot.Size = new Size(14, 14);
+            pnlStatusDot.TabIndex = 0;
             // 
             // cbDataBits
             // 
@@ -180,6 +189,15 @@
             cbDataBits.Name = "cbDataBits";
             cbDataBits.Size = new Size(140, 23);
             cbDataBits.TabIndex = 6;
+            // 
+            // lbStatus
+            // 
+            lbStatus.AutoSize = true;
+            lbStatus.Location = new Point(42, 23);
+            lbStatus.Name = "lbStatus";
+            lbStatus.Size = new Size(79, 15);
+            lbStatus.TabIndex = 0;
+            lbStatus.Text = "Disconnected";
             // 
             // cbBaudRate
             // 
@@ -220,33 +238,6 @@
             cbComport.Name = "cbComport";
             cbComport.Size = new Size(140, 23);
             cbComport.TabIndex = 0;
-            // 
-            // pnlStatusBar
-            // 
-            pnlStatusBar.BackColor = Color.White;
-            pnlStatusBar.Controls.Add(pnlStatusDot);
-            pnlStatusBar.Controls.Add(lbStatus);
-            pnlStatusBar.Location = new Point(16, 14);
-            pnlStatusBar.Name = "pnlStatusBar";
-            pnlStatusBar.Size = new Size(660, 36);
-            pnlStatusBar.TabIndex = 0;
-            // 
-            // pnlStatusDot
-            // 
-            pnlStatusDot.BackColor = Color.Transparent;
-            pnlStatusDot.Location = new Point(12, 11);
-            pnlStatusDot.Name = "pnlStatusDot";
-            pnlStatusDot.Size = new Size(14, 14);
-            pnlStatusDot.TabIndex = 0;
-            // 
-            // lbStatus
-            // 
-            lbStatus.AutoSize = true;
-            lbStatus.Location = new Point(34, 10);
-            lbStatus.Name = "lbStatus";
-            lbStatus.Size = new Size(79, 15);
-            lbStatus.TabIndex = 0;
-            lbStatus.Text = "Disconnected";
             // 
             // label3
             // 
@@ -322,7 +313,7 @@
             tpsettings.Location = new Point(4, 24);
             tpsettings.Name = "tpsettings";
             tpsettings.Padding = new Padding(16, 14, 16, 8);
-            tpsettings.Size = new Size(747, 310);
+            tpsettings.Size = new Size(711, 297);
             tpsettings.TabIndex = 1;
             tpsettings.Text = "Settings";
             // 
@@ -351,7 +342,7 @@
             tpadvanced.Location = new Point(4, 24);
             tpadvanced.Name = "tpadvanced";
             tpadvanced.Padding = new Padding(16, 14, 16, 8);
-            tpadvanced.Size = new Size(747, 310);
+            tpadvanced.Size = new Size(711, 297);
             tpadvanced.TabIndex = 2;
             tpadvanced.Text = "Advanced Panel";
             // 
@@ -463,7 +454,7 @@
             tpemail.Location = new Point(4, 24);
             tpemail.Name = "tpemail";
             tpemail.Padding = new Padding(16, 14, 16, 8);
-            tpemail.Size = new Size(747, 310);
+            tpemail.Size = new Size(711, 297);
             tpemail.TabIndex = 3;
             tpemail.Text = "Email";
             // 
@@ -563,7 +554,7 @@
             tprsm.Location = new Point(4, 24);
             tprsm.Name = "tprsm";
             tprsm.Padding = new Padding(16, 14, 16, 8);
-            tprsm.Size = new Size(747, 310);
+            tprsm.Size = new Size(711, 297);
             tprsm.TabIndex = 4;
             tprsm.Text = "RSM";
             // 
@@ -594,21 +585,21 @@
             btdevices.Text = "Devices";
             btdevices.Click += btdevices_Click;
             // 
-            // tabPage1
+            // tbGent
             // 
-            tabPage1.BackColor = Color.FromArgb(245, 246, 250);
-            tabPage1.BackgroundImageLayout = ImageLayout.Center;
-            tabPage1.Controls.Add(chkExtendedText);
-            tabPage1.Controls.Add(chkDisplayUnknown);
-            tabPage1.Controls.Add(chkDisablePanelText);
-            tabPage1.Controls.Add(chkDisplayChkSumFails);
-            tabPage1.Controls.Add(chkOutStationFaults);
-            tabPage1.Location = new Point(4, 24);
-            tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(747, 310);
-            tabPage1.TabIndex = 5;
-            tabPage1.Text = "Gent Panel";
+            tbGent.BackColor = Color.FromArgb(245, 246, 250);
+            tbGent.BackgroundImageLayout = ImageLayout.Center;
+            tbGent.Controls.Add(chkExtendedText);
+            tbGent.Controls.Add(chkDisplayUnknown);
+            tbGent.Controls.Add(chkDisablePanelText);
+            tbGent.Controls.Add(chkDisplayChkSumFails);
+            tbGent.Controls.Add(chkOutStationFaults);
+            tbGent.Location = new Point(4, 24);
+            tbGent.Name = "tbGent";
+            tbGent.Padding = new Padding(3);
+            tbGent.Size = new Size(711, 297);
+            tbGent.TabIndex = 5;
+            tbGent.Text = "Gent Panel";
             // 
             // chkExtendedText
             // 
@@ -655,12 +646,19 @@
             chkOutStationFaults.TabIndex = 1;
             chkOutStationFaults.Text = "All Outstation Faults Are General Fault";
             // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(189, 15);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(377, 23);
+            progressBar1.TabIndex = 7;
+            // 
             // frmSetup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(755, 390);
-            Controls.Add(tpGent);
+            ClientSize = new Size(719, 377);
+            Controls.Add(tabPage);
             Controls.Add(pnlFooter);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
@@ -669,11 +667,9 @@
             Text = "Setup";
             Load += frmSetup_Load;
             pnlFooter.ResumeLayout(false);
-            tpGent.ResumeLayout(false);
+            tabPage.ResumeLayout(false);
             tpserialsettings.ResumeLayout(false);
             tpserialsettings.PerformLayout();
-            pnlStatusBar.ResumeLayout(false);
-            pnlStatusBar.PerformLayout();
             tpsettings.ResumeLayout(false);
             tpsettings.PerformLayout();
             tpadvanced.ResumeLayout(false);
@@ -682,8 +678,8 @@
             tpemail.ResumeLayout(false);
             tpemail.PerformLayout();
             tprsm.ResumeLayout(false);
-            tabPage1.ResumeLayout(false);
-            tabPage1.PerformLayout();
+            tbGent.ResumeLayout(false);
+            tbGent.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -691,7 +687,6 @@
 
         // ── Field declarations ───────────────────────────────────────────────
         private Panel pnlFooter;
-        private Panel pnlStatusBar;
         private Panel pnlStatusDot;
         private Label lblCalibration;
         private Button btApply;
@@ -707,7 +702,7 @@
         private CheckBox debug;
         private Label label6;
         private TextBox tbOffset;
-        private TabControl tpGent;
+        private TabControl tabPage;
         private TabPage tpserialsettings;
         private TabPage tpadvanced;
         private CheckBox chkDefaultZone;
@@ -736,7 +731,7 @@
         private Button btdiscovery;
         private Button frmListen;
         private Button btdevices;
-        private TabPage tabPage1;
+        private TabPage tbGent;
         private CheckBox chkExtendedText;
         private CheckBox chkDisplayUnknown;
         private CheckBox chkDisablePanelText;
@@ -745,5 +740,6 @@
         private Label label7;
         private ComboBox cbDataBits;
         private ComboBox cbBaudRate;
+        private ProgressBar progressBar1;
     }
 }
