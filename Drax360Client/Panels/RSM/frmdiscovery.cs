@@ -120,13 +120,13 @@ namespace DraxClient.Panels.RSM
             MessageType = 0,
             MessageID = 1,
             ModuleNumber = 2,
-            SerialNumber =3,
+            SerialNumber = 3,
             ModuleType = 4,
             MACAddress = 5,
             DHCPName = 6,
             IpAddress = 7,
             SubnetMask = 8,
-            Gateway = 9 ,
+            Gateway = 9,
             ReportIP1 = 10,
             ReportIP2 = 11,   //currently unused
             ReportIP3 = 12,   //currently unused
@@ -402,7 +402,7 @@ namespace DraxClient.Panels.RSM
                     settingModuleType = ExpandModuleType(mparts[(int)mdiscover.ModuleType]);
                     settingSerialNumber = mparts[(int)mdiscover.SerialNumber];
                     settingMACAddress = GetHexMacAddress(mparts[(int)mdiscover.MACAddress]);
-             
+
                     settingDHCPName = mparts[(int)mdiscover.DHCPName];
                     settingIpAddress = mparts[(int)mdiscover.IpAddress];
                     settingSubnetMask = mparts[(int)mdiscover.SubnetMask];
@@ -492,6 +492,7 @@ namespace DraxClient.Panels.RSM
                 tbreportto1.Text = settingReporting1;
                 tbreportto2.Text = settingReporting2;
                 tbsoftwarever.Text = settingSoftwareVer;
+                panel_handler();
 
             }
             else
@@ -743,7 +744,7 @@ namespace DraxClient.Panels.RSM
             if (!IsNew)
             {
                 settingIpAddress = OurDevice.IP;
-                settingName= OurDevice.Name;
+                settingName = OurDevice.Name;
             }
 
             // Start listener using async ReceiveAsync loop on a background task
@@ -813,7 +814,7 @@ namespace DraxClient.Panels.RSM
 
             // has dhcp name changed?
             string dhcpname = this.tbdhcpname.Text;
-            
+
 
             if (settingDHCPName != dhcpname)
             {
@@ -822,7 +823,7 @@ namespace DraxClient.Panels.RSM
 
             }
 
-            
+
 
             // has id sub net mask changed?
             string subnetmask = this.tbsubnetmask.Text;
@@ -885,14 +886,106 @@ namespace DraxClient.Panels.RSM
 
         }
 
-        private void tbipaddress_TextChanged(object sender, EventArgs e)
-        {
 
+        private void tbsubnetmask_TextChanged(object sender, EventArgs e)
+        {
+            panel_handler();
+        }
+
+        private void tbgateway_TextChanged(object sender, EventArgs e)
+        {
+            panel_handler();
         }
 
         private void btclose_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
+        }
+
+        private void tbmodulenumber_TextChanged(object sender, EventArgs e)
+        {
+            panel_handler();
+        }
+
+        private void panel_handler()
+        {
+            bool valid = true;
+
+
+
+            if (!isvalidipaddress(tbipaddress.Text))
+            {
+                valid = false;
+            }
+
+            if (!isvalidipaddress(tbsubnetmask.Text))
+            {
+                valid = false;
+            }
+
+            if (!isvalidipaddress(tbgateway.Text)   && !string.IsNullOrEmpty(tbgateway.Text))
+            {
+                valid = false;
+            }
+
+
+            if (string.IsNullOrEmpty(tbname.Text))
+            {
+                valid = false;
+            }
+            btsavechanges.Enabled = valid;
+        }
+
+
+        private  bool isvalidipaddress(string? ip)
+        {
+            if (string.IsNullOrWhiteSpace(ip))
+                return false;
+
+            // Trim and use TryParse to validate. Ensure AddressFamily is InterNetwork (IPv4).
+            ip = ip!.Trim();
+            if (IPAddress.TryParse(ip, out var addr))
+            {
+                return addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork;
+            }
+
+            return false;
+        }
+
+
+        private void tbserialnumber_TextChanged(object sender, EventArgs e)
+        {
+            panel_handler();
+        }
+
+        private void tbname_TextChanged(object sender, EventArgs e)
+        {
+            panel_handler();
+        }
+
+        private void tbdhcpname_TextChanged(object sender, EventArgs e)
+        {
+            panel_handler();
+        }
+
+        private void tbipaddress_TextChanged(object sender, EventArgs e)
+        {
+            panel_handler();
+        }
+
+        private void tbipaddress_TextChanged_1(object sender, EventArgs e)
+        {
+            panel_handler();
+        }
+
+        private void tbreportto1_TextChanged(object sender, EventArgs e)
+        {
+            panel_handler();
+        }
+
+        private void tbreportto2_TextChanged(object sender, EventArgs e)
+        {
+            panel_handler();
         }
 
         #region to convert later

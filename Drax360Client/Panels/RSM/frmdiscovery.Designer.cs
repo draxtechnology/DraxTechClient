@@ -34,6 +34,8 @@
             lbdhcpname = new Label();
             tbdhcpname = new TextBox();
             pnleditoptions = new Panel();
+            lblname = new Label();
+            tbname = new TextBox();
             progressBar1 = new ProgressBar();
             label3 = new Label();
             tbsoftwarever = new TextBox();
@@ -58,8 +60,6 @@
             btrestoretodefaults = new Button();
             btsavechanges = new Button();
             btclose = new Button();
-            lblname = new Label();
-            tbname = new TextBox();
             ((System.ComponentModel.ISupportInitialize)pbdiscoveryimage).BeginInit();
             pnleditoptions.SuspendLayout();
             SuspendLayout();
@@ -102,6 +102,7 @@
             tbdhcpname.Name = "tbdhcpname";
             tbdhcpname.Size = new Size(187, 23);
             tbdhcpname.TabIndex = 3;
+            tbdhcpname.TextChanged += tbdhcpname_TextChanged;
             // 
             // pnleditoptions
             // 
@@ -137,6 +138,26 @@
             pnleditoptions.Name = "pnleditoptions";
             pnleditoptions.Size = new Size(478, 470);
             pnleditoptions.TabIndex = 4;
+            // 
+            // lblname
+            // 
+            lblname.AutoSize = true;
+            lblname.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblname.Location = new Point(13, 139);
+            lblname.Name = "lblname";
+            lblname.Size = new Size(43, 15);
+            lblname.TabIndex = 27;
+            lblname.Text = "Name:";
+            lblname.TextAlign = ContentAlignment.TopRight;
+            // 
+            // tbname
+            // 
+            tbname.Location = new Point(128, 136);
+            tbname.MaxLength = 24;
+            tbname.Name = "tbname";
+            tbname.Size = new Size(187, 23);
+            tbname.TabIndex = 28;
+            tbname.TextChanged += tbname_TextChanged;
             // 
             // progressBar1
             // 
@@ -181,6 +202,7 @@
             tbreportto2.Name = "tbreportto2";
             tbreportto2.Size = new Size(187, 23);
             tbreportto2.TabIndex = 23;
+            tbreportto2.TextChanged += tbreportto2_TextChanged;
             // 
             // label1
             // 
@@ -199,6 +221,7 @@
             tbreportto1.Name = "tbreportto1";
             tbreportto1.Size = new Size(187, 23);
             tbreportto1.TabIndex = 21;
+            tbreportto1.TextChanged += tbreportto1_TextChanged;
             // 
             // lbmacaddress
             // 
@@ -236,6 +259,7 @@
             tbserialnumber.Name = "tbserialnumber";
             tbserialnumber.Size = new Size(187, 23);
             tbserialnumber.TabIndex = 17;
+            tbserialnumber.TextChanged += tbserialnumber_TextChanged;
             // 
             // lbmoduletype
             // 
@@ -273,6 +297,7 @@
             tbmodulenumber.Name = "tbmodulenumber";
             tbmodulenumber.Size = new Size(187, 23);
             tbmodulenumber.TabIndex = 13;
+            tbmodulenumber.TextChanged += tbmodulenumber_TextChanged;
             // 
             // lbgateway
             // 
@@ -291,6 +316,7 @@
             tbgateway.Name = "tbgateway";
             tbgateway.Size = new Size(187, 23);
             tbgateway.TabIndex = 11;
+            tbgateway.TextChanged += tbgateway_TextChanged;
             // 
             // lbsubnetmask
             // 
@@ -309,6 +335,7 @@
             tbsubnetmask.Name = "tbsubnetmask";
             tbsubnetmask.Size = new Size(187, 23);
             tbsubnetmask.TabIndex = 9;
+            tbsubnetmask.TextChanged += tbsubnetmask_TextChanged;
             // 
             // lbipaddress
             // 
@@ -327,6 +354,7 @@
             tbipaddress.Name = "tbipaddress";
             tbipaddress.Size = new Size(187, 23);
             tbipaddress.TabIndex = 7;
+            tbipaddress.TextChanged += tbipaddress_TextChanged_1;
             // 
             // btrestoretodefaults
             // 
@@ -357,25 +385,6 @@
             btclose.Text = "Close";
             btclose.UseVisualStyleBackColor = true;
             btclose.Click += btclose_Click;
-            // 
-            // lblname
-            // 
-            lblname.AutoSize = true;
-            lblname.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblname.Location = new Point(13, 139);
-            lblname.Name = "lblname";
-            lblname.Size = new Size(43, 15);
-            lblname.TabIndex = 27;
-            lblname.Text = "Name:";
-            lblname.TextAlign = ContentAlignment.TopRight;
-            // 
-            // tbname
-            // 
-            tbname.Location = new Point(128, 136);
-            tbname.MaxLength = 24;
-            tbname.Name = "tbname";
-            tbname.Size = new Size(187, 23);
-            tbname.TabIndex = 28;
             // 
             // frmdiscovery
             // 
