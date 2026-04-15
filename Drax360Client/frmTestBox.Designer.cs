@@ -90,6 +90,11 @@
             btOn.Text = "ON";
             btOn.UseVisualStyleBackColor = true;
             btOn.Click += btOn_Click;
+            // ON button - dark navy
+            btOn.BackColor = Color.FromArgb(26, 43, 74);
+            btOn.ForeColor = Color.White;
+            btOn.FlatStyle = FlatStyle.Flat;
+            btOn.FlatAppearance.BorderSize = 0;
             // 
             // btReset
             // 
@@ -101,6 +106,11 @@
             btReset.Text = "RESET";
             btReset.UseVisualStyleBackColor = true;
             btReset.Click += btReset_Click;
+            // RESET button - red
+            btReset.BackColor = Color.FromArgb(226, 75, 74);
+            btReset.ForeColor = Color.White;
+            btReset.FlatStyle = FlatStyle.Flat;
+            btReset.FlatAppearance.BorderSize = 0;
             // 
             // tbNode
             // 

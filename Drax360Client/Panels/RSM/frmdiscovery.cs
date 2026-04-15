@@ -409,7 +409,13 @@ namespace DraxClient.Panels.RSM
                     settingGateway = mparts[(int)mdiscover.Gateway];
                     settingReporting1 = mparts[(int)mdiscover.ReportIP1];
                     settingReporting2 = mparts[(int)mdiscover.ReportIP2];
-                    settingSoftwareVer = mparts[(int)mdiscover.SwVersion];
+                    settingSoftwareVer = "";
+                    try
+                    {
+                        settingSoftwareVer = mparts[(int)mdiscover.SwVersion];
+                    }
+                    catch { }
+                   
 
                     /*
                     vsfDiscover.Cell(flexcpText, disRow.ModuleNumber, 1) = mParts(mDiscover.ModuleNumber)
@@ -531,7 +537,7 @@ namespace DraxClient.Panels.RSM
 
                     int length = i - start;
 
-                    if (length > 0) // Avoid empty strings unless needed
+                    // if (length > 0) // Avoid empty strings unless needed
 
                     {
 
