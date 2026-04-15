@@ -31,6 +31,7 @@
             btok = new Button();
             tabPage = new TabControl();
             tpserialsettings = new TabPage();
+            progressBar1 = new ProgressBar();
             pnlStatusDot = new Panel();
             cbDataBits = new ComboBox();
             lbStatus = new Label();
@@ -70,7 +71,6 @@
             tbpassword = new TextBox();
             cbauthorisation = new CheckBox();
             tprsm = new TabPage();
-            btdiscovery = new Button();
             frmListen = new Button();
             btdevices = new Button();
             tbGent = new TabPage();
@@ -79,7 +79,6 @@
             chkDisablePanelText = new CheckBox();
             chkDisplayChkSumFails = new CheckBox();
             chkOutStationFaults = new CheckBox();
-            progressBar1 = new ProgressBar();
             pnlFooter.SuspendLayout();
             tabPage.SuspendLayout();
             tpserialsettings.SuspendLayout();
@@ -173,6 +172,13 @@
             tpserialsettings.Size = new Size(711, 297);
             tpserialsettings.TabIndex = 0;
             tpserialsettings.Text = "Serial Settings";
+            // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(189, 15);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(377, 23);
+            progressBar1.TabIndex = 7;
             // 
             // pnlStatusDot
             // 
@@ -548,7 +554,6 @@
             // tprsm
             // 
             tprsm.BackColor = Color.FromArgb(245, 246, 250);
-            tprsm.Controls.Add(btdiscovery);
             tprsm.Controls.Add(frmListen);
             tprsm.Controls.Add(btdevices);
             tprsm.Location = new Point(4, 24);
@@ -557,15 +562,6 @@
             tprsm.Size = new Size(711, 297);
             tprsm.TabIndex = 4;
             tprsm.Text = "RSM";
-            // 
-            // btdiscovery
-            // 
-            btdiscovery.Location = new Point(16, 16);
-            btdiscovery.Name = "btdiscovery";
-            btdiscovery.Size = new Size(100, 30);
-            btdiscovery.TabIndex = 0;
-            btdiscovery.Text = "Discovery";
-            btdiscovery.Click += btdiscovery_Click;
             // 
             // frmListen
             // 
@@ -646,13 +642,6 @@
             chkOutStationFaults.TabIndex = 1;
             chkOutStationFaults.Text = "All Outstation Faults Are General Fault";
             // 
-            // progressBar1
-            // 
-            progressBar1.Location = new Point(189, 15);
-            progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(377, 23);
-            progressBar1.TabIndex = 7;
-            // 
             // frmSetup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -728,7 +717,6 @@
         private TextBox tbpassword;
         private CheckBox cbauthorisation;
         private TabPage tprsm;
-        private Button btdiscovery;
         private Button frmListen;
         private Button btdevices;
         private TabPage tbGent;

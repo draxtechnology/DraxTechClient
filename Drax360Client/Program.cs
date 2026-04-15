@@ -9,12 +9,12 @@ namespace DraxClient
 
         public class HiddenAppContext : ApplicationContext
         {
-            private bool debug = false; // Set to true for debugging purposes
+            private bool debug = true; // Set to true for debugging purposes
             private frmprimary _mainForm;
             public HiddenAppContext()
             {
                 //var _mainForm = new frmprimary();
-                var _mainForm = new frmTestBox();
+                var _mainForm = new frmSetup();
 
                 // Force the creation of the form's handle
                 var handle = _mainForm.Handle;
