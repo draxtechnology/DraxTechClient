@@ -89,6 +89,31 @@ namespace DraxClient
         private void btOn_Click(object sender, EventArgs e)
         {
             ComboBoxItem selectedItem = this.cbType.SelectedItem as ComboBoxItem;
+
+            if (selectedItem == null)
+            {
+                MessageBox.Show("Please select a type.", "Validation Error");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(this.tbNode.Text))
+            {
+                MessageBox.Show("Please enter a node.", "Validation Error");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(this.tbLoop.Text))
+            {
+                MessageBox.Show("Please enter a loop.", "Validation Error");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(this.tbDevice.Text))
+            {
+                MessageBox.Show("Please enter a device.", "Validation Error");
+                return;
+            }
+
             sendcmd("Test Box", selectedItem.Value + "," + this.tbNode.Text + "," + this.tbLoop.Text + "," + this.tbDevice.Text);
             sendcmd($"SETTINGSSET|TESTBOX,Input," + this.tbDevice.Text);
             sendcmd($"SETTINGSSET|TESTBOX,Zone," + this.tbLoop.Text);
@@ -160,6 +185,29 @@ namespace DraxClient
         private void btReset_Click(object sender, EventArgs e)
         {
             ComboBoxItem selectedItem = this.cbType.SelectedItem as ComboBoxItem;
+            if (selectedItem == null)
+            {
+                MessageBox.Show("Please select a type.", "Validation Error");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(this.tbNode.Text))
+            {
+                MessageBox.Show("Please enter a node.", "Validation Error");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(this.tbLoop.Text))
+            {
+                MessageBox.Show("Please enter a loop.", "Validation Error");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(this.tbDevice.Text))
+            {
+                MessageBox.Show("Please enter a device.", "Validation Error");
+                return;
+            }
             sendcmd("Test Box Reset", selectedItem.Value + "," + this.tbNode.Text + "," + this.tbLoop.Text + "," + this.tbDevice.Text);
             sendcmd($"SETTINGSSET|TESTBOX,Input," + this.tbDevice.Text);
             sendcmd($"SETTINGSSET|TESTBOX,Zone," + this.tbLoop.Text);
@@ -171,11 +219,6 @@ namespace DraxClient
         private void frmTestBox_Load(object sender, EventArgs e)
         {
             Console.WriteLine("frmTestBox Load event fired.");
-        }
-
-        private void cbType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

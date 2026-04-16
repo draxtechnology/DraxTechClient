@@ -78,39 +78,36 @@
             cbType.Name = "cbType";
             cbType.Size = new Size(133, 23);
             cbType.TabIndex = 6;
-            cbType.SelectedIndexChanged += cbType_SelectedIndexChanged;
             // 
             // btOn
             // 
+            btOn.BackColor = Color.FromArgb(26, 43, 74);
+            btOn.FlatAppearance.BorderSize = 0;
+            btOn.FlatStyle = FlatStyle.Flat;
+            btOn.ForeColor = Color.White;
             btOn.Location = new Point(186, 76);
             btOn.Margin = new Padding(3, 2, 3, 2);
             btOn.Name = "btOn";
             btOn.Size = new Size(82, 22);
             btOn.TabIndex = 7;
             btOn.Text = "ON";
-            btOn.UseVisualStyleBackColor = true;
+            btOn.UseVisualStyleBackColor = false;
             btOn.Click += btOn_Click;
-            // ON button - dark navy
-            btOn.BackColor = Color.FromArgb(26, 43, 74);
-            btOn.ForeColor = Color.White;
-            btOn.FlatStyle = FlatStyle.Flat;
-            btOn.FlatAppearance.BorderSize = 0;
             // 
             // btReset
             // 
+            btReset.BackColor = Color.FromArgb(226, 75, 74);
+            btReset.FlatAppearance.BorderSize = 0;
+            btReset.FlatStyle = FlatStyle.Flat;
+            btReset.ForeColor = Color.White;
             btReset.Location = new Point(297, 75);
             btReset.Margin = new Padding(3, 2, 3, 2);
             btReset.Name = "btReset";
             btReset.Size = new Size(66, 23);
             btReset.TabIndex = 8;
             btReset.Text = "RESET";
-            btReset.UseVisualStyleBackColor = true;
+            btReset.UseVisualStyleBackColor = false;
             btReset.Click += btReset_Click;
-            // RESET button - red
-            btReset.BackColor = Color.FromArgb(226, 75, 74);
-            btReset.ForeColor = Color.White;
-            btReset.FlatStyle = FlatStyle.Flat;
-            btReset.FlatAppearance.BorderSize = 0;
             // 
             // tbNode
             // 

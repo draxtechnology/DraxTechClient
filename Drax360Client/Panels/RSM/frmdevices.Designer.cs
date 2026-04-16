@@ -69,7 +69,7 @@
             // 
             // btdiscovery
             // 
-            btdiscovery.Location = new Point(486, 415);
+            btdiscovery.Location = new Point(649, 415);
             btdiscovery.Name = "btdiscovery";
             btdiscovery.Size = new Size(139, 23);
             btdiscovery.TabIndex = 14;
@@ -87,6 +87,8 @@
             Controls.Add(btedit);
             Controls.Add(dgdevices);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frmdevices";
             Text = "RSM Devices";
             ((System.ComponentModel.ISupportInitialize)dgdevices).EndInit();
