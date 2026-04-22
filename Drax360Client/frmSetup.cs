@@ -290,6 +290,7 @@ namespace DraxClient
                     break;
 
                 case "EMAIL":
+                    tabPage.TabPages.Remove(tpserialsettings);
                     tabPage.TabPages.Add(tpemail);
                     break;
             }
@@ -308,6 +309,10 @@ namespace DraxClient
                     break;
                 case "EMAIL":
                     load_email_groups();
+                    this.tbname.Text = sendcmd("SETTINGSGET|EMAIL,SMTPSERVER");
+                    this.tbuser.Text = sendcmd("SETTINGSGET|EMAIL,LOGINNAME");
+                    this.tbpassword.Text = sendcmd("SETTINGSGET|EMAIL,PASSWORD");
+                    this.tbport.Text = sendcmd("SETTINGSGET|EMAIL,SMTPPORT");
                     break;
                 case "GENT":
                     this.tbOffset.Text = sendcmd("SETTINGSGET|SETUP,GIAMX1OFFSET");

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmemaigroups));
             btsendtest = new Button();
             btdelete = new Button();
             btedit = new Button();
@@ -99,6 +100,9 @@
             Controls.Add(btdelete);
             Controls.Add(btedit);
             Controls.Add(dgemailgroups);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frmemaigroups";
             Text = "Email Groups";
             FormClosing += frmemaigroups_FormClosing;

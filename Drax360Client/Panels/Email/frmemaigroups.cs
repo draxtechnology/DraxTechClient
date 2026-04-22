@@ -258,9 +258,8 @@ namespace DraxClient.Panels.Email
         }
 
         private void btsendtest_Click(object sender, EventArgs e)
-        {
-
-        }
+              =>new frmemailtest().ShowDialog();
+        
     }
 }
 
