@@ -547,9 +547,9 @@
             cbauthorisation.AutoSize = true;
             cbauthorisation.Location = new Point(16, 170);
             cbauthorisation.Name = "cbauthorisation";
-            cbauthorisation.Size = new Size(146, 19);
+            cbauthorisation.Size = new Size(180, 19);
             cbauthorisation.TabIndex = 5;
-            cbauthorisation.Text = "Requires Authorisation";
+            cbauthorisation.Text = "Requires SMTP Authorisation";
             // 
             // tprsm
             // 

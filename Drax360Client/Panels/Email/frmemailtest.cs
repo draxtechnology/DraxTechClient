@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryptoModule;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,8 +26,12 @@ namespace DraxClient.Panels.Email
         {
             string smtpserver = sendcmd("SETTINGSGET|EMAIL,SMTPSERVER");
             string smtpuser = sendcmd("SETTINGSGET|EMAIL,LOGINNAME");
-            // string smtppassword = sendcmd("SETTINGSGET|EMAIL,PASSWORD");
-            string smtppassword = "Y(531132842940ax";
+            string smtppassword = sendcmd("SETTINGSGET|EMAIL,PASSWORD");
+            string decryptedpassword = AesDecryptor.DecryptOpenSSLCtr(smtppassword, "");
+            string result = sendcmd("SETTINGSGET|EMAIL,SMTPAUTHORISATION");
+            bool cbauthorisation = result == "1" || result == "True";
+
+            //string smtppassword = "Y(531132842940ax";
             int smtpport = Convert.ToInt32(sendcmd("SETTINGSGET|EMAIL,SMTPPORT"));
 
             try
@@ -40,9 +45,11 @@ namespace DraxClient.Panels.Email
 
                 // set smtp-client with basicAuthentication
                 mySmtpClient.UseDefaultCredentials = false;
-                System.Net.NetworkCredential basicAuthenticationInfo = new
-                   System.Net.NetworkCredential(smtpuser, smtppassword);
-                mySmtpClient.Credentials = basicAuthenticationInfo;
+                if (cbauthorisation)
+                {
+                    System.Net.NetworkCredential basicAuthenticationInfo = new System.Net.NetworkCredential(smtpuser, decryptedpassword);
+                    mySmtpClient.Credentials = basicAuthenticationInfo;
+                }
 
                 // add from,to mailaddresses
                 MailAddress from = new MailAddress(smtpuser, "Email Test");
@@ -64,10 +71,11 @@ namespace DraxClient.Panels.Email
                 myMail.Body += "<span style='color: blue;font-size: 8pt;'>Please contact the AMX1 administrator if you wish to be removed from this email list.<br>";
                 myMail.Body += "<span style='color: blue;font-size: 8pt;'>" + sendcmd("SETTINGSGET|EMAIL,FOOTER");
                 myMail.BodyEncoding = System.Text.Encoding.UTF8;
-                // text or html
+
                 myMail.IsBodyHtml = true;
 
                 mySmtpClient.Send(myMail);
+                sendcmd($"SETTINGSSET|EMAIL,TESTMESSAGE,{this.textBox1.Text.Replace(","," ")}");
                 this.Close();
             }
 

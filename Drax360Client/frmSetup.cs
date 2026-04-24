@@ -1,9 +1,11 @@
-﻿using DraxClient.Panels.Email;
+﻿using CryptoModule;
+using DraxClient.Panels.Email;
 using DraxClient.Panels.RSM;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Printing;
@@ -311,8 +313,12 @@ namespace DraxClient
                     load_email_groups();
                     this.tbname.Text = sendcmd("SETTINGSGET|EMAIL,SMTPSERVER");
                     this.tbuser.Text = sendcmd("SETTINGSGET|EMAIL,LOGINNAME");
-                    this.tbpassword.Text = sendcmd("SETTINGSGET|EMAIL,PASSWORD");
+                    string smtppassword = sendcmd("SETTINGSGET|EMAIL,PASSWORD");
+                    this.tbpassword.Text = AesDecryptor.DecryptOpenSSLCtr(smtppassword, "");
                     this.tbport.Text = sendcmd("SETTINGSGET|EMAIL,SMTPPORT");
+                    result = sendcmd("SETTINGSGET|EMAIL,SMTPAUTHORISATION");
+                    this.cbauthorisation.Checked = result == "1" || result == "True";
+
                     break;
                 case "GENT":
                     this.tbOffset.Text = sendcmd("SETTINGSGET|SETUP,GIAMX1OFFSET");
@@ -465,21 +471,34 @@ namespace DraxClient
 
         private void savesettings()
         {
-            if (cbComport.SelectedItem is ComboBoxItem item)
-                sendcmd($"SETTINGSSET|PANEL1,COMMPORT,{item.Value}");
-
-            sendcmd($"SETTINGSSET|SETUP,DATALOGGING,{(debug.Checked ? "1" : "0")}");
-            sendcmd($"SETTINGSSET|SETUP,BAUDRATE,{this.cbBaudRate.Text}");
-            sendcmd($"SETTINGSSET|SETUP,DATABITS,{this.cbDataBits.Text}");
-            sendcmd($"SETTINGSSET|SETUP,PARITY,{this.cbParity.Text}");
-            sendcmd($"SETTINGSSET|SETUP,GIAMX1OFFSET,{this.tbOffset.Text}");
-            if (_panelType == "GENT")
+            if (_panelType == "EMAIL")
             {
-                sendcmd($"SETTINGSSET|SETUP,OutStationFaultsGenFault,{(chkOutStationFaults.Checked ? "1" : "0")}");
-                sendcmd($"SETTINGSSET|SETUP,DisplayChkSumFails,{(chkDisplayChkSumFails.Checked ? "1" : "0")}");
-                sendcmd($"SETTINGSSET|SETUP,DisablePanelText,{(chkDisablePanelText.Checked ? "1" : "0")}");
-                sendcmd($"SETTINGSSET|SETUP,DisplayUnknownEvents,{(chkDisplayUnknown.Checked ? "1" : "0")}");
-                sendcmd($"SETTINGSSET|SETUP,UseExtendedTextIfOver,{(chkExtendedText.Checked ? "1" : "0")}");
+                sendcmd($"SETTINGSSET|EMAIL,SMTPSERVER,{this.tbname.Text}");
+                sendcmd($"SETTINGSSET|EMAIL,LOGINNAME,{this.tbuser.Text}");
+                //string encryptedPassword = AesDecryptor.EncryptOpenSSLCtr(this.tbpassword.Text, "");
+                //sendcmd($"SETTINGSSET|EMAIL,PASSWORD,{encryptedPassword}");
+                sendcmd($"SETTINGSSET|EMAIL,SMTPPORT,{this.tbport.Text}");
+                sendcmd($"SETTINGSSET|EMAIL,SMTPAUTHORISATION,{(cbauthorisation.Checked ? "1" : "0")}");
+                sendcmd($"SETTINGSSET|EMAIL,DATALOGGING,{(debug.Checked ? "1" : "0")}");
+            }
+            else
+            { 
+                if (cbComport.SelectedItem is ComboBoxItem item)
+                    sendcmd($"SETTINGSSET|PANEL1,COMMPORT,{item.Value}");
+
+                sendcmd($"SETTINGSSET|SETUP,DATALOGGING,{(debug.Checked ? "1" : "0")}");
+                sendcmd($"SETTINGSSET|SETUP,BAUDRATE,{this.cbBaudRate.Text}");
+                sendcmd($"SETTINGSSET|SETUP,DATABITS,{this.cbDataBits.Text}");
+                sendcmd($"SETTINGSSET|SETUP,PARITY,{this.cbParity.Text}");
+                sendcmd($"SETTINGSSET|SETUP,GIAMX1OFFSET,{this.tbOffset.Text}");
+                if (_panelType == "GENT")
+                {
+                    sendcmd($"SETTINGSSET|SETUP,OutStationFaultsGenFault,{(chkOutStationFaults.Checked ? "1" : "0")}");
+                    sendcmd($"SETTINGSSET|SETUP,DisplayChkSumFails,{(chkDisplayChkSumFails.Checked ? "1" : "0")}");
+                    sendcmd($"SETTINGSSET|SETUP,DisablePanelText,{(chkDisablePanelText.Checked ? "1" : "0")}");
+                    sendcmd($"SETTINGSSET|SETUP,DisplayUnknownEvents,{(chkDisplayUnknown.Checked ? "1" : "0")}");
+                    sendcmd($"SETTINGSSET|SETUP,UseExtendedTextIfOver,{(chkExtendedText.Checked ? "1" : "0")}");
+                }
             }
             sendcmd("SETTINGSSAVE");
         }
