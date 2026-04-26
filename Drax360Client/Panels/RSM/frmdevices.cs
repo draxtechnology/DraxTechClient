@@ -17,8 +17,8 @@ namespace DraxClient.Panels.RSM
     {
         private readonly object _fileLock = new();
         private static readonly string FileName = "devices.json";
-        private static readonly string StorageDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DraxClient");
-        private static readonly string StorageFilePath = Path.Combine(StorageDirectory, FileName);
+        private static readonly string StorageDirectory = Paths.StorageDirectory;
+        private static readonly string StorageFilePath = Paths.GetFile(FileName);
 
         public List<Device> Devices = new List<Device>();
 
@@ -26,6 +26,7 @@ namespace DraxClient.Panels.RSM
         public frmdevices()
         {
             InitializeComponent();
+            Paths.MigrateLegacyFile(FileName);
             if (load_devices())
             {
                 bind_grid();

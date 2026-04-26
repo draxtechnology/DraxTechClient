@@ -43,6 +43,12 @@
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_C1B6D03D2E7A3B89745D2A1F0C087654"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -99,6 +105,20 @@
     {
         "CustomAction"
         {
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_D2C7E14E3F8B4C9A856E3D2A1B098765"
+            {
+            "Name" = "8:setpermissions.vbs"
+            "Condition" = "8:"
+            "Object" = "8:_C1B6D03D2E7A3B89745D2A1F0C087654"
+            "FileType" = "3:0"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:0"
+            "Identifier" = "8:_BD2C5F9D_6E3B_5C8F_AD4E_9F7E6D5C4321"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:"
+            }
         }
         "DefaultFeature"
         {
@@ -135,6 +155,26 @@
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
             "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C1B6D03D2E7A3B89745D2A1F0C087654"
+            {
+            "SourcePath" = "8:setpermissions.vbs"
+            "TargetName" = "8:setpermissions.vbs"
+            "Tag" = "8:"
+            "Folder" = "8:_B2A2C12F7DDE4AADAB2E3CB3B2FCFF75"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:TRUE"
             "System" = "11:FALSE"
             "Permanent" = "11:FALSE"
             "SharedLegacy" = "11:FALSE"

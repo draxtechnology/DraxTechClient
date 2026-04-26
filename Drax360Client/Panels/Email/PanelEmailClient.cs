@@ -12,13 +12,15 @@ namespace DraxClient.Panels.Email
     {
         private readonly object _fileLock = new();
         private static readonly string FileName = "emailgroups.json";
-        private static readonly string StorageDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DraxClient");
-        private static readonly string StorageFilePath = Path.Combine(StorageDirectory, FileName);
+        private static readonly string StorageDirectory = Paths.StorageDirectory;
+        private static readonly string StorageFilePath = Paths.GetFile(FileName);
 
         public List<Group> Groups = new List<Group>();
 
         public PanelEmailClient()
         {
+            Paths.MigrateLegacyFile(FileName);
+
             // Attempt to load persisted groups; if that fails, populate defaults.
             if (!Load())
             {
