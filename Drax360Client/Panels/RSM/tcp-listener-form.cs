@@ -140,6 +140,22 @@ namespace TcpListenerApp
 
                 await Task.Run(() => ListenForConnections(cancellationTokenSource.Token));
             }
+            catch (SocketException ex) when (ex.ErrorCode == 10048)
+            {
+                // WSAEADDRINUSE - Drax360Service (DraxTechnology) usually owns 1471
+                // when configured for the RSM panel. Two processes cannot bind the
+                // same port; stop the service before using this diagnostic listener.
+                MessageBox.Show(
+                    "Port 1471 is already in use.\n\n" +
+                    "The Drax360Service (DraxTechnology) is most likely already " +
+                    "listening on this port for the RSM panel. Stop the service " +
+                    "(services.msc, or net stop DraxTechnology) and try again.",
+                    "Port In Use",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                StopListener();
+            }
+
             catch (Exception ex)
             {
                 MessageBox.Show($"Error starting listener: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
