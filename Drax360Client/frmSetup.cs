@@ -14,7 +14,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TcpListenerApp;
 using static DraxClient.frmTestBox;
 
 namespace DraxClient
@@ -522,9 +521,6 @@ namespace DraxClient
 
         private void btdiscovery_Click(object sender, EventArgs e)
             => new frmdiscovery().ShowDialog();
-
-        private void frmListen_Click(object sender, EventArgs e)
-            => new TcpListenerForm().ShowDialog();
 
         private void btdevices_Click(object sender, EventArgs e)
             => new frmdevices().ShowDialog();

@@ -71,7 +71,6 @@
             tbpassword = new TextBox();
             cbauthorisation = new CheckBox();
             tprsm = new TabPage();
-            frmListen = new Button();
             btdevices = new Button();
             tbGent = new TabPage();
             chkExtendedText = new CheckBox();
@@ -554,7 +553,6 @@
             // tprsm
             // 
             tprsm.BackColor = Color.FromArgb(245, 246, 250);
-            tprsm.Controls.Add(frmListen);
             tprsm.Controls.Add(btdevices);
             tprsm.Location = new Point(4, 24);
             tprsm.Name = "tprsm";
@@ -562,18 +560,9 @@
             tprsm.Size = new Size(711, 297);
             tprsm.TabIndex = 4;
             tprsm.Text = "RSM";
-            // 
-            // frmListen
-            // 
-            frmListen.Location = new Point(124, 16);
-            frmListen.Name = "frmListen";
-            frmListen.Size = new Size(100, 30);
-            frmListen.TabIndex = 1;
-            frmListen.Text = "Listen";
-            frmListen.Click += frmListen_Click;
-            // 
+            //
             // btdevices
-            // 
+            //
             btdevices.Location = new Point(232, 16);
             btdevices.Name = "btdevices";
             btdevices.Size = new Size(100, 30);
@@ -717,7 +706,6 @@
         private TextBox tbpassword;
         private CheckBox cbauthorisation;
         private TabPage tprsm;
-        private Button frmListen;
         private Button btdevices;
         private TabPage tbGent;
         private CheckBox chkExtendedText;

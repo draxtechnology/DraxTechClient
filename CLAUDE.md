@@ -57,7 +57,7 @@ The client supports multiple fire panel families. `frmSetup.LoadFormData()` call
 `Drax360Client/Panels/` houses panel-family code that would otherwise bloat `frmSetup`:
 
 - `Panels/Email/` — `PanelEmailClient` persists `Group`/`Address` data as JSON at `%AppData%\DraxClient\emailgroups.json` (note: writes the user's roaming AppData, not the install dir). Edited via `frmemailgroups` / `frmemailgroup`.
-- `Panels/RSM/` — RSM module (TCP/IP gateway device) discovery and configuration. `frmdiscovery.cs` defines two legacy-ordered enums (`optSetGet`, `cmdToPanel`) whose integer values are wire-protocol identifiers — **do not renumber**. `tcp-listener-form.cs` lives in namespace `TcpListenerApp` (not `DraxClient.Panels.RSM`).
+- `Panels/RSM/` — RSM module (TCP/IP gateway device) discovery and configuration. `frmdiscovery.cs` defines two legacy-ordered enums (`optSetGet`, `cmdToPanel`) whose integer values are wire-protocol identifiers — **do not renumber**.
 
 ### Styling
 
