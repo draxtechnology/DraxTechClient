@@ -9,7 +9,7 @@ namespace DraxClient
 
         public class HiddenAppContext : ApplicationContext
         {
-            private bool debug = true; // Set to true for debugging purposes
+            private bool debug = false; // Set to true for debugging purposes
             private frmprimary _mainForm;
             public HiddenAppContext()
             {
