@@ -23,6 +23,11 @@ namespace DraxClient
         const string kpipenamesend = "DraxTechnologyPipeSend";
         const char kpipedelim = '|';
 
+        private ProgressBar progressBarConnection;
+        private System.Windows.Forms.Timer timerProgress;
+        private bool _isConnecting = false;
+        private bool _isDisconnecting = false;
+
         // ── Palette ──────────────────────────────────────────────────────────
         static readonly Color clrBackground = Color.FromArgb(245, 246, 250);
         static readonly Color clrSurface = Color.White;
@@ -41,8 +46,48 @@ namespace DraxClient
         public frmSetup()
         {
             InitializeComponent();
+
+            // Initialize after InitializeComponent
+
             ApplyModernStyling();
             LoadFormData();
+        }
+
+        private void TimerProgress_Tick(object sender, EventArgs e)
+        {
+
+            if (_isConnecting && progressBar1.Value < 100)
+            {
+                progressBar1.Value = Math.Min(progressBar1.Value + 1, 100);
+                if (progressBar1.Value == 100)
+                {
+                    progressBar1.Value = 0;
+                }
+            }
+            else if (_isDisconnecting && progressBar1.Value > 0)
+            {
+                progressBar1.Value = Math.Max(progressBar1.Value - 1, 0);
+                if (progressBar1.Value == 0)
+                {
+                    _isDisconnecting = false;
+                    timerProgress.Stop();
+                }
+            }
+        }
+
+        private void OnSerialPortConnected()
+        {
+            _isDisconnecting = false;
+            _isConnecting = true;
+            timerProgress.Start();
+        }
+
+        private void OnSerialPortDisconnected()
+        {
+            _isConnecting = false;
+            _isDisconnecting = true;
+            timerProgress.Start();
+
         }
 
         // ── Styling ───────────────────────────────────────────────────────────
@@ -248,9 +293,15 @@ namespace DraxClient
             pnlStatusDot.Paint -= PaintDot_Red;
             pnlStatusDot.Paint -= PaintDot_Green;
             if (connected)
+            {
                 pnlStatusDot.Paint += PaintDot_Green;
+                OnSerialPortConnected();
+            }
             else
+            {
                 pnlStatusDot.Paint += PaintDot_Red;
+                OnSerialPortDisconnected();
+            }
             pnlStatusDot.Invalidate();
         }
 
@@ -267,6 +318,10 @@ namespace DraxClient
         // ── Data loading (original constructor logic, cleaned up) ─────────────
         private void LoadFormData()
         {
+            timerProgress = new System.Windows.Forms.Timer();
+            timerProgress.Interval = 1;
+            timerProgress.Tick += TimerProgress_Tick;
+
             tabPage.TabPages.Remove(tprsm);
             tabPage.TabPages.Remove(tpemail);
             tabPage.TabPages.Remove(tpadvanced);
