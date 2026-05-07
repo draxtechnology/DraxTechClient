@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
 
-  <Package Name="Drax Client"
-           Manufacturer="Drax"
+  <Package Name="Drax Technology Client"
+           Manufacturer="Drax Technology"
            Version="1.0.0"
            UpgradeCode="BCDEEC3D-DD83-44D7-9AC4-783B277ECBC5"
            Scope="perMachine"
@@ -27,7 +27,7 @@
 
     <!-- Install location: C:\Program Files\Drax\Drax Client -->
     <StandardDirectory Id="ProgramFiles64Folder">
-      <Directory Id="ManufacturerFolder" Name="Drax">
+      <Directory Id="ManufacturerFolder" Name="Drax Client">
         <Directory Id="INSTALLFOLDER" Name="Drax Client" />
       </Directory>
     </StandardDirectory>
