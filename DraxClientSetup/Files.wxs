@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+    <ComponentGroup Id="DependencyFiles" Directory="INSTALLFOLDER">
+      <Component Id="cmp_DraxClient_deps_json" Guid="91235021-9F8B-D262-BDD5-91622D3FA48C">
+        <File Id="fil_DraxClient_deps_json" Source="$(var.DraxClient.TargetDir)DraxClient.deps.json" KeyPath="yes" />
+      </Component>
+      <Component Id="cmp_DraxClient_dll" Guid="EB401EB8-8D91-7694-E310-326DB50A55AF">
+        <File Id="fil_DraxClient_dll" Source="$(var.DraxClient.TargetDir)DraxClient.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="cmp_DraxClient_runtimeconfig_json" Guid="4CAB0C37-BD11-1804-DC15-1859A3F999A2">
+        <File Id="fil_DraxClient_runtimeconfig_json" Source="$(var.DraxClient.TargetDir)DraxClient.runtimeconfig.json" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

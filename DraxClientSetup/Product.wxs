@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <Package Name="Drax Client"
+           Manufacturer="Drax"
+           Version="1.0.0"
+           UpgradeCode="BCDEEC3D-DD83-44D7-9AC4-783B277ECBC5"
+           Scope="perMachine"
+           InstallerVersion="500">
+
+    <SummaryInformation Description="Drax Technology Client"
+                        Keywords="Installer,Drax,Client" />
+
+    <MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed." />
+
+    <Media Id="1" Cabinet="files.cab" EmbedCab="yes" CompressionLevel="high" />
+
+    <Icon Id="DraxClient.ico" SourceFile="..\Drax360Client\DT-small.ico" />
+    <Property Id="ARPPRODUCTICON" Value="DraxClient.ico" />
+
+    <Feature Id="Main" Title="Drax Client" Level="1">
+      <ComponentGroupRef Id="ClientComponents" />
+      <ComponentGroupRef Id="DependencyFiles" />
+      <ComponentRef Id="StartMenuShortcutComponent" />
+      <ComponentRef Id="DesktopShortcutComponent" />
+    </Feature>
+
+    <!-- Install location: C:\Program Files\Drax\Drax Client -->
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="ManufacturerFolder" Name="Drax">
+        <Directory Id="INSTALLFOLDER" Name="Drax Client" />
+      </Directory>
+    </StandardDirectory>
+
+    <!-- Start Menu folder: Drax\Drax360 Client -->
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="DraxStartMenu" Name="Drax" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+
+    <!-- Main client EXE component -->
+    <ComponentGroup Id="ClientComponents" Directory="INSTALLFOLDER">
+      <Component Id="DraxClientExe" Guid="C9D4E5F6-A7B8-9C0D-1E2F-3A4B5C6D7E8F">
+        <File Id="DraxClient.exe"
+              Source="$(var.DraxClient.TargetDir)DraxClient.exe"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="DraxClientIco" Guid="D8C7B6A5-9483-7261-5040-3F2E1D0C9B8A">
+        <File Id="DT_small.ico"
+              Source="..\Drax360Client\DT-small.ico" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Start Menu shortcut (own component for clean uninstall of the folder) -->
+    <Component Id="StartMenuShortcutComponent"
+               Directory="DraxStartMenu"
+               Guid="E1F2A3B4-C5D6-E7F8-A9B0-C1D2E3F4A5B6">
+      <Shortcut Id="StartMenuShortcut"
+                Name="Drax360 Client"
+                Description="Drax Technology Client"
+                Target="[INSTALLFOLDER]DraxClient.exe"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="DraxClient.ico" />
+      <RemoveFolder Id="RemoveDraxStartMenu" On="uninstall" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\Drax\DraxClient"
+                     Name="StartMenuShortcut"
+                     Type="integer"
+                     Value="1"
+                     KeyPath="yes" />
+    </Component>
+
+    <!-- Desktop shortcut -->
+    <Component Id="DesktopShortcutComponent"
+               Directory="DesktopFolder"
+               Guid="F2A3B4C5-D6E7-F8A9-B0C1-D2E3F4A5B6C7">
+      <Shortcut Id="DesktopShortcut"
+                Name="Drax360 Client"
+                Description="Drax Technology Client"
+                Target="[INSTALLFOLDER]DraxClient.exe"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="DraxClient.ico" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\Drax\DraxClient"
+                     Name="DesktopShortcut"
+                     Type="integer"
+                     Value="1"
+                     KeyPath="yes" />
+    </Component>
+
+  </Package>
+
+</Wix>
