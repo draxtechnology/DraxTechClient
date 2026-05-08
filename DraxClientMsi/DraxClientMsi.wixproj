@@ -2,17 +2,18 @@
 
   <PropertyGroup>
     <OutputName>DraxClientSetup</OutputName>
-    <OutputType>Bundle</OutputType>
+    <OutputType>Package</OutputType>
     <InstallerPlatform>x64</InstallerPlatform>
+    <SuppressIces>ICE57;ICE61</SuppressIces>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WixToolset.Bal.wixext" Version="5.0.2" />
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
     <PackageReference Include="WixToolset.Util.wixext" Version="5.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DraxClientMsi\DraxClientMsi.wixproj" />
+    <ProjectReference Include="..\Drax360Client\DraxClient.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+
+  <Bundle Name="Drax Technology Client"
+          Version="1.0.0"
+          Manufacturer="Drax Technology"
+          UpgradeCode="C4D5E6F7-A8B9-0C1D-2E3F-4A5B6C7D8E9F"
+          IconSourceFile="..\Drax360Client\DT-small.ico">
+
+    <!--
+      WixStandardBootstrapperApplication from WixToolset.Bal.wixext.
+      Valid themes: hyperlinkLicense, hyperlinkLargeLicense, hyperlinkSidebarLicense,
+                    rtfLicense, rtfLargeLicense, none.
+      LicenseUrl="" = no license screen shown.
+    -->
+    <BootstrapperApplication>
+      <bal:WixStandardBootstrapperApplication Theme="hyperlinkLicense"
+                                               LicenseUrl=""
+                                               LogoFile="..\Drax360Client\DT-small.ico"
+                                               ShowVersion="yes" />
+    </BootstrapperApplication>
+
+    <!--
+      Registry key is present when any version of Windows Desktop Runtime (x64) is installed.
+      On a clean machine this key will be absent and .NET 8 will be installed.
+    -->
+    <util:RegistrySearch Id="SearchNetDesktop8"
+                         Root="HKLM"
+                         Key="SOFTWARE\dotnet\Setup\InstalledVersions\x64\sharedfx\Microsoft.WindowsDesktop.App"
+                         Variable="NetDesktop8Present"
+                         Result="exists" />
+
+    <Chain>
+      <!--
+        .NET 8 Desktop Runtime — installed silently only when missing.
+
+        REQUIRED BEFORE BUILDING:
+          1. Go to https://dotnet.microsoft.com/download/dotnet/8.0
+          2. Download the Windows x64 installer under ".NET Desktop Runtime 8.x.x"
+          3. Rename it to: windowsdesktop-runtime-8.0-win-x64.exe
+          4. Place it in this folder (DraxClientSetup\)
+
+        The file is embedded in the bundle at build time (~55 MB extra).
+        To update to a newer patch, replace the file and rebuild.
+      -->
+      <ExePackage Id="NetDesktopRuntime8"
+                  SourceFile="windowsdesktop-runtime-8.0.26-win-x64.exe"
+                  DetectCondition="NetDesktop8Present"
+                  InstallArguments="/install /quiet /norestart"
+                  RepairArguments="/repair /quiet /norestart"
+                  UninstallArguments="/uninstall /quiet /norestart"
+                  Permanent="yes" />
+
+      <!-- Drax Client MSI -->
+      <MsiPackage SourceFile="$(var.DraxClientMsi.TargetPath)" />
+    </Chain>
+  </Bundle>
+
+</Wix>

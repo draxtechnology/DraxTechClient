@@ -96,16 +96,16 @@
             pnlFooter.Controls.Add(btApply);
             pnlFooter.Controls.Add(btok);
             pnlFooter.Dock = DockStyle.Bottom;
-            pnlFooter.Location = new Point(0, 325);
+            pnlFooter.Location = new Point(0, 318);
             pnlFooter.Name = "pnlFooter";
             pnlFooter.Padding = new Padding(0, 10, 12, 10);
-            pnlFooter.Size = new Size(719, 52);
+            pnlFooter.Size = new Size(590, 52);
             pnlFooter.TabIndex = 1;
             // 
             // btcancel
             // 
             btcancel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btcancel.Location = new Point(578, 11);
+            btcancel.Location = new Point(505, 10);
             btcancel.Name = "btcancel";
             btcancel.Size = new Size(80, 30);
             btcancel.TabIndex = 2;
@@ -115,7 +115,7 @@
             // btApply
             // 
             btApply.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btApply.Location = new Point(490, 11);
+            btApply.Location = new Point(415, 11);
             btApply.Name = "btApply";
             btApply.Size = new Size(80, 30);
             btApply.TabIndex = 1;
@@ -125,7 +125,7 @@
             // btok
             // 
             btok.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btok.Location = new Point(402, 11);
+            btok.Location = new Point(325, 11);
             btok.Name = "btok";
             btok.Size = new Size(80, 30);
             btok.TabIndex = 0;
@@ -144,7 +144,7 @@
             tabPage.Location = new Point(0, 0);
             tabPage.Name = "tabPage";
             tabPage.SelectedIndex = 0;
-            tabPage.Size = new Size(719, 325);
+            tabPage.Size = new Size(590, 318);
             tabPage.TabIndex = 0;
             // 
             // tpserialsettings
@@ -168,7 +168,7 @@
             tpserialsettings.Location = new Point(4, 24);
             tpserialsettings.Name = "tpserialsettings";
             tpserialsettings.Padding = new Padding(16, 14, 16, 8);
-            tpserialsettings.Size = new Size(711, 297);
+            tpserialsettings.Size = new Size(582, 290);
             tpserialsettings.TabIndex = 0;
             tpserialsettings.Text = "Serial Settings";
             // 
@@ -203,6 +203,7 @@
             lbStatus.Size = new Size(79, 15);
             lbStatus.TabIndex = 0;
             lbStatus.Text = "Disconnected";
+            lbStatus.Click += lbStatus_Click;
             // 
             // cbBaudRate
             // 
@@ -318,7 +319,7 @@
             tpsettings.Location = new Point(4, 24);
             tpsettings.Name = "tpsettings";
             tpsettings.Padding = new Padding(16, 14, 16, 8);
-            tpsettings.Size = new Size(711, 297);
+            tpsettings.Size = new Size(582, 290);
             tpsettings.TabIndex = 1;
             tpsettings.Text = "Settings";
             // 
@@ -347,7 +348,7 @@
             tpadvanced.Location = new Point(4, 24);
             tpadvanced.Name = "tpadvanced";
             tpadvanced.Padding = new Padding(16, 14, 16, 8);
-            tpadvanced.Size = new Size(711, 297);
+            tpadvanced.Size = new Size(582, 290);
             tpadvanced.TabIndex = 2;
             tpadvanced.Text = "Advanced Panel";
             // 
@@ -459,7 +460,7 @@
             tpemail.Location = new Point(4, 24);
             tpemail.Name = "tpemail";
             tpemail.Padding = new Padding(16, 14, 16, 8);
-            tpemail.Size = new Size(711, 297);
+            tpemail.Size = new Size(582, 290);
             tpemail.TabIndex = 3;
             tpemail.Text = "Email";
             // 
@@ -557,12 +558,12 @@
             tprsm.Location = new Point(4, 24);
             tprsm.Name = "tprsm";
             tprsm.Padding = new Padding(16, 14, 16, 8);
-            tprsm.Size = new Size(711, 297);
+            tprsm.Size = new Size(582, 290);
             tprsm.TabIndex = 4;
             tprsm.Text = "RSM";
-            //
+            // 
             // btdevices
-            //
+            // 
             btdevices.Location = new Point(232, 16);
             btdevices.Name = "btdevices";
             btdevices.Size = new Size(100, 30);
@@ -582,7 +583,7 @@
             tbGent.Location = new Point(4, 24);
             tbGent.Name = "tbGent";
             tbGent.Padding = new Padding(3);
-            tbGent.Size = new Size(711, 297);
+            tbGent.Size = new Size(582, 290);
             tbGent.TabIndex = 5;
             tbGent.Text = "Gent Panel";
             // 
@@ -635,7 +636,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(719, 377);
+            ClientSize = new Size(590, 370);
             Controls.Add(tabPage);
             Controls.Add(pnlFooter);
             Icon = (Icon)resources.GetObject("$this.Icon");

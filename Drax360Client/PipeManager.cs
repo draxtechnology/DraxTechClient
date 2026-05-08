@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.IO.Pipes;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,20 +20,74 @@ namespace DraxClient
         private static frmAbout? _aboutBox;
         private static frmSetup? _setup;
 
+        // Built once, reused on every server creation to avoid repeated SID/descriptor work.
+        private static readonly PipeSecurity _pipeSecurity = BuildPipeSecurity();
+
+        private static PipeSecurity BuildPipeSecurity()
+        {
+            var sec = new PipeSecurity();
+            sec.AddAccessRule(new PipeAccessRule(
+                new SecurityIdentifier(WellKnownSidType.WorldSid, null),
+                PipeAccessRights.FullControl,
+                AccessControlType.Allow));
+            return sec;
+        }
+
+        private static NamedPipeServerStream CreatePipeServer()
+        {
+            try
+            {
+                var pipe = NamedPipeServerStreamAcl.Create(
+                    PipeNameReturn, PipeDirection.InOut, 254,
+                    PipeTransmissionMode.Message, PipeOptions.Asynchronous,
+                    0, 0, _pipeSecurity);
+                Console.WriteLine($"[{PipeNameReturn}] ready");
+                return pipe;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ACL pipe failed ({ex.GetType().Name}) — using default ACL");
+                var pipe = new NamedPipeServerStream(
+                    PipeNameReturn, PipeDirection.InOut, 254,
+                    PipeTransmissionMode.Message, PipeOptions.Asynchronous);
+                Console.WriteLine($"[{PipeNameReturn}] ready (default ACL)");
+                return pipe;
+            }
+        }
+
         public static void Start()
         {
-            Console.WriteLine($"Pipe Server Return is Starting on background thread ({PipeNameReturn})");
+            Console.WriteLine($"Pipe Server Return is Starting ({PipeNameReturn})");
             Task.Run(() => ListenLoop());
         }
+
         private static async Task ListenLoop()
         {
+            // Pre-create the first server on a background thread so any slow security
+            // descriptor work happens during startup rather than in the hot path.
+            var pipeServer = await Task.Run(CreatePipeServer);
+
             while (true)
             {
-                var pipeServer = new NamedPipeServerStream(PipeNameReturn, PipeDirection.InOut, 254, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
-                Console.WriteLine($"Waiting for connection ({PipeNameReturn})");
-                await pipeServer.WaitForConnectionAsync();
+                try
+                {
+                    await pipeServer.WaitForConnectionAsync();
 
-                _ = Task.Run(() => HandleClient(pipeServer));
+                    // Kick off next server creation IN PARALLEL with handling this connection.
+                    // By the time the service sends the next command the new server is ready.
+                    var nextServerTask = Task.Run(CreatePipeServer);
+
+                    _ = Task.Run(() => HandleClient(pipeServer));
+
+                    pipeServer = await nextServerTask;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Pipe loop error ({ex.GetType().Name}): {ex.Message}");
+                    await Task.Delay(500);
+                    try { pipeServer = await Task.Run(CreatePipeServer); }
+                    catch { await Task.Delay(2000); }
+                }
             }
         }
 
@@ -63,23 +119,23 @@ namespace DraxClient
         {
             switch (command)
             {
-                case "|NWM:TBSHOW":
+                case string s when s.Contains("|NWM:TBSHOW"):
                     ShowTestBox();
                     return "OK";
 
-                case "|NWM:TBHIDE":
+                case string s when s.Contains("|NWM:TBHIDE"):
                     HideTestBox();
                     return "OK";
 
-                case "|NWM:SHOWABOUT":
+                case string s when s.Contains("|NWM:SHOWABOUT"):
                     ShowAbout();
                     return "OK";
 
-                case "|GEN:SETUPSHOW":
+                case string s when s.Contains("|GEN:SETUPSHOW"):
                     Setup();
                     return "OK";
 
-                case "|NWM:CLOSEALLWINDOWS":
+                case string s when s.Contains("|NWM:CLOSEALLWINDOWS"):
                     // HideTestBox();
                     return "OK";
 
@@ -91,7 +147,8 @@ namespace DraxClient
 
         public static void ShowTestBox()
         {
-            _mainForm.Invoke((MethodInvoker)(() =>
+            if (_mainForm == null) return;
+            _mainForm.BeginInvoke((MethodInvoker)(() =>
             {
                 if (_testBox == null || _testBox.IsDisposed)
                 {
@@ -117,7 +174,8 @@ namespace DraxClient
 
         public static void ShowAbout()
         {
-            _mainForm.Invoke((MethodInvoker)(() =>
+            if (_mainForm == null) return;
+            _mainForm.BeginInvoke((MethodInvoker)(() =>
             {
                 if (_aboutBox == null || _aboutBox.IsDisposed)
                 {
@@ -144,7 +202,8 @@ namespace DraxClient
 
         public static void Setup()
         {
-            _mainForm.Invoke((MethodInvoker)(() =>
+            if (_mainForm == null) return;
+            _mainForm.BeginInvoke((MethodInvoker)(() =>
             {
                 if (_setup == null || _setup.IsDisposed)
                 {
@@ -171,9 +230,10 @@ namespace DraxClient
 
         private static void HideTestBox()
         {
+            if (_mainForm == null) return;
             if (_mainForm.InvokeRequired)
             {
-                _mainForm.Invoke(new Action(HideTestBox));
+                _mainForm.BeginInvoke(new Action(HideTestBox));
                 return;
             }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
 
   <Package Name="Drax Technology Client"
            Manufacturer="Drax Technology"
@@ -25,14 +26,12 @@
       <ComponentRef Id="DesktopShortcutComponent" />
     </Feature>
 
-    <!-- Install location: C:\Program Files\Drax\Drax Client -->
-    <StandardDirectory Id="ProgramFiles64Folder">
-      <Directory Id="ManufacturerFolder" Name="Drax Client">
-        <Directory Id="INSTALLFOLDER" Name="Drax Client" />
-      </Directory>
-    </StandardDirectory>
+    <!-- Default install location: C:\AMX1\ — user can change this in the installer UI -->
+    <DirectoryRef Id="TARGETDIR">
+      <Directory Id="INSTALLFOLDER" Name="AMX1" />
+    </DirectoryRef>
 
-    <!-- Start Menu folder: Drax\Drax360 Client -->
+    <!-- Start Menu folder: Drax -->
     <StandardDirectory Id="ProgramMenuFolder">
       <Directory Id="DraxStartMenu" Name="Drax" />
     </StandardDirectory>
@@ -57,7 +56,7 @@
                Directory="DraxStartMenu"
                Guid="E1F2A3B4-C5D6-E7F8-A9B0-C1D2E3F4A5B6">
       <Shortcut Id="StartMenuShortcut"
-                Name="Drax360 Client"
+                Name="Drax Technology Client"
                 Description="Drax Technology Client"
                 Target="[INSTALLFOLDER]DraxClient.exe"
                 WorkingDirectory="INSTALLFOLDER"
@@ -76,7 +75,7 @@
                Directory="DesktopFolder"
                Guid="F2A3B4C5-D6E7-F8A9-B0C1-D2E3F4A5B6C7">
       <Shortcut Id="DesktopShortcut"
-                Name="Drax360 Client"
+                Name="Drax Technology Client"
                 Description="Drax Technology Client"
                 Target="[INSTALLFOLDER]DraxClient.exe"
                 WorkingDirectory="INSTALLFOLDER"
@@ -88,6 +87,11 @@
                      Value="1"
                      KeyPath="yes" />
     </Component>
+
+    <!-- Install-folder confirmation dialog: Welcome → Choose folder → Ready → Progress → Finish -->
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+
+    <WixVariable Id="WixUIBannerBmp" Value="..\Drax360Client\DT-small.ico" />
 
   </Package>
 

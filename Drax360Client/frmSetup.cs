@@ -536,7 +536,7 @@ namespace DraxClient
                 sendcmd($"SETTINGSSET|EMAIL,DATALOGGING,{(debug.Checked ? "1" : "0")}");
             }
             else
-            { 
+            {
                 if (cbComport.SelectedItem is ComboBoxItem item)
                     sendcmd($"SETTINGSSET|PANEL1,COMMPORT,{item.Value}");
 
@@ -607,6 +607,11 @@ namespace DraxClient
         }
 
         private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbStatus_Click(object sender, EventArgs e)
         {
 
         }
