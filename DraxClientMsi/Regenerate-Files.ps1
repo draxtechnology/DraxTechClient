@@ -1,11 +1,11 @@
-# Regenerates Files.wxs from the contents of Drax360Client\bin\Debug\net8.0-windows.
-# Run this whenever a NuGet dependency changes or .NET 8 brings in different
+# Regenerates Files.wxs from the contents of Drax360Client\bin\Debug\net10.0-windows.
+# Run this whenever a NuGet dependency changes or the runtime brings in different
 # runtime artifacts. Build the client first (dotnet build) so bin is populated.
 #
-#   pwsh DraxClientSetup\Regenerate-Files.ps1
+#   pwsh DraxClientMsi\Regenerate-Files.ps1
 
 Set-Location $PSScriptRoot
-$bin = Join-Path $PSScriptRoot '..\Drax360Client\bin\Debug\net8.0-windows'
+$bin = Join-Path $PSScriptRoot '..\Drax360Client\bin\Debug\net10.0-windows'
 if (-not (Test-Path $bin)) { throw "$bin not found - run dotnet build first." }
 
 # Skip files already declared explicitly in Product.wxs (the EXE) and pdb symbols.

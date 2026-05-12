@@ -12,6 +12,7 @@ namespace DraxClient.Panels.Email
 {
     public partial class frmemailgroup : Form
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Group group { get; set; }
         private BindingSource _addressesSource;
 

@@ -169,7 +169,9 @@ namespace DraxClient.Panels.RSM
 
         // Capture the UI SynchronizationContext so background threads can marshal UI updates reliably
         private readonly SynchronizationContext _uiContext;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Device OurDevice { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsNew { get; set; }
         public frmdiscovery()
         {

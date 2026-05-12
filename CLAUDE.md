@@ -4,15 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Solution layout
 
-`DraxClient.sln` contains four code projects plus a Visual Studio installer project. All C# projects target **.NET 8** with `Nullable` and `ImplicitUsings` enabled.
+`DraxClient.sln` contains four code projects plus two WiX 5 installer projects. All C# projects target **.NET 10** with `Nullable` and `ImplicitUsings` enabled. The client was retargeted from `net8.0-windows` to `net10.0-windows` on 2026-05-12 once net8 entered Maintenance phase; net10 LTS runs through November 2028.
 
 | Project | Folder | Type | Purpose |
 |---|---|---|---|
-| `DraxClient` | `Drax360Client/` | WinExe, `net8.0-windows`, WinForms | The shipped tray app (`AssemblyName=DraxClient`). Root namespace `DraxClient`. |
-| `Read AMX File` | `Read AMX File/` | Console, `net8.0` | Standalone utility — reads a Unix-epoch timestamp at byte offset 44 of a `.GEN` panel config file. Sample `.GEN` files are copied to output. |
+| `DraxClient` | `Drax360Client/` | WinExe, `net10.0-windows`, WinForms | The shipped tray app (`AssemblyName=DraxClient`). Root namespace `DraxClient`. |
+| `Read AMX File` | `Read AMX File/` | Console, `net10.0` | Standalone utility — reads a Unix-epoch timestamp at byte offset 44 of a `.GEN` panel config file. Sample `.GEN` files are copied to output. |
 | `MQTT Test` | `MQTT Test/` | WinExe, WinForms | Scratch harness using `MQTTnet 5.0.1` + `MQTTnet.Extensions.ManagedClient 4.3.7`. Namespace `MQTT_Test`. |
-| `MQTTResponder` | `MQTTResponder/` | Console, `net8.0` | Scratch MQTT subscriber/publisher against `broker.hivemq.com`. |
-| `DraxClientSetup` | `DraxClientSetup/` | `.vdproj` installer | Builds only in classic VS (Debug/Release only — no Any CPU). Not an SDK-style project. |
+| `MQTTResponder` | `MQTTResponder/` | Console, `net10.0` | Scratch MQTT subscriber/publisher against `broker.hivemq.com`. |
+| `DraxClientMsi` | `DraxClientMsi/` | WiX 5 SDK-style `.wixproj` | Produces the bare client MSI (`DraxClientMsi.msi`). Harvest the dependency surface with `Regenerate-Files.ps1` after any NuGet change. |
+| `DraxClientSetup` | `DraxClientSetup/` | WiX 5 SDK-style `.wixproj` bundle | Wraps the MSI behind a silent `Microsoft.WindowsDesktop.App` 10.x runtime install. Requires `windowsdesktop-runtime-10.0.x-win-x64.exe` in the folder before building (see `Bundle.wxs` comments). |
 
 `Drax360Client/DraxClient.csproj` is the folder-name / project-name mismatch to watch for: the folder is `Drax360Client` but the project and assembly are both `DraxClient`.
 
