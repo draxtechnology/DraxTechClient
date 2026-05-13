@@ -45,10 +45,10 @@
               Source="$(var.DraxClient.TargetDir)DraxClient.exe"
               KeyPath="yes" />
       </Component>
-      <Component Id="DraxClientIco" Guid="D8C7B6A5-9483-7261-5040-3F2E1D0C9B8A">
-        <File Id="DT_small.ico"
-              Source="..\Drax360Client\DT-small.ico" />
-      </Component>
+      <!-- DT-small.ico is embedded in the EXE and registered in the MSI's
+           internal Icon table (line 19) for ARPPRODUCTICON + the Start
+           Menu / Desktop shortcuts. No separate deployed copy is needed
+           in the install folder. -->
     </ComponentGroup>
 
     <!-- Start Menu shortcut (own component for clean uninstall of the folder) -->
