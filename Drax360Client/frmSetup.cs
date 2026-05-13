@@ -50,6 +50,10 @@ namespace DraxClient
         {
             InitializeComponent();
 
+            // Stay above AMX overlays once an event lands; matches frmAbout
+            // and frmTestBox which both set this in their constructors.
+            this.TopMost = true;
+
             // Initialize after InitializeComponent
 
             ApplyModernStyling();
