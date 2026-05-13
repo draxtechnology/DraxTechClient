@@ -30,6 +30,9 @@ namespace DraxClient
         private bool _isDisconnecting = false;
         private bool _lastKnownConnected;
         private bool _pollInProgress;
+        // Most-recent "Data Last Received: <ts>" timestamp seen from the
+        // service. The progress bar ticks forward every time this changes.
+        private string _lastDataTimestamp = "";
 
         // ── Palette ──────────────────────────────────────────────────────────
         static readonly Color clrBackground = Color.FromArgb(245, 246, 250);
@@ -62,39 +65,24 @@ namespace DraxClient
 
         private void TimerProgress_Tick(object sender, EventArgs e)
         {
-
-            if (_isConnecting && progressBar1.Value < 100)
-            {
-                progressBar1.Value = Math.Min(progressBar1.Value + 1, 100);
-                if (progressBar1.Value == 100)
-                {
-                    progressBar1.Value = 0;
-                }
-            }
-            else if (_isDisconnecting && progressBar1.Value > 0)
-            {
-                progressBar1.Value = Math.Max(progressBar1.Value - 1, 0);
-                if (progressBar1.Value == 0)
-                {
-                    _isDisconnecting = false;
-                    timerProgress.Stop();
-                }
-            }
+            // Legacy fake animation. The progress bar is now driven by
+            // PollConnectionTick reading the service's "Data Last Received"
+            // timestamps — see UpdateProgressBarFromStatus. Left as a no-op
+            // until we remove the timer entirely.
         }
 
         private void OnSerialPortConnected()
         {
-            _isDisconnecting = false;
-            _isConnecting = true;
-            timerProgress.Start();
+            // Reset bar; PollConnectionTick will tick it forward on each new
+            // handshake reported by the service.
+            progressBar1.Value = 0;
+            _lastDataTimestamp = "";
         }
 
         private void OnSerialPortDisconnected()
         {
-            _isConnecting = false;
-            _isDisconnecting = true;
-            timerProgress.Start();
-
+            progressBar1.Value = 0;
+            _lastDataTimestamp = "";
         }
 
         // ── Styling ───────────────────────────────────────────────────────────
@@ -353,8 +341,44 @@ namespace DraxClient
                     this.lbStatus.ForeColor = connected ? clrGreen : clrRed;
                     UpdateStatusDot(connected);
                 }
+                UpdateProgressBarFromStatus(status);
             }
             finally { _pollInProgress = false; }
+        }
+
+        // Progress bar shows handshake activity. The service replies with
+        // "Data Last Received: <timestamp>" once panel data has started
+        // flowing; we tick the bar forward whenever that timestamp advances
+        // between polls (one tick per second of activity given the 1s poll
+        // interval). "CONNECTED" alone means the port is open but no panel
+        // data has arrived yet, so the bar stays at 0; "DISCONNECTED" /
+        // error also resets it.
+        private void UpdateProgressBarFromStatus(string status)
+        {
+            if (string.IsNullOrEmpty(status))
+            {
+                progressBar1.Value = 0;
+                _lastDataTimestamp = "";
+                return;
+            }
+            string lower = status.ToLower();
+            if (lower.StartsWith("data last received"))
+            {
+                int colon = status.IndexOf(':');
+                string ts = colon >= 0 ? status.Substring(colon + 1).Trim() : "";
+                if (!string.IsNullOrEmpty(ts) && ts != _lastDataTimestamp)
+                {
+                    progressBar1.Value = Math.Min(progressBar1.Value + 20, 100);
+                    _lastDataTimestamp = ts;
+                }
+                // Same timestamp as last poll: hold the bar value.
+            }
+            else
+            {
+                // "CONNECTED" with no data yet, "DISCONNECTED", or "ERROR".
+                progressBar1.Value = 0;
+                _lastDataTimestamp = "";
+            }
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
