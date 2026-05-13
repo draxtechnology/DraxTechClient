@@ -20,6 +20,7 @@ namespace DraxClient.Panels.Email
         {
             this.group = group;
 
+            this.TopMost = true;
             InitializeComponent();
             bind_grid();
 

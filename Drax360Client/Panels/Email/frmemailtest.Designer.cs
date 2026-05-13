@@ -22,6 +22,7 @@
 
         public frmemailtest()
         {
+            this.TopMost = true;
             InitializeComponent();
             LoadFormData();
         }

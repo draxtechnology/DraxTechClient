@@ -24,6 +24,7 @@ namespace DraxClient
 
         public frmprimary()
         {
+            this.TopMost = true;
             InitializeComponent();
             //this.Load += frmprimary_Load;
             //this.Shown += Frmprimary_Shown;  

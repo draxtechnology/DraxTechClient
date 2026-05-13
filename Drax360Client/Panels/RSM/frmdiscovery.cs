@@ -175,6 +175,7 @@ namespace DraxClient.Panels.RSM
         public bool IsNew { get; set; }
         public frmdiscovery()
         {
+            this.TopMost = true;
             InitializeComponent();
         }
 

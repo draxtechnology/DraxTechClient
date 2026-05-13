@@ -17,6 +17,7 @@ namespace DraxClient.Panels.Email
 
         public frmemaigroups()
         {
+            this.TopMost = true;
             InitializeComponent();
             load_email_groups();
         }

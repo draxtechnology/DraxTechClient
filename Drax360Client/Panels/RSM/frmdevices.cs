@@ -25,6 +25,7 @@ namespace DraxClient.Panels.RSM
 
         public frmdevices()
         {
+            this.TopMost = true;
             InitializeComponent();
             Paths.MigrateLegacyFile(FileName);
             if (load_devices())
