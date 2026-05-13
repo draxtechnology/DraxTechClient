@@ -25,8 +25,11 @@ namespace DraxClient
 
         private ProgressBar progressBarConnection;
         private System.Windows.Forms.Timer timerProgress;
+        private System.Windows.Forms.Timer _connectionPollTimer;
         private bool _isConnecting = false;
         private bool _isDisconnecting = false;
+        private bool _lastKnownConnected;
+        private bool _pollInProgress;
 
         // ── Palette ──────────────────────────────────────────────────────────
         static readonly Color clrBackground = Color.FromArgb(245, 246, 250);
@@ -315,6 +318,49 @@ namespace DraxClient
                 e.Graphics.FillEllipse(br, 2, 2, pnlStatusDot.Width - 4, pnlStatusDot.Height - 4);
         }
 
+        // Service replies "CONNECTED" before any data arrives, then switches to
+        // "Data Last Received: <timestamp>" once the panel actually starts
+        // talking (DraxService.cs:1460-1467). Both mean the COM port is open.
+        // Anything else ("DISCONNECTED", "ERROR", "Error: ...", empty) is not.
+        private static bool IsConnectedStatus(string status)
+        {
+            if (string.IsNullOrEmpty(status)) return false;
+            string lower = status.ToLower();
+            return lower.StartsWith("connected") || lower.StartsWith("data last received");
+        }
+
+        private async void PollConnectionTick(object sender, EventArgs e)
+        {
+            if (_pollInProgress) return;
+            if (string.IsNullOrEmpty(cbComport.Text)) return;
+            _pollInProgress = true;
+            try
+            {
+                string status = await Task.Run(() => sendcmd("GETCOMMPORTSTATUS|" + cbComport.Text));
+                bool connected = IsConnectedStatus(status);
+                if (connected != _lastKnownConnected)
+                {
+                    _lastKnownConnected = connected;
+                    this.lbStatus.Text = connected ? "Connected" : "Disconnected";
+                    this.lbStatus.ForeColor = connected ? clrGreen : clrRed;
+                    UpdateStatusDot(connected);
+                }
+            }
+            finally { _pollInProgress = false; }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (_connectionPollTimer != null)
+            {
+                _connectionPollTimer.Stop();
+                _connectionPollTimer.Tick -= PollConnectionTick;
+                _connectionPollTimer.Dispose();
+                _connectionPollTimer = null;
+            }
+            base.OnFormClosing(e);
+        }
+
         // ── Data loading (original constructor logic, cleaned up) ─────────────
         private void LoadFormData()
         {
@@ -409,10 +455,20 @@ namespace DraxClient
 
             // Status
             string status = sendcmd("GETCOMMPORTSTATUS|" + cbComport.Text);
-            bool connected = status.ToLower() == "connected";
+            bool connected = IsConnectedStatus(status);
+            _lastKnownConnected = connected;
             this.lbStatus.Text = connected ? "Connected" : "Disconnected";
             this.lbStatus.ForeColor = connected ? clrGreen : clrRed;
             UpdateStatusDot(connected);
+
+            // Live polling so cable removal / re-insertion (or the service
+            // restarting) shows up without re-opening the form. Service can
+            // reply with either "CONNECTED" or "Data Last Received: <ts>" once
+            // the panel starts talking — both mean "port open", so the parse
+            // accepts both prefixes.
+            _connectionPollTimer = new System.Windows.Forms.Timer { Interval = 1000 };
+            _connectionPollTimer.Tick += PollConnectionTick;
+            _connectionPollTimer.Start();
 
             // Data Bits
             cbDataBits.Items.Add(new ComboBoxItem { Text = "8", Value = "8" });
