@@ -332,11 +332,15 @@ namespace DraxClient
         private async void PollConnectionTick(object sender, EventArgs e)
         {
             if (_pollInProgress) return;
-            if (string.IsNullOrEmpty(cbComport.Text)) return;
+            // Capture the comport name on the UI thread; we can't touch the
+            // ComboBox from inside the Task.Run lambda below (WinForms controls
+            // are thread-affine to the thread that created them).
+            string comport = cbComport.Text;
+            if (string.IsNullOrEmpty(comport)) return;
             _pollInProgress = true;
             try
             {
-                string status = await Task.Run(() => sendcmd("GETCOMMPORTSTATUS|" + cbComport.Text));
+                string status = await Task.Run(() => sendcmd("GETCOMMPORTSTATUS|" + comport));
                 bool connected = IsConnectedStatus(status);
                 if (connected != _lastKnownConnected)
                 {
