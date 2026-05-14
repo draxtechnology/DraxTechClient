@@ -18,7 +18,6 @@
     <BootstrapperApplication>
       <bal:WixStandardBootstrapperApplication Theme="hyperlinkLicense"
                                                LicenseUrl=""
-                                               LogoFile="..\Drax360Client\DT-small.ico"
                                                ShowVersion="yes" />
     </BootstrapperApplication>
 
