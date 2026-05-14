@@ -349,8 +349,10 @@ namespace DraxClient
         // Progress bar shows handshake activity. The service replies with
         // "Data Last Received: <timestamp>" once panel data has started
         // flowing; we tick the bar forward whenever that timestamp advances
-        // between polls (one tick per second of activity given the 1s poll
-        // interval). "CONNECTED" alone means the port is open but no panel
+        // between polls. Once it fills, it wraps back to 0 and starts again
+        // so the bar runs continually for as long as the panel keeps talking
+        // (Mike's request — a static 100% bar looked like the connection had
+        // stalled). "CONNECTED" alone means the port is open but no panel
         // data has arrived yet, so the bar stays at 0; "DISCONNECTED" /
         // error also resets it.
         private void UpdateProgressBarFromStatus(string status)
@@ -368,7 +370,8 @@ namespace DraxClient
                 string ts = colon >= 0 ? status.Substring(colon + 1).Trim() : "";
                 if (!string.IsNullOrEmpty(ts) && ts != _lastDataTimestamp)
                 {
-                    progressBar1.Value = Math.Min(progressBar1.Value + 20, 100);
+                    int next = progressBar1.Value + 20;
+                    progressBar1.Value = next > 100 ? 0 : next;
                     _lastDataTimestamp = ts;
                 }
                 // Same timestamp as last poll: hold the bar value.
