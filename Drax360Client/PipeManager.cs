@@ -145,10 +145,17 @@ namespace DraxClient
             }
         }
 
+        // Belt-and-braces: even with frmprimary as the persistent owner, a
+        // future refactor that lets the main form be closed would resurface
+        // the "BeginInvoke before handle created" exception we just fixed.
+        // Guard at each marshal point.
+        private static bool MainFormReady() =>
+            _mainForm != null && !_mainForm.IsDisposed && _mainForm.IsHandleCreated;
+
         public static void ShowTestBox()
         {
-            if (_mainForm == null) return;
-            _mainForm.BeginInvoke((MethodInvoker)(() =>
+            if (!MainFormReady()) return;
+            _mainForm!.BeginInvoke((MethodInvoker)(() =>
             {
                 if (_testBox == null || _testBox.IsDisposed)
                 {
@@ -174,8 +181,8 @@ namespace DraxClient
 
         public static void ShowAbout()
         {
-            if (_mainForm == null) return;
-            _mainForm.BeginInvoke((MethodInvoker)(() =>
+            if (!MainFormReady()) return;
+            _mainForm!.BeginInvoke((MethodInvoker)(() =>
             {
                 if (_aboutBox == null || _aboutBox.IsDisposed)
                 {
@@ -202,8 +209,8 @@ namespace DraxClient
 
         public static void Setup()
         {
-            if (_mainForm == null) return;
-            _mainForm.BeginInvoke((MethodInvoker)(() =>
+            if (!MainFormReady()) return;
+            _mainForm!.BeginInvoke((MethodInvoker)(() =>
             {
                 if (_setup == null || _setup.IsDisposed)
                 {
@@ -230,8 +237,8 @@ namespace DraxClient
 
         private static void HideTestBox()
         {
-            if (_mainForm == null) return;
-            if (_mainForm.InvokeRequired)
+            if (!MainFormReady()) return;
+            if (_mainForm!.InvokeRequired)
             {
                 _mainForm.BeginInvoke(new Action(HideTestBox));
                 return;
