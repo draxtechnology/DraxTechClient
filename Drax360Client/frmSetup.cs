@@ -73,16 +73,39 @@ namespace DraxClient
 
         private void OnSerialPortConnected()
         {
-            // Reset bar; PollConnectionTick will tick it forward on each new
-            // handshake reported by the service.
-            progressBar1.Value = 0;
+            // Marquee starts in UpdateProgressBarFromStatus once we see a
+            // "Data Last Received" tick from the service.
+            SetMarquee(false);
             _lastDataTimestamp = "";
         }
 
         private void OnSerialPortDisconnected()
         {
-            progressBar1.Value = 0;
+            SetMarquee(false);
             _lastDataTimestamp = "";
+        }
+
+        // Marquee style = always-moving stripe while panel data is flowing.
+        // Continuous style with Value=0 = static empty bar (port closed or
+        // panel silent). Mike's feedback was that a quantitative bar driven
+        // by byte-burst events looked erratic; the Marquee just signals
+        // "link alive" without pretending to measure rate.
+        private void SetMarquee(bool on)
+        {
+            if (on)
+            {
+                if (progressBar1.Style != ProgressBarStyle.Marquee)
+                {
+                    progressBar1.Style = ProgressBarStyle.Marquee;
+                    progressBar1.MarqueeAnimationSpeed = 30;
+                }
+            }
+            else
+            {
+                progressBar1.Style = ProgressBarStyle.Continuous;
+                progressBar1.MarqueeAnimationSpeed = 0;
+                progressBar1.Value = 0;
+            }
         }
 
         // ── Styling ───────────────────────────────────────────────────────────
@@ -346,20 +369,20 @@ namespace DraxClient
             finally { _pollInProgress = false; }
         }
 
-        // Progress bar shows handshake activity. The service replies with
-        // "Data Last Received: <timestamp>" once panel data has started
-        // flowing; we tick the bar forward whenever that timestamp advances
-        // between polls. Once it fills, it wraps back to 0 and starts again
-        // so the bar runs continually for as long as the panel keeps talking
-        // (Mike's request — a static 100% bar looked like the connection had
-        // stalled). "CONNECTED" alone means the port is open but no panel
-        // data has arrived yet, so the bar stays at 0; "DISCONNECTED" /
-        // error also resets it.
+        // Progress bar shows handshake activity as a Marquee animation —
+        // continuous moving stripe while panel data is flowing, static
+        // empty bar otherwise. Driven by the "Data Last Received: <ts>"
+        // reply from the service: when the timestamp advances between polls
+        // the panel just chattered, so keep the Marquee running; when the
+        // timestamp stops advancing or the port is closed/errored, stop it.
+        // Earlier byte-burst-driven incremental version was inconsistent
+        // because lastDataReceived stamps on every Datareceived event
+        // (often multiple per real handshake frame).
         private void UpdateProgressBarFromStatus(string status)
         {
             if (string.IsNullOrEmpty(status))
             {
-                progressBar1.Value = 0;
+                SetMarquee(false);
                 _lastDataTimestamp = "";
                 return;
             }
@@ -370,16 +393,21 @@ namespace DraxClient
                 string ts = colon >= 0 ? status.Substring(colon + 1).Trim() : "";
                 if (!string.IsNullOrEmpty(ts) && ts != _lastDataTimestamp)
                 {
-                    int next = progressBar1.Value + 20;
-                    progressBar1.Value = next > 100 ? 0 : next;
+                    SetMarquee(true);
                     _lastDataTimestamp = ts;
                 }
-                // Same timestamp as last poll: hold the bar value.
+                else
+                {
+                    // Same timestamp as last poll — panel went silent for at
+                    // least one poll interval. Stop the Marquee until the
+                    // next handshake arrives.
+                    SetMarquee(false);
+                }
             }
             else
             {
                 // "CONNECTED" with no data yet, "DISCONNECTED", or "ERROR".
-                progressBar1.Value = 0;
+                SetMarquee(false);
                 _lastDataTimestamp = "";
             }
         }
