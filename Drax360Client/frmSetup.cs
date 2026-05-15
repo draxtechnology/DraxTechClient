@@ -33,6 +33,12 @@ namespace DraxClient
         // Most-recent "Data Last Received: <ts>" timestamp seen from the
         // service. The progress bar ticks forward every time this changes.
         private string _lastDataTimestamp = "";
+        // When we last saw a *new* timestamp value — drives Marquee hysteresis
+        // so the bar doesn't flicker on/off between 1-second polls when the
+        // service's timestamp is seconds-precision and multiple polls within
+        // the same second see the same value.
+        private DateTime _lastFreshTimestampAt = DateTime.MinValue;
+        private const double kMarqueeInertiaSeconds = 3.0;
 
         // ── Palette ──────────────────────────────────────────────────────────
         static readonly Color clrBackground = Color.FromArgb(245, 246, 250);
@@ -77,12 +83,14 @@ namespace DraxClient
             // "Data Last Received" tick from the service.
             SetMarquee(false);
             _lastDataTimestamp = "";
+            _lastFreshTimestampAt = DateTime.MinValue;
         }
 
         private void OnSerialPortDisconnected()
         {
             SetMarquee(false);
             _lastDataTimestamp = "";
+            _lastFreshTimestampAt = DateTime.MinValue;
         }
 
         // Marquee style = always-moving stripe while panel data is flowing.
@@ -372,18 +380,21 @@ namespace DraxClient
         // Progress bar shows handshake activity as a Marquee animation —
         // continuous moving stripe while panel data is flowing, static
         // empty bar otherwise. Driven by the "Data Last Received: <ts>"
-        // reply from the service: when the timestamp advances between polls
-        // the panel just chattered, so keep the Marquee running; when the
-        // timestamp stops advancing or the port is closed/errored, stop it.
-        // Earlier byte-burst-driven incremental version was inconsistent
-        // because lastDataReceived stamps on every Datareceived event
-        // (often multiple per real handshake frame).
+        // reply from the service. The first cut toggled Marquee on/off per
+        // poll based on whether the timestamp changed since the previous
+        // tick, but the service's timestamp is seconds-precision so multiple
+        // polls within the same second saw the same value and the bar
+        // flickered. Hysteresis now: record when we last saw a *fresh* value
+        // and keep Marquee running for kMarqueeInertiaSeconds after that.
+        // Reads as smooth motion while data flows, stops cleanly when the
+        // panel goes silent for more than a few seconds.
         private void UpdateProgressBarFromStatus(string status)
         {
             if (string.IsNullOrEmpty(status))
             {
                 SetMarquee(false);
                 _lastDataTimestamp = "";
+                _lastFreshTimestampAt = DateTime.MinValue;
                 return;
             }
             string lower = status.ToLower();
@@ -393,22 +404,19 @@ namespace DraxClient
                 string ts = colon >= 0 ? status.Substring(colon + 1).Trim() : "";
                 if (!string.IsNullOrEmpty(ts) && ts != _lastDataTimestamp)
                 {
-                    SetMarquee(true);
                     _lastDataTimestamp = ts;
+                    _lastFreshTimestampAt = DateTime.Now;
                 }
-                else
-                {
-                    // Same timestamp as last poll — panel went silent for at
-                    // least one poll interval. Stop the Marquee until the
-                    // next handshake arrives.
-                    SetMarquee(false);
-                }
+                bool fresh = (DateTime.Now - _lastFreshTimestampAt).TotalSeconds
+                             < kMarqueeInertiaSeconds;
+                SetMarquee(fresh);
             }
             else
             {
                 // "CONNECTED" with no data yet, "DISCONNECTED", or "ERROR".
                 SetMarquee(false);
                 _lastDataTimestamp = "";
+                _lastFreshTimestampAt = DateTime.MinValue;
             }
         }
 
