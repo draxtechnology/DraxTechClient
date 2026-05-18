@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static DraxClient.frmTestBox;
+using static System.Windows.Forms.DataFormats;
 
 namespace DraxClient
 {
@@ -38,7 +39,8 @@ namespace DraxClient
         // service's timestamp is seconds-precision and multiple polls within
         // the same second see the same value.
         private DateTime _lastFreshTimestampAt = DateTime.MinValue;
-        private const double kMarqueeInertiaSeconds = 3.0;
+        private const double kMarqueeInertiaSeconds = 10.0;
+        private int glNumHeartbeats = 0;
 
         // ── Palette ──────────────────────────────────────────────────────────
         static readonly Color clrBackground = Color.FromArgb(245, 246, 250);
@@ -102,17 +104,27 @@ namespace DraxClient
         {
             if (on)
             {
-                if (progressBar1.Style != ProgressBarStyle.Marquee)
+               // if (progressBar1.Style != ProgressBarStyle.Blocks)
                 {
-                    progressBar1.Style = ProgressBarStyle.Marquee;
-                    progressBar1.MarqueeAnimationSpeed = 30;
+                    progressBar1.Style = ProgressBarStyle.Blocks;
+                    if (progressBar1.Value + 20 > 100)
+                    {
+                        progressBar1.Value = 0;
+                    }
+                    progressBar1.Value = progressBar1.Value + 20;
+                    _lastFreshTimestampAt = DateTime.Now;
+                    this.lblComCounterPanel1.Text = "Heart Beats: " + glNumHeartbeats.ToString() + " - ";
+
+                    // Me.lblComCounterPanel1.Caption = Format$(glNumHeartbeats, "#,###,###,##0") & " - " & Format$(glNumMessages, "#,###,###,##0")
+
+                    //progressBar1.MarqueeAnimationSpeed = 30;
                 }
             }
             else
             {
-                progressBar1.Style = ProgressBarStyle.Continuous;
-                progressBar1.MarqueeAnimationSpeed = 0;
-                progressBar1.Value = 0;
+               // progressBar1.Style = ProgressBarStyle.Blocks;
+               // progressBar1.MarqueeAnimationSpeed = 0;
+              //  progressBar1.Value = 0;
             }
         }
 
@@ -408,7 +420,7 @@ namespace DraxClient
                     _lastFreshTimestampAt = DateTime.Now;
                 }
                 bool fresh = (DateTime.Now - _lastFreshTimestampAt).TotalSeconds
-                             < kMarqueeInertiaSeconds;
+                             > kMarqueeInertiaSeconds;
                 SetMarquee(fresh);
             }
             else
@@ -505,8 +517,17 @@ namespace DraxClient
                     result = sendcmd("SETTINGSGET|SETUP,DisplayUnknownEvents");
                     this.chkDisplayUnknown.Checked = result == "1" || result == "True";
 
-                    result = sendcmd("SETTINGSGET|SETUP,UseExtendedTextIfOver");
+                    result = sendcmd("SETTINGSGET|SETUP,UseExtendedText");
                     this.chkExtendedText.Checked = result == "1" || result == "True";
+
+                    result = sendcmd("SETTINGSGET|SETUP,EXTENDEDTEXTFILEPATH");
+                    this.txtFilePath.Text = result;
+
+                    result = sendcmd("SETTINGSGET|SETUP,UseExtendedTextIfOver");
+                    this.ExtendedTextifOver.Text = result;
+
+                    result = sendcmd("SETTINGSGET|SETUP,DELIMITER");
+                    this.cboDelimiter.SelectedIndex = Convert.ToInt32(result) - 1;
 
                     break;
                 case "MOLREYZX":
@@ -678,7 +699,8 @@ namespace DraxClient
                     sendcmd($"SETTINGSSET|SETUP,DisplayChkSumFails,{(chkDisplayChkSumFails.Checked ? "1" : "0")}");
                     sendcmd($"SETTINGSSET|SETUP,DisablePanelText,{(chkDisablePanelText.Checked ? "1" : "0")}");
                     sendcmd($"SETTINGSSET|SETUP,DisplayUnknownEvents,{(chkDisplayUnknown.Checked ? "1" : "0")}");
-                    sendcmd($"SETTINGSSET|SETUP,UseExtendedTextIfOver,{(chkExtendedText.Checked ? "1" : "0")}");
+                    sendcmd($"SETTINGSSET|SETUP,EXTENDEDTEXT,{(chkExtendedText.Checked ? "1" : "0")}");
+                    sendcmd($"SETTINGSSET|SETUP,UseExtendedTextIfOver,{ExtendedTextifOver.Text}");
                 }
             }
             sendcmd("SETTINGSSAVE");
@@ -733,14 +755,22 @@ namespace DraxClient
             return gp;
         }
 
-        private void label4_Click(object sender, EventArgs e)
+        private void btBrowse_Click(object sender, EventArgs e)
         {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Title = "Select a File";
+                openFileDialog.Filter = "All Files (*.*)|*.*";
+                // Common filter examples:
+                // "Text Files (*.txt)|*.txt"
+                // "Excel Files (*.xlsx)|*.xlsx"
+                // "Images (*.jpg;*.png)|*.jpg;*.png"
 
-        }
-
-        private void lbStatus_Click(object sender, EventArgs e)
-        {
-
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    txtFilePath.Text = openFileDialog.FileName;
+                }
+            }
         }
     }
 }
