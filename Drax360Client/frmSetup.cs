@@ -512,7 +512,7 @@ namespace DraxClient
                     result = sendcmd("SETTINGSGET|SETUP,DisplayUnknownEvents");
                     this.chkDisplayUnknown.Checked = result == "1" || result == "True";
 
-                    result = sendcmd("SETTINGSGET|SETUP,UseExtendedText");
+                    result = sendcmd("SETTINGSGET|SETUP,EXTENDEDTEXT");
                     this.chkExtendedText.Checked = result == "1" || result == "True";
 
                     result = sendcmd("SETTINGSGET|SETUP,EXTENDEDTEXTFILEPATH");
@@ -588,7 +588,7 @@ namespace DraxClient
             result = sendcmd("SETTINGSGET|SETUP,PARITY");
             foreach (ComboBoxItem item in cbParity.Items)
             {
-                if (item.Value == result) { cbParity.SelectedItem = item; break; }
+                if (item.Value.ToLower() == result.ToLower()) { cbParity.SelectedItem = item; break; }
             }
 
             // Debug / data-logging checkbox
@@ -656,13 +656,13 @@ namespace DraxClient
         private void btApply_Click(object sender, EventArgs e)
         {
             savesettings();
-            sendcmd("ServiceRestart");
+            // sendcmd("ServiceRestart");
         }
 
         private void btok_Click(object sender, EventArgs e)
         {
             savesettings();
-            sendcmd("ServiceRestart");
+            // sendcmd("ServiceRestart");
             this.Close();
         }
 
@@ -697,7 +697,7 @@ namespace DraxClient
                     sendcmd($"SETTINGSSET|SETUP,EXTENDEDTEXT,{(chkExtendedText.Checked ? "1" : "0")}");
                     sendcmd($"SETTINGSSET|SETUP,EXTENDEDTEXTFILEPATH,{txtFilePath.Text}");
                     sendcmd($"SETTINGSSET|SETUP,UseExtendedTextIfOver,{ExtendedTextifOver.Text}");
-                    sendcmd($"SETTINGSSET|SETUP,DELIMITER,{(cboDelimiter.SelectedIndex) - 1}");
+                    sendcmd($"SETTINGSSET|SETUP,DELIMITER,{(cboDelimiter.SelectedIndex) + 1}");
                 }
             }
             sendcmd("SETTINGSSAVE");
@@ -768,6 +768,11 @@ namespace DraxClient
                     txtFilePath.Text = openFileDialog.FileName;
                 }
             }
+        }
+
+        private void lblComCounterPanel1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

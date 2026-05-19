@@ -31,6 +31,7 @@
             btok = new Button();
             tabPage = new TabControl();
             tpserialsettings = new TabPage();
+            lblComCounterPanel1 = new Label();
             progressBar1 = new ProgressBar();
             pnlStatusDot = new Panel();
             cbDataBits = new ComboBox();
@@ -84,7 +85,6 @@
             chkDisablePanelText = new CheckBox();
             chkDisplayChkSumFails = new CheckBox();
             chkOutStationFaults = new CheckBox();
-            lblComCounterPanel1 = new Label();
             pnlFooter.SuspendLayout();
             tabPage.SuspendLayout();
             tpserialsettings.SuspendLayout();
@@ -185,6 +185,16 @@
             tpserialsettings.Size = new Size(666, 391);
             tpserialsettings.TabIndex = 0;
             tpserialsettings.Text = "Serial Settings";
+            // 
+            // lblComCounterPanel1
+            // 
+            lblComCounterPanel1.Location = new Point(216, 65);
+            lblComCounterPanel1.Name = "lblComCounterPanel1";
+            lblComCounterPanel1.Size = new Size(427, 27);
+            lblComCounterPanel1.TabIndex = 8;
+            lblComCounterPanel1.Text = " - ";
+            lblComCounterPanel1.TextAlign = ContentAlignment.MiddleCenter;
+            lblComCounterPanel1.Click += lblComCounterPanel1_Click;
             // 
             // progressBar1
             // 
@@ -737,15 +747,6 @@
             chkOutStationFaults.Size = new Size(280, 24);
             chkOutStationFaults.TabIndex = 1;
             chkOutStationFaults.Text = "All Outstation Faults Are General Fault";
-            // 
-            // lblComCounterPanel1
-            // 
-            lblComCounterPanel1.AutoSize = true;
-            lblComCounterPanel1.Location = new Point(370, 65);
-            lblComCounterPanel1.Name = "lblComCounterPanel1";
-            lblComCounterPanel1.Size = new Size(19, 20);
-            lblComCounterPanel1.TabIndex = 8;
-            lblComCounterPanel1.Text = "- ";
             // 
             // frmSetup
             // 
