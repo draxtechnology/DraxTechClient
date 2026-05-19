@@ -40,7 +40,6 @@ namespace DraxClient
         // the same second see the same value.
         private DateTime _lastFreshTimestampAt = DateTime.MinValue;
         private const double kMarqueeInertiaSeconds = 10.0;
-        private int glNumHeartbeats = 0;
 
         // ── Palette ──────────────────────────────────────────────────────────
         static readonly Color clrBackground = Color.FromArgb(245, 246, 250);
@@ -69,6 +68,7 @@ namespace DraxClient
 
             ApplyModernStyling();
             LoadFormData();
+
         }
 
         private void TimerProgress_Tick(object sender, EventArgs e)
@@ -104,27 +104,22 @@ namespace DraxClient
         {
             if (on)
             {
-               // if (progressBar1.Style != ProgressBarStyle.Blocks)
+
+                progressBar1.Style = ProgressBarStyle.Blocks;
+                if (progressBar1.Value + 20 > 100)
                 {
-                    progressBar1.Style = ProgressBarStyle.Blocks;
-                    if (progressBar1.Value + 20 > 100)
-                    {
-                        progressBar1.Value = 0;
-                    }
-                    progressBar1.Value = progressBar1.Value + 20;
-                    _lastFreshTimestampAt = DateTime.Now;
-                    this.lblComCounterPanel1.Text = "Heart Beats: " + glNumHeartbeats.ToString() + " - ";
-
-                    // Me.lblComCounterPanel1.Caption = Format$(glNumHeartbeats, "#,###,###,##0") & " - " & Format$(glNumMessages, "#,###,###,##0")
-
-                    //progressBar1.MarqueeAnimationSpeed = 30;
+                    progressBar1.Value = 0;
                 }
-            }
-            else
-            {
-               // progressBar1.Style = ProgressBarStyle.Blocks;
-               // progressBar1.MarqueeAnimationSpeed = 0;
-              //  progressBar1.Value = 0;
+                progressBar1.Value = progressBar1.Value + 20;
+                _lastFreshTimestampAt = DateTime.Now;
+
+                int glNumHeartbeats = Convert.ToInt32(sendcmd("GetPanelHandShake"));
+                int glNumMessages = Convert.ToInt32(sendcmd("GetPanelNumMessages"));
+
+                this.lblComCounterPanel1.Text = "Heart Beats: " + glNumHeartbeats.ToString() + " - Messages: " + glNumMessages;
+
+                // Me.lblComCounterPanel1.Caption = Format$(glNumHeartbeats, "#,###,###,##0") & " - " & Format$(glNumMessages, "#,###,###,##0")
+
             }
         }
 
@@ -677,8 +672,8 @@ namespace DraxClient
             {
                 sendcmd($"SETTINGSSET|EMAIL,SMTPSERVER,{this.tbname.Text}");
                 sendcmd($"SETTINGSSET|EMAIL,LOGINNAME,{this.tbuser.Text}");
-                //string encryptedPassword = AesDecryptor.EncryptOpenSSLCtr(this.tbpassword.Text, "");
-                //sendcmd($"SETTINGSSET|EMAIL,PASSWORD,{encryptedPassword}");
+                string encryptedPassword = AesDecryptor.EncryptOpenSSLCtr(this.tbpassword.Text, "");
+                sendcmd($"SETTINGSSET|EMAIL,PASSWORD,{encryptedPassword}");
                 sendcmd($"SETTINGSSET|EMAIL,SMTPPORT,{this.tbport.Text}");
                 sendcmd($"SETTINGSSET|EMAIL,SMTPAUTHORISATION,{(cbauthorisation.Checked ? "1" : "0")}");
                 sendcmd($"SETTINGSSET|EMAIL,DATALOGGING,{(debug.Checked ? "1" : "0")}");
@@ -700,7 +695,9 @@ namespace DraxClient
                     sendcmd($"SETTINGSSET|SETUP,DisablePanelText,{(chkDisablePanelText.Checked ? "1" : "0")}");
                     sendcmd($"SETTINGSSET|SETUP,DisplayUnknownEvents,{(chkDisplayUnknown.Checked ? "1" : "0")}");
                     sendcmd($"SETTINGSSET|SETUP,EXTENDEDTEXT,{(chkExtendedText.Checked ? "1" : "0")}");
+                    sendcmd($"SETTINGSSET|SETUP,EXTENDEDTEXTFILEPATH,{txtFilePath.Text}");
                     sendcmd($"SETTINGSSET|SETUP,UseExtendedTextIfOver,{ExtendedTextifOver.Text}");
+                    sendcmd($"SETTINGSSET|SETUP,DELIMITER,{(cboDelimiter.SelectedIndex) - 1}");
                 }
             }
             sendcmd("SETTINGSSAVE");
