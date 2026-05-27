@@ -528,6 +528,7 @@ namespace DraxClient
                 case "MOLREYZX":
                 case "MORLEYMAX":
                 case "NOTIFIER":
+                case "INSPRE":
                 case "PEARL":
                 case "SYNCRO":
                     this.tbOffset.Text = sendcmd("SETTINGSGET|PANEL1,AMX1OFFSET");
