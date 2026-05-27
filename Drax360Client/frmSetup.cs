@@ -540,6 +540,8 @@ namespace DraxClient
                     break;
             }
 
+            if (tbOffset.Text == "") tbOffset.Text = "0";   
+
             // Status
             string status = sendcmd("GETCOMMPORTSTATUS|" + cbComport.Text);
             bool connected = IsConnectedStatus(status);
