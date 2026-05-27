@@ -591,6 +591,16 @@ namespace DraxClient
                 if (item.Value.ToLower() == result.ToLower()) { cbParity.SelectedItem = item; break; }
             }
 
+            // Parity
+            cbStopBits.Items.Add(new ComboBoxItem { Text = "1", Value = "1" });
+            cbStopBits.Items.Add(new ComboBoxItem { Text = "1.5", Value = "1.5" });
+            cbStopBits.Items.Add(new ComboBoxItem { Text = "2", Value = "2" });
+            result = sendcmd("SETTINGSGET|SETUP,STOPBITS");
+            foreach (ComboBoxItem item in cbStopBits.Items)
+            {
+                if (item.Value.ToLower() == result.ToLower()) { cbStopBits.SelectedItem = item; break; }
+            }
+
             // Debug / data-logging checkbox
             result = "0";
             if (_panelType == "ADVANCED") result = sendcmd("SETTINGSGET|MAIN,DesignTime");
@@ -687,6 +697,7 @@ namespace DraxClient
                 sendcmd($"SETTINGSSET|SETUP,BAUDRATE,{this.cbBaudRate.Text}");
                 sendcmd($"SETTINGSSET|SETUP,DATABITS,{this.cbDataBits.Text}");
                 sendcmd($"SETTINGSSET|SETUP,PARITY,{this.cbParity.Text}");
+                sendcmd($"SETTINGSSET|SETUP,STOPBITS,{this.cbStopBits.Text}");
                 sendcmd($"SETTINGSSET|SETUP,GIAMX1OFFSET,{this.tbOffset.Text}");
                 if (_panelType == "GENT")
                 {

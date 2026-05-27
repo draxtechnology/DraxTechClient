@@ -31,6 +31,8 @@
             btok = new Button();
             tabPage = new TabControl();
             tpserialsettings = new TabPage();
+            label10 = new Label();
+            cbStopBits = new ComboBox();
             lblComCounterPanel1 = new Label();
             progressBar1 = new ProgressBar();
             pnlStatusDot = new Panel();
@@ -103,20 +105,18 @@
             pnlFooter.Controls.Add(btApply);
             pnlFooter.Controls.Add(btok);
             pnlFooter.Dock = DockStyle.Bottom;
-            pnlFooter.Location = new Point(0, 424);
-            pnlFooter.Margin = new Padding(3, 4, 3, 4);
+            pnlFooter.Location = new Point(0, 318);
             pnlFooter.Name = "pnlFooter";
-            pnlFooter.Padding = new Padding(0, 13, 14, 13);
-            pnlFooter.Size = new Size(674, 69);
+            pnlFooter.Padding = new Padding(0, 10, 12, 10);
+            pnlFooter.Size = new Size(590, 52);
             pnlFooter.TabIndex = 1;
             // 
             // btcancel
             // 
             btcancel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btcancel.Location = new Point(557, 13);
-            btcancel.Margin = new Padding(3, 4, 3, 4);
+            btcancel.Location = new Point(487, 10);
             btcancel.Name = "btcancel";
-            btcancel.Size = new Size(91, 40);
+            btcancel.Size = new Size(80, 30);
             btcancel.TabIndex = 2;
             btcancel.Text = "Cancel";
             btcancel.Click += btcancel_Click;
@@ -124,10 +124,9 @@
             // btApply
             // 
             btApply.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btApply.Location = new Point(454, 15);
-            btApply.Margin = new Padding(3, 4, 3, 4);
+            btApply.Location = new Point(397, 11);
             btApply.Name = "btApply";
-            btApply.Size = new Size(91, 40);
+            btApply.Size = new Size(80, 30);
             btApply.TabIndex = 1;
             btApply.Text = "Apply";
             btApply.Click += btApply_Click;
@@ -135,10 +134,9 @@
             // btok
             // 
             btok.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btok.Location = new Point(351, 15);
-            btok.Margin = new Padding(3, 4, 3, 4);
+            btok.Location = new Point(307, 11);
             btok.Name = "btok";
-            btok.Size = new Size(91, 40);
+            btok.Size = new Size(80, 30);
             btok.TabIndex = 0;
             btok.Text = "OK";
             btok.Click += btok_Click;
@@ -153,15 +151,16 @@
             tabPage.Controls.Add(tbGent);
             tabPage.Dock = DockStyle.Fill;
             tabPage.Location = new Point(0, 0);
-            tabPage.Margin = new Padding(3, 4, 3, 4);
             tabPage.Name = "tabPage";
             tabPage.SelectedIndex = 0;
-            tabPage.Size = new Size(674, 424);
+            tabPage.Size = new Size(590, 318);
             tabPage.TabIndex = 0;
             // 
             // tpserialsettings
             // 
             tpserialsettings.BackColor = Color.FromArgb(245, 246, 250);
+            tpserialsettings.Controls.Add(label10);
+            tpserialsettings.Controls.Add(cbStopBits);
             tpserialsettings.Controls.Add(lblComCounterPanel1);
             tpserialsettings.Controls.Add(progressBar1);
             tpserialsettings.Controls.Add(pnlStatusDot);
@@ -178,19 +177,37 @@
             tpserialsettings.Controls.Add(tbOffset);
             tpserialsettings.Controls.Add(cbParity);
             tpserialsettings.Controls.Add(label4);
-            tpserialsettings.Location = new Point(4, 29);
-            tpserialsettings.Margin = new Padding(3, 4, 3, 4);
+            tpserialsettings.Location = new Point(4, 24);
             tpserialsettings.Name = "tpserialsettings";
-            tpserialsettings.Padding = new Padding(18, 19, 18, 11);
-            tpserialsettings.Size = new Size(666, 391);
+            tpserialsettings.Padding = new Padding(16, 14, 16, 8);
+            tpserialsettings.Size = new Size(582, 290);
             tpserialsettings.TabIndex = 0;
             tpserialsettings.Text = "Serial Settings";
             // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(393, 166);
+            label10.Name = "label10";
+            label10.Size = new Size(53, 15);
+            label10.TabIndex = 10;
+            label10.Tag = "fieldlabel";
+            label10.Text = "Stop Bits";
+            // 
+            // cbStopBits
+            // 
+            cbStopBits.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbStopBits.FormattingEnabled = true;
+            cbStopBits.Location = new Point(393, 184);
+            cbStopBits.Name = "cbStopBits";
+            cbStopBits.Size = new Size(140, 23);
+            cbStopBits.TabIndex = 9;
+            // 
             // lblComCounterPanel1
             // 
-            lblComCounterPanel1.Location = new Point(216, 65);
+            lblComCounterPanel1.Location = new Point(189, 49);
             lblComCounterPanel1.Name = "lblComCounterPanel1";
-            lblComCounterPanel1.Size = new Size(427, 27);
+            lblComCounterPanel1.Size = new Size(374, 20);
             lblComCounterPanel1.TabIndex = 8;
             lblComCounterPanel1.Text = " - ";
             lblComCounterPanel1.TextAlign = ContentAlignment.MiddleCenter;
@@ -198,54 +215,50 @@
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(216, 20);
-            progressBar1.Margin = new Padding(3, 4, 3, 4);
+            progressBar1.Location = new Point(189, 15);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(431, 31);
+            progressBar1.Size = new Size(377, 23);
             progressBar1.TabIndex = 7;
             // 
             // pnlStatusDot
             // 
             pnlStatusDot.BackColor = Color.Transparent;
-            pnlStatusDot.Location = new Point(23, 32);
-            pnlStatusDot.Margin = new Padding(3, 4, 3, 4);
+            pnlStatusDot.Location = new Point(20, 24);
             pnlStatusDot.Name = "pnlStatusDot";
-            pnlStatusDot.Size = new Size(16, 19);
+            pnlStatusDot.Size = new Size(14, 14);
             pnlStatusDot.TabIndex = 0;
             // 
             // cbDataBits
             // 
             cbDataBits.FormattingEnabled = true;
-            cbDataBits.Location = new Point(18, 245);
-            cbDataBits.Margin = new Padding(3, 4, 3, 4);
+            cbDataBits.Location = new Point(16, 184);
             cbDataBits.Name = "cbDataBits";
-            cbDataBits.Size = new Size(159, 28);
+            cbDataBits.Size = new Size(140, 23);
             cbDataBits.TabIndex = 6;
             // 
             // lbStatus
             // 
             lbStatus.AutoSize = true;
-            lbStatus.Location = new Point(48, 31);
+            lbStatus.Location = new Point(42, 23);
             lbStatus.Name = "lbStatus";
-            lbStatus.Size = new Size(99, 20);
+            lbStatus.Size = new Size(79, 15);
             lbStatus.TabIndex = 0;
             lbStatus.Text = "Disconnected";
             // 
             // cbBaudRate
             // 
             cbBaudRate.FormattingEnabled = true;
-            cbBaudRate.Location = new Point(248, 163);
-            cbBaudRate.Margin = new Padding(3, 4, 3, 4);
+            cbBaudRate.Location = new Point(217, 122);
             cbBaudRate.Name = "cbBaudRate";
-            cbBaudRate.Size = new Size(159, 28);
+            cbBaudRate.Size = new Size(140, 23);
             cbBaudRate.TabIndex = 5;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(18, 139);
+            label1.Location = new Point(16, 104);
             label1.Name = "label1";
-            label1.Size = new Size(83, 20);
+            label1.Size = new Size(69, 15);
             label1.TabIndex = 0;
             label1.Tag = "fieldlabel";
             label1.Text = "Comm Port";
@@ -254,9 +267,9 @@
             // 
             label7.AutoSize = true;
             label7.ForeColor = SystemColors.ControlDarkDark;
-            label7.Location = new Point(18, 88);
+            label7.Location = new Point(16, 66);
             label7.Name = "label7";
-            label7.Size = new Size(162, 20);
+            label7.Size = new Size(132, 15);
             label7.TabIndex = 4;
             label7.Tag = "fieldlabel";
             label7.Text = "PORT CONFIGURATION";
@@ -267,18 +280,17 @@
             cbComport.DropDownStyle = ComboBoxStyle.DropDownList;
             cbComport.FlatStyle = FlatStyle.Popup;
             cbComport.FormattingEnabled = true;
-            cbComport.Location = new Point(18, 163);
-            cbComport.Margin = new Padding(3, 4, 3, 4);
+            cbComport.Location = new Point(16, 122);
             cbComport.Name = "cbComport";
-            cbComport.Size = new Size(159, 28);
+            cbComport.Size = new Size(140, 23);
             cbComport.TabIndex = 0;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(18, 221);
+            label3.Location = new Point(16, 166);
             label3.Name = "label3";
-            label3.Size = new Size(69, 20);
+            label3.Size = new Size(53, 15);
             label3.TabIndex = 2;
             label3.Tag = "fieldlabel";
             label3.Text = "Data Bits";
@@ -286,9 +298,9 @@
             // lblCalibration
             // 
             lblCalibration.AutoSize = true;
-            lblCalibration.Location = new Point(18, 321);
+            lblCalibration.Location = new Point(16, 234);
             lblCalibration.Name = "lblCalibration";
-            lblCalibration.Size = new Size(100, 20);
+            lblCalibration.Size = new Size(81, 15);
             lblCalibration.TabIndex = 2;
             lblCalibration.Tag = "section";
             lblCalibration.Text = "CALIBRATION";
@@ -296,9 +308,9 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(248, 139);
+            label2.Location = new Point(217, 104);
             label2.Name = "label2";
-            label2.Size = new Size(77, 20);
+            label2.Size = new Size(60, 15);
             label2.TabIndex = 1;
             label2.Tag = "fieldlabel";
             label2.Text = "Baud Rate";
@@ -306,37 +318,35 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(18, 351);
+            label6.Location = new Point(16, 256);
             label6.Name = "label6";
-            label6.Size = new Size(49, 20);
+            label6.Size = new Size(39, 15);
             label6.TabIndex = 3;
             label6.Tag = "fieldlabel";
             label6.Text = "Offset";
             // 
             // tbOffset
             // 
-            tbOffset.Location = new Point(201, 347);
-            tbOffset.Margin = new Padding(3, 4, 3, 4);
+            tbOffset.Location = new Point(176, 253);
             tbOffset.Name = "tbOffset";
-            tbOffset.Size = new Size(159, 27);
+            tbOffset.Size = new Size(140, 23);
             tbOffset.TabIndex = 4;
             // 
             // cbParity
             // 
             cbParity.DropDownStyle = ComboBoxStyle.DropDownList;
             cbParity.FormattingEnabled = true;
-            cbParity.Location = new Point(248, 245);
-            cbParity.Margin = new Padding(3, 4, 3, 4);
+            cbParity.Location = new Point(217, 184);
             cbParity.Name = "cbParity";
-            cbParity.Size = new Size(159, 28);
+            cbParity.Size = new Size(140, 23);
             cbParity.TabIndex = 3;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(248, 221);
+            label4.Location = new Point(217, 166);
             label4.Name = "label4";
-            label4.Size = new Size(45, 20);
+            label4.Size = new Size(37, 15);
             label4.TabIndex = 3;
             label4.Tag = "fieldlabel";
             label4.Text = "Parity";
@@ -345,21 +355,19 @@
             // 
             tpsettings.BackColor = Color.FromArgb(245, 246, 250);
             tpsettings.Controls.Add(debug);
-            tpsettings.Location = new Point(4, 29);
-            tpsettings.Margin = new Padding(3, 4, 3, 4);
+            tpsettings.Location = new Point(4, 24);
             tpsettings.Name = "tpsettings";
-            tpsettings.Padding = new Padding(18, 19, 18, 11);
-            tpsettings.Size = new Size(666, 391);
+            tpsettings.Padding = new Padding(16, 14, 16, 8);
+            tpsettings.Size = new Size(582, 290);
             tpsettings.TabIndex = 1;
             tpsettings.Text = "Settings";
             // 
             // debug
             // 
             debug.AutoSize = true;
-            debug.Location = new Point(37, 32);
-            debug.Margin = new Padding(3, 4, 3, 4);
+            debug.Location = new Point(32, 24);
             debug.Name = "debug";
-            debug.Size = new Size(154, 24);
+            debug.Size = new Size(122, 19);
             debug.TabIndex = 0;
             debug.Text = "Enable Debug Log";
             // 
@@ -376,89 +384,81 @@
             tpadvanced.Controls.Add(chkSubAddressOffset);
             tpadvanced.Controls.Add(lblSubAddressOffsetNumber);
             tpadvanced.Controls.Add(SubAddressOffsetNumber);
-            tpadvanced.Location = new Point(4, 29);
-            tpadvanced.Margin = new Padding(3, 4, 3, 4);
+            tpadvanced.Location = new Point(4, 24);
             tpadvanced.Name = "tpadvanced";
-            tpadvanced.Padding = new Padding(18, 19, 18, 11);
-            tpadvanced.Size = new Size(666, 391);
+            tpadvanced.Padding = new Padding(16, 14, 16, 8);
+            tpadvanced.Size = new Size(582, 290);
             tpadvanced.TabIndex = 2;
             tpadvanced.Text = "Advanced Panel";
             // 
             // chkRefreshZonesStart
             // 
             chkRefreshZonesStart.AutoSize = true;
-            chkRefreshZonesStart.Location = new Point(30, 24);
-            chkRefreshZonesStart.Margin = new Padding(3, 4, 3, 4);
+            chkRefreshZonesStart.Location = new Point(26, 18);
             chkRefreshZonesStart.Name = "chkRefreshZonesStart";
-            chkRefreshZonesStart.Size = new Size(228, 24);
+            chkRefreshZonesStart.Size = new Size(182, 19);
             chkRefreshZonesStart.TabIndex = 0;
             chkRefreshZonesStart.Text = "Refresh Zone Texts on Startup";
             // 
             // chkRefreshZonesConfig
             // 
             chkRefreshZonesConfig.AutoSize = true;
-            chkRefreshZonesConfig.Location = new Point(30, 59);
-            chkRefreshZonesConfig.Margin = new Padding(3, 4, 3, 4);
+            chkRefreshZonesConfig.Location = new Point(26, 44);
             chkRefreshZonesConfig.Name = "chkRefreshZonesConfig";
-            chkRefreshZonesConfig.Size = new Size(325, 24);
+            chkRefreshZonesConfig.Size = new Size(262, 19);
             chkRefreshZonesConfig.TabIndex = 1;
             chkRefreshZonesConfig.Text = "Refresh Zone Texts on Configuration Change";
             // 
             // chkDefaultZone
             // 
             chkDefaultZone.AutoSize = true;
-            chkDefaultZone.Location = new Point(30, 93);
-            chkDefaultZone.Margin = new Padding(3, 4, 3, 4);
+            chkDefaultZone.Location = new Point(26, 70);
             chkDefaultZone.Name = "chkDefaultZone";
-            chkDefaultZone.Size = new Size(149, 24);
+            chkDefaultZone.Size = new Size(118, 19);
             chkDefaultZone.TabIndex = 2;
             chkDefaultZone.Text = "Default Zone Text";
             // 
             // chkIgnoreNullZone
             // 
             chkIgnoreNullZone.AutoSize = true;
-            chkIgnoreNullZone.Location = new Point(30, 128);
-            chkIgnoreNullZone.Margin = new Padding(3, 4, 3, 4);
+            chkIgnoreNullZone.Location = new Point(26, 96);
             chkIgnoreNullZone.Name = "chkIgnoreNullZone";
-            chkIgnoreNullZone.Size = new Size(174, 24);
+            chkIgnoreNullZone.Size = new Size(139, 19);
             chkIgnoreNullZone.TabIndex = 3;
             chkIgnoreNullZone.Text = "Ignore Null Zone Text";
             // 
             // chkClassicIsolations
             // 
             chkClassicIsolations.AutoSize = true;
-            chkClassicIsolations.Location = new Point(30, 163);
-            chkClassicIsolations.Margin = new Padding(3, 4, 3, 4);
+            chkClassicIsolations.Location = new Point(26, 122);
             chkClassicIsolations.Name = "chkClassicIsolations";
-            chkClassicIsolations.Size = new Size(142, 24);
+            chkClassicIsolations.Size = new Size(115, 19);
             chkClassicIsolations.TabIndex = 4;
             chkClassicIsolations.Text = "Classic Isolations";
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(30, 208);
+            label5.Location = new Point(26, 156);
             label5.Name = "label5";
-            label5.Size = new Size(115, 20);
+            label5.Size = new Size(91, 15);
             label5.TabIndex = 5;
             label5.Tag = "fieldlabel";
             label5.Text = "Heartbeat Panel";
             // 
             // cboHB1
             // 
-            cboHB1.Location = new Point(251, 208);
-            cboHB1.Margin = new Padding(3, 4, 3, 4);
+            cboHB1.Location = new Point(220, 156);
             cboHB1.Name = "cboHB1";
-            cboHB1.Size = new Size(80, 27);
+            cboHB1.Size = new Size(70, 23);
             cboHB1.TabIndex = 5;
             // 
             // chkSubAddressOffset
             // 
             chkSubAddressOffset.AutoSize = true;
-            chkSubAddressOffset.Location = new Point(30, 251);
-            chkSubAddressOffset.Margin = new Padding(3, 4, 3, 4);
+            chkSubAddressOffset.Location = new Point(26, 188);
             chkSubAddressOffset.Name = "chkSubAddressOffset";
-            chkSubAddressOffset.Size = new Size(157, 24);
+            chkSubAddressOffset.Size = new Size(126, 19);
             chkSubAddressOffset.TabIndex = 6;
             chkSubAddressOffset.TabStop = false;
             chkSubAddressOffset.Text = "Sub Address Offset";
@@ -467,9 +467,9 @@
             // lblSubAddressOffsetNumber
             // 
             lblSubAddressOffsetNumber.AutoSize = true;
-            lblSubAddressOffsetNumber.Location = new Point(30, 285);
+            lblSubAddressOffsetNumber.Location = new Point(26, 214);
             lblSubAddressOffsetNumber.Name = "lblSubAddressOffsetNumber";
-            lblSubAddressOffsetNumber.Size = new Size(193, 20);
+            lblSubAddressOffsetNumber.Size = new Size(154, 15);
             lblSubAddressOffsetNumber.TabIndex = 7;
             lblSubAddressOffsetNumber.Tag = "fieldlabel";
             lblSubAddressOffsetNumber.Text = "Sub Address Offset Number";
@@ -477,10 +477,9 @@
             // 
             // SubAddressOffsetNumber
             // 
-            SubAddressOffsetNumber.Location = new Point(251, 281);
-            SubAddressOffsetNumber.Margin = new Padding(3, 4, 3, 4);
+            SubAddressOffsetNumber.Location = new Point(220, 211);
             SubAddressOffsetNumber.Name = "SubAddressOffsetNumber";
-            SubAddressOffsetNumber.Size = new Size(91, 27);
+            SubAddressOffsetNumber.Size = new Size(80, 23);
             SubAddressOffsetNumber.TabIndex = 7;
             SubAddressOffsetNumber.Visible = false;
             // 
@@ -497,20 +496,18 @@
             tpemail.Controls.Add(lbpassword);
             tpemail.Controls.Add(tbpassword);
             tpemail.Controls.Add(cbauthorisation);
-            tpemail.Location = new Point(4, 29);
-            tpemail.Margin = new Padding(3, 4, 3, 4);
+            tpemail.Location = new Point(4, 24);
             tpemail.Name = "tpemail";
-            tpemail.Padding = new Padding(18, 19, 18, 11);
-            tpemail.Size = new Size(666, 391);
+            tpemail.Padding = new Padding(16, 14, 16, 8);
+            tpemail.Size = new Size(582, 290);
             tpemail.TabIndex = 3;
             tpemail.Text = "Email";
             // 
             // bteditemailgroups
             // 
-            bteditemailgroups.Location = new Point(18, 19);
-            bteditemailgroups.Margin = new Padding(3, 4, 3, 4);
+            bteditemailgroups.Location = new Point(16, 14);
             bteditemailgroups.Name = "bteditemailgroups";
-            bteditemailgroups.Size = new Size(114, 40);
+            bteditemailgroups.Size = new Size(100, 30);
             bteditemailgroups.TabIndex = 0;
             bteditemailgroups.Text = "Edit Groups";
             bteditemailgroups.Click += bteditemailgroups_Click;
@@ -518,83 +515,78 @@
             // lbsmtpserver
             // 
             lbsmtpserver.AutoSize = true;
-            lbsmtpserver.Location = new Point(18, 83);
+            lbsmtpserver.Location = new Point(16, 62);
             lbsmtpserver.Name = "lbsmtpserver";
-            lbsmtpserver.Size = new Size(91, 20);
+            lbsmtpserver.Size = new Size(73, 15);
             lbsmtpserver.TabIndex = 1;
             lbsmtpserver.Tag = "fieldlabel";
             lbsmtpserver.Text = "SMTP Server";
             // 
             // tbname
             // 
-            tbname.Location = new Point(18, 107);
-            tbname.Margin = new Padding(3, 4, 3, 4);
+            tbname.Location = new Point(16, 80);
             tbname.Name = "tbname";
-            tbname.Size = new Size(285, 27);
+            tbname.Size = new Size(250, 23);
             tbname.TabIndex = 1;
             // 
             // lbport
             // 
             lbport.AutoSize = true;
-            lbport.Location = new Point(18, 152);
+            lbport.Location = new Point(16, 114);
             lbport.Name = "lbport";
-            lbport.Size = new Size(35, 20);
+            lbport.Size = new Size(29, 15);
             lbport.TabIndex = 2;
             lbport.Tag = "fieldlabel";
             lbport.Text = "Port";
             // 
             // tbport
             // 
-            tbport.Location = new Point(18, 176);
-            tbport.Margin = new Padding(3, 4, 3, 4);
+            tbport.Location = new Point(16, 132);
             tbport.Name = "tbport";
-            tbport.Size = new Size(114, 27);
+            tbport.Size = new Size(100, 23);
             tbport.TabIndex = 2;
             // 
             // lbuser
             // 
             lbuser.AutoSize = true;
-            lbuser.Location = new Point(366, 83);
+            lbuser.Location = new Point(320, 62);
             lbuser.Name = "lbuser";
-            lbuser.Size = new Size(75, 20);
+            lbuser.Size = new Size(60, 15);
             lbuser.TabIndex = 3;
             lbuser.Tag = "fieldlabel";
             lbuser.Text = "Username";
             // 
             // tbuser
             // 
-            tbuser.Location = new Point(366, 107);
-            tbuser.Margin = new Padding(3, 4, 3, 4);
+            tbuser.Location = new Point(320, 80);
             tbuser.Name = "tbuser";
-            tbuser.Size = new Size(285, 27);
+            tbuser.Size = new Size(250, 23);
             tbuser.TabIndex = 3;
             // 
             // lbpassword
             // 
             lbpassword.AutoSize = true;
-            lbpassword.Location = new Point(366, 152);
+            lbpassword.Location = new Point(320, 114);
             lbpassword.Name = "lbpassword";
-            lbpassword.Size = new Size(70, 20);
+            lbpassword.Size = new Size(57, 15);
             lbpassword.TabIndex = 4;
             lbpassword.Tag = "fieldlabel";
             lbpassword.Text = "Password";
             // 
             // tbpassword
             // 
-            tbpassword.Location = new Point(366, 176);
-            tbpassword.Margin = new Padding(3, 4, 3, 4);
+            tbpassword.Location = new Point(320, 132);
             tbpassword.Name = "tbpassword";
             tbpassword.PasswordChar = '*';
-            tbpassword.Size = new Size(285, 27);
+            tbpassword.Size = new Size(250, 23);
             tbpassword.TabIndex = 4;
             // 
             // cbauthorisation
             // 
             cbauthorisation.AutoSize = true;
-            cbauthorisation.Location = new Point(18, 227);
-            cbauthorisation.Margin = new Padding(3, 4, 3, 4);
+            cbauthorisation.Location = new Point(16, 170);
             cbauthorisation.Name = "cbauthorisation";
-            cbauthorisation.Size = new Size(222, 24);
+            cbauthorisation.Size = new Size(180, 19);
             cbauthorisation.TabIndex = 5;
             cbauthorisation.Text = "Requires SMTP Authorisation";
             // 
@@ -602,20 +594,18 @@
             // 
             tprsm.BackColor = Color.FromArgb(245, 246, 250);
             tprsm.Controls.Add(btdevices);
-            tprsm.Location = new Point(4, 29);
-            tprsm.Margin = new Padding(3, 4, 3, 4);
+            tprsm.Location = new Point(4, 24);
             tprsm.Name = "tprsm";
-            tprsm.Padding = new Padding(18, 19, 18, 11);
-            tprsm.Size = new Size(666, 391);
+            tprsm.Padding = new Padding(16, 14, 16, 8);
+            tprsm.Size = new Size(582, 290);
             tprsm.TabIndex = 4;
             tprsm.Text = "RSM";
             // 
             // btdevices
             // 
-            btdevices.Location = new Point(265, 21);
-            btdevices.Margin = new Padding(3, 4, 3, 4);
+            btdevices.Location = new Point(232, 16);
             btdevices.Name = "btdevices";
-            btdevices.Size = new Size(114, 40);
+            btdevices.Size = new Size(100, 30);
             btdevices.TabIndex = 2;
             btdevices.Text = "Devices";
             btdevices.Click += btdevices_Click;
@@ -635,56 +625,52 @@
             tbGent.Controls.Add(chkDisablePanelText);
             tbGent.Controls.Add(chkDisplayChkSumFails);
             tbGent.Controls.Add(chkOutStationFaults);
-            tbGent.Location = new Point(4, 29);
-            tbGent.Margin = new Padding(3, 4, 3, 4);
+            tbGent.Location = new Point(4, 24);
             tbGent.Name = "tbGent";
-            tbGent.Padding = new Padding(3, 4, 3, 4);
-            tbGent.Size = new Size(666, 391);
+            tbGent.Padding = new Padding(3);
+            tbGent.Size = new Size(582, 290);
             tbGent.TabIndex = 5;
             tbGent.Text = "Gent Panel";
             // 
             // ExtendedTextifOver
             // 
-            ExtendedTextifOver.Location = new Point(234, 220);
-            ExtendedTextifOver.Margin = new Padding(3, 4, 3, 4);
+            ExtendedTextifOver.Location = new Point(205, 165);
             ExtendedTextifOver.Name = "ExtendedTextifOver";
-            ExtendedTextifOver.Size = new Size(102, 27);
+            ExtendedTextifOver.Size = new Size(90, 23);
             ExtendedTextifOver.TabIndex = 12;
             // 
             // cboDelimiter
             // 
             cboDelimiter.FormattingEnabled = true;
             cboDelimiter.Items.AddRange(new object[] { "Comma", "Tab" });
-            cboDelimiter.Location = new Point(234, 259);
-            cboDelimiter.Margin = new Padding(3, 4, 3, 4);
+            cboDelimiter.Location = new Point(205, 194);
             cboDelimiter.Name = "cboDelimiter";
-            cboDelimiter.Size = new Size(102, 28);
+            cboDelimiter.Size = new Size(90, 23);
             cboDelimiter.TabIndex = 11;
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(64, 261);
+            label9.Location = new Point(56, 196);
             label9.Name = "label9";
-            label9.Size = new Size(134, 20);
+            label9.Size = new Size(106, 15);
             label9.TabIndex = 10;
             label9.Text = "Delimter Character";
             // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(64, 224);
+            label8.Location = new Point(56, 168);
             label8.Name = "label8";
-            label8.Size = new Size(171, 20);
+            label8.Size = new Size(135, 15);
             label8.TabIndex = 9;
             label8.Text = "Use if Panel text is over -";
             // 
             // btBrowse
             // 
-            btBrowse.Location = new Point(545, 165);
-            btBrowse.Margin = new Padding(3, 4, 3, 4);
+            btBrowse.Location = new Point(477, 124);
             btBrowse.Name = "btBrowse";
-            btBrowse.Size = new Size(86, 31);
+            btBrowse.Size = new Size(75, 23);
             btBrowse.TabIndex = 8;
             btBrowse.Text = "Browse";
             btBrowse.UseVisualStyleBackColor = true;
@@ -692,71 +678,64 @@
             // 
             // txtFilePath
             // 
-            txtFilePath.Location = new Point(185, 167);
-            txtFilePath.Margin = new Padding(3, 4, 3, 4);
+            txtFilePath.Location = new Point(162, 125);
             txtFilePath.Name = "txtFilePath";
-            txtFilePath.Size = new Size(353, 27);
+            txtFilePath.Size = new Size(309, 23);
             txtFilePath.TabIndex = 6;
             // 
             // chkExtendedText
             // 
             chkExtendedText.AutoSize = true;
-            chkExtendedText.Location = new Point(41, 172);
-            chkExtendedText.Margin = new Padding(3, 4, 3, 4);
+            chkExtendedText.Location = new Point(36, 129);
             chkExtendedText.Name = "chkExtendedText";
-            chkExtendedText.Size = new Size(152, 24);
+            chkExtendedText.Size = new Size(120, 19);
             chkExtendedText.TabIndex = 5;
             chkExtendedText.Text = "Use Extended Text";
             // 
             // chkDisplayUnknown
             // 
             chkDisplayUnknown.AutoSize = true;
-            chkDisplayUnknown.Location = new Point(41, 139);
-            chkDisplayUnknown.Margin = new Padding(3, 4, 3, 4);
+            chkDisplayUnknown.Location = new Point(36, 104);
             chkDisplayUnknown.Name = "chkDisplayUnknown";
-            chkDisplayUnknown.Size = new Size(191, 24);
+            chkDisplayUnknown.Size = new Size(155, 19);
             chkDisplayUnknown.TabIndex = 4;
             chkDisplayUnknown.Text = "Display Unknown Events";
             // 
             // chkDisablePanelText
             // 
             chkDisablePanelText.AutoSize = true;
-            chkDisablePanelText.Location = new Point(41, 105);
-            chkDisablePanelText.Margin = new Padding(3, 4, 3, 4);
+            chkDisablePanelText.Location = new Point(36, 79);
             chkDisablePanelText.Name = "chkDisablePanelText";
-            chkDisablePanelText.Size = new Size(151, 24);
+            chkDisablePanelText.Size = new Size(120, 19);
             chkDisablePanelText.TabIndex = 3;
             chkDisablePanelText.Text = "Disable Panel Text";
             // 
             // chkDisplayChkSumFails
             // 
             chkDisplayChkSumFails.AutoSize = true;
-            chkDisplayChkSumFails.Location = new Point(41, 72);
-            chkDisplayChkSumFails.Margin = new Padding(3, 4, 3, 4);
+            chkDisplayChkSumFails.Location = new Point(36, 54);
             chkDisplayChkSumFails.Name = "chkDisplayChkSumFails";
-            chkDisplayChkSumFails.Size = new Size(169, 24);
+            chkDisplayChkSumFails.Size = new Size(138, 19);
             chkDisplayChkSumFails.TabIndex = 2;
             chkDisplayChkSumFails.Text = "Display ChkSum Fails";
             // 
             // chkOutStationFaults
             // 
             chkOutStationFaults.AutoSize = true;
-            chkOutStationFaults.Location = new Point(41, 39);
-            chkOutStationFaults.Margin = new Padding(3, 4, 3, 4);
+            chkOutStationFaults.Location = new Point(36, 29);
             chkOutStationFaults.Name = "chkOutStationFaults";
-            chkOutStationFaults.Size = new Size(280, 24);
+            chkOutStationFaults.Size = new Size(226, 19);
             chkOutStationFaults.TabIndex = 1;
             chkOutStationFaults.Text = "All Outstation Faults Are General Fault";
             // 
             // frmSetup
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(674, 493);
+            ClientSize = new Size(590, 370);
             Controls.Add(tabPage);
             Controls.Add(pnlFooter);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "frmSetup";
@@ -842,5 +821,7 @@
         private Label label9;
         private Label label8;
         private Label lblComCounterPanel1;
+        private Label label10;
+        private ComboBox cbStopBits;
     }
 }
