@@ -570,14 +570,22 @@ namespace DraxClient
             }
 
             // Baud Raute
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "300", Value = "300" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "600", Value = "600" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "1200", Value = "600" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "2400", Value = "1200" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "4800", Value = "4800" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "9600", Value = "9600" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "19200", Value = "19200" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "38400", Value = "38400" });
+            if (_panelType == "NOTIFIER" || _panelType == "INPSIRE")
+            {
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "9600", Value = "9600" });
+                cbBaudRate.Enabled = false;
+            }
+            else
+            {
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "300", Value = "300" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "600", Value = "600" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "1200", Value = "600" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "2400", Value = "1200" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "4800", Value = "4800" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "9600", Value = "9600" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "19200", Value = "19200" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "38400", Value = "38400" });
+            }
             result = sendcmd("SETTINGSGET|SETUP,BaudRate");
             foreach (ComboBoxItem item in cbBaudRate.Items)
             {
