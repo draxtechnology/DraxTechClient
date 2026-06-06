@@ -8,9 +8,17 @@ namespace DraxClient.Panels.RSM
     // Mirrors VB6 frmRSMNodes / vsfNodes (7 columns: Node, Site Name, Node Name,
     // Node Type, Status, Messages, Address). Polls RSMNODES on the named pipe
     // every 2 s and colours Status cells green (ONLINE) or red (OFFLINE).
+    //
+    // Also owns device management (previously a separate frmdevices): nodes can
+    // be named/provisioned via Properties (edit), Discovery (add), and Delete —
+    // all persisted to devices.json so the service can enrich log lines.
     public partial class frmRSMNodes : Form
     {
         private const string kPipeName = "DraxTechnologyPipeSend";
+        private readonly object _fileLock = new();
+        private static readonly string _devicesPath = Paths.GetFile("devices.json");
+
+        private List<Device> _devices = new();
         private System.Windows.Forms.Timer _timer;
 
         public frmRSMNodes()
@@ -21,6 +29,8 @@ namespace DraxClient.Panels.RSM
 
         private void frmRSMNodes_Load(object sender, EventArgs e)
         {
+            Paths.MigrateLegacyFile("devices.json");
+            LoadDevices();
             Refresh_Grid();
             _timer = new System.Windows.Forms.Timer { Interval = 2000 };
             _timer.Tick += (_, _) => Refresh_Grid();
@@ -33,17 +43,58 @@ namespace DraxClient.Panels.RSM
             _timer?.Dispose();
         }
 
+        // ── Device list (devices.json) ────────────────────────────────────────
+
+        private void LoadDevices()
+        {
+            lock (_fileLock)
+            {
+                try
+                {
+                    if (!File.Exists(_devicesPath)) return;
+                    string json = File.ReadAllText(_devicesPath);
+                    var opts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    _devices = JsonSerializer.Deserialize<List<Device>>(json, opts) ?? new List<Device>();
+                }
+                catch { /* keep empty list on error */ }
+            }
+        }
+
+        private void SaveDevices()
+        {
+            lock (_fileLock)
+            {
+                try
+                {
+                    string dir = Path.GetDirectoryName(_devicesPath)!;
+                    if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                    var opts = new JsonSerializerOptions { WriteIndented = true };
+                    string json = JsonSerializer.Serialize(_devices, opts);
+                    string tmp = _devicesPath + ".tmp";
+                    File.WriteAllText(tmp, json, Encoding.UTF8);
+                    File.Copy(tmp, _devicesPath, overwrite: true);
+                    File.Delete(tmp);
+                }
+                catch { }
+            }
+        }
+
+        private Device? FindDeviceByIP(string ip)
+            => _devices.FirstOrDefault(d =>
+                string.Equals(d.IP?.Trim(), ip?.Trim(), StringComparison.OrdinalIgnoreCase));
+
+        private bool IsDuplicateIP(string ip, Guid excludeId)
+            => _devices.Any(d =>
+                d.ID != excludeId &&
+                string.Equals(d.IP?.Trim(), ip?.Trim(), StringComparison.OrdinalIgnoreCase));
+
+        // ── Live node grid ────────────────────────────────────────────────────
+
         private void Refresh_Grid()
         {
             string json;
-            try
-            {
-                json = SendCmd("RSMNODES");
-            }
-            catch
-            {
-                return; // service not available — keep old data
-            }
+            try { json = SendCmd("RSMNODES"); }
+            catch { return; }
 
             List<NodeSnapshot> nodes;
             try
@@ -52,12 +103,8 @@ namespace DraxClient.Panels.RSM
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                     ?? new List<NodeSnapshot>();
             }
-            catch
-            {
-                return;
-            }
+            catch { return; }
 
-            // Preserve selected row
             int selectedNode = -1;
             if (dgNodes.SelectedRows.Count > 0 && dgNodes.SelectedRows[0].Tag is int n)
                 selectedNode = n;
@@ -67,27 +114,28 @@ namespace DraxClient.Panels.RSM
 
             foreach (var node in nodes)
             {
-                int idx = dgNodes.Rows.Add(
-                    node.Node,
-                    node.Site,
-                    node.Name,
-                    node.TypeText,
-                    node.Status,
-                    node.Messages,
-                    node.Address);
+                // Enrich Name from devices.json if the service hasn't populated it yet
+                string name = node.Name;
+                if (string.IsNullOrEmpty(name))
+                {
+                    var d = FindDeviceByIP(node.Address);
+                    if (d != null) name = d.Name;
+                }
+
+                int idx = dgNodes.Rows.Add(node.Node, node.Site, name,
+                    node.TypeText, node.Status, node.Messages, node.Address);
 
                 DataGridViewRow row = dgNodes.Rows[idx];
                 row.Tag = node.Node;
 
                 bool online = string.Equals(node.Status, "ONLINE", StringComparison.OrdinalIgnoreCase);
-                DataGridViewCell statusCell = row.Cells[colStatus.Index];
-                statusCell.Style.BackColor = online ? Color.Lime : Color.Red;
-                statusCell.Style.ForeColor = Color.Black;
-                statusCell.Style.SelectionBackColor = statusCell.Style.BackColor;
-                statusCell.Style.SelectionForeColor = Color.Black;
+                DataGridViewCell cell = row.Cells[colStatus.Index];
+                cell.Style.BackColor = online ? Color.Lime : Color.Red;
+                cell.Style.ForeColor = Color.Black;
+                cell.Style.SelectionBackColor = cell.Style.BackColor;
+                cell.Style.SelectionForeColor = Color.Black;
 
-                if (node.Node == selectedNode)
-                    row.Selected = true;
+                if (node.Node == selectedNode) row.Selected = true;
             }
 
             dgNodes.ResumeLayout();
@@ -101,38 +149,95 @@ namespace DraxClient.Panels.RSM
             bool sel = dgNodes.SelectedRows.Count > 0;
             btProperties.Enabled = sel;
             btDelete.Enabled = sel;
-            btRestart.Enabled = false; // TODO: enable once RSMRESTART pipe verb exists
+            btRestart.Enabled = false; // pending RSMRESTART pipe verb
             btLicense.Enabled = sel;
         }
 
+        // ── Button handlers ───────────────────────────────────────────────────
+
         private void btClose_Click(object sender, EventArgs e) => Close();
 
-        private void btDiscovery_Click(object sender, EventArgs e)
-            => new frmdiscovery().ShowDialog();
+        // Properties — edit the device entry for the selected node's IP
+        private void btProperties_Click(object sender, EventArgs e)
+        {
+            if (dgNodes.SelectedRows.Count == 0) return;
+            string ip = dgNodes.SelectedRows[0].Cells[colAddress.Index].Value?.ToString() ?? "";
 
+            Device device = FindDeviceByIP(ip) ?? new Device { IP = ip };
+            bool isNew = FindDeviceByIP(ip) == null;
+
+            using var frm = new frmdiscovery { OurDevice = device, IsNew = isNew };
+            if (frm.ShowDialog() != DialogResult.OK) return;
+
+            string newIp = frm.OurDevice.IP?.Trim() ?? "";
+            if (!string.IsNullOrEmpty(newIp) && IsDuplicateIP(newIp, device.ID))
+            {
+                MessageBox.Show("Another device with this IP already exists.", "Duplicate IP",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (isNew)
+                _devices.Add(frm.OurDevice);
+            else
+            {
+                int i = _devices.FindIndex(d => d.ID == device.ID);
+                if (i >= 0) _devices[i] = frm.OurDevice;
+            }
+
+            SaveDevices();
+            Refresh_Grid();
+        }
+
+        // Delete — remove the device entry for the selected node's IP
         private void btDelete_Click(object sender, EventArgs e)
         {
             if (dgNodes.SelectedRows.Count == 0) return;
             int node = (int)(dgNodes.SelectedRows[0].Cells[colNode.Index].Value ?? 0);
+            string ip = dgNodes.SelectedRows[0].Cells[colAddress.Index].Value?.ToString() ?? "";
+
+            var device = FindDeviceByIP(ip);
+            if (device == null)
+            {
+                MessageBox.Show($"Node {node} has no device entry to remove.", "Nothing to delete",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             var dr = MessageBox.Show(
-                $"Remove node {node} from the list? (No command is sent to the panel.)",
+                $"Remove the device entry for node {node} ({device.Name}, {ip})?",
                 "Confirm Remove", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dr == DialogResult.Yes)
-                Refresh_Grid();
+            if (dr != DialogResult.Yes) return;
+
+            _devices.Remove(device);
+            SaveDevices();
+            Refresh_Grid();
         }
 
-        private void btProperties_Click(object sender, EventArgs e)
+        // Discovery — add a new device entry
+        private void btDiscovery_Click(object sender, EventArgs e)
         {
-            // Properties dialog not yet implemented — placeholder
-            MessageBox.Show("Properties dialog coming soon.", "Properties",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using var frm = new frmdiscovery { OurDevice = new Device(), IsNew = true };
+            if (frm.ShowDialog() != DialogResult.OK) return;
+
+            string newIp = frm.OurDevice.IP?.Trim() ?? "";
+            if (!string.IsNullOrEmpty(newIp) && IsDuplicateIP(newIp, frm.OurDevice.ID))
+            {
+                MessageBox.Show("A device with this IP already exists.", "Duplicate IP",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            _devices.Add(frm.OurDevice);
+            SaveDevices();
+            Refresh_Grid();
         }
 
         private void btLicense_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Install License not yet implemented.", "Install License",
+            => MessageBox.Show("Install License not yet implemented.", "Install License",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
+
+        // ── Pipe helper ───────────────────────────────────────────────────────
 
         private static string SendCmd(string cmd)
         {
@@ -141,19 +246,14 @@ namespace DraxClient.Panels.RSM
             pipe.ReadMode = PipeTransmissionMode.Message;
             byte[] msg = Encoding.Default.GetBytes(cmd);
             pipe.Write(msg, 0, msg.Length);
-
             byte[] buf = new byte[4096];
             using var ms = new MemoryStream();
-            do
-            {
-                int read = pipe.Read(buf, 0, buf.Length);
-                ms.Write(buf, 0, read);
-            } while (!pipe.IsMessageComplete);
-
+            do { int r = pipe.Read(buf, 0, buf.Length); ms.Write(buf, 0, r); }
+            while (!pipe.IsMessageComplete);
             return Encoding.Default.GetString(ms.ToArray());
         }
 
-        // POCO matching the RSMNODES JSON schema from PanelRSM.BuildNodeSnapshot()
+        // POCO matching PanelRSM.BuildNodeSnapshot() JSON schema
         private class NodeSnapshot
         {
             public int Node { get; set; }

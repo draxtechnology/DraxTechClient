@@ -74,7 +74,6 @@
             tbpassword = new TextBox();
             cbauthorisation = new CheckBox();
             tprsm = new TabPage();
-            btdevices = new Button();
             btnNodes = new Button();
             tbGent = new TabPage();
             ExtendedTextifOver = new TextBox();
@@ -595,22 +594,13 @@
             // 
             tprsm.BackColor = Color.FromArgb(245, 246, 250);
             tprsm.Controls.Add(btnNodes);
-            tprsm.Controls.Add(btdevices);
+
             tprsm.Location = new Point(4, 24);
             tprsm.Name = "tprsm";
             tprsm.Padding = new Padding(16, 14, 16, 8);
             tprsm.Size = new Size(582, 290);
             tprsm.TabIndex = 4;
             tprsm.Text = "RSM";
-            // 
-            // btdevices
-            // 
-            btdevices.Location = new Point(232, 16);
-            btdevices.Name = "btdevices";
-            btdevices.Size = new Size(100, 30);
-            btdevices.TabIndex = 2;
-            btdevices.Text = "Devices";
-            btdevices.Click += btdevices_Click;
             //
             // btnNodes
             //
@@ -815,7 +805,6 @@
         private TextBox tbpassword;
         private CheckBox cbauthorisation;
         private TabPage tprsm;
-        private Button btdevices;
         private Button btnNodes;
         private TabPage tbGent;
         private CheckBox chkExtendedText;

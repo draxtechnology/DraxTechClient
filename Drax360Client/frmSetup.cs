@@ -745,9 +745,6 @@ namespace DraxClient
         private void btdiscovery_Click(object sender, EventArgs e)
             => new frmdiscovery().ShowDialog();
 
-        private void btdevices_Click(object sender, EventArgs e)
-            => new frmdevices().ShowDialog();
-
         private void btnNodes_Click(object sender, EventArgs e)
             => new frmRSMNodes().ShowDialog();
 
