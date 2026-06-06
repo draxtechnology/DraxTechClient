@@ -528,6 +528,7 @@ namespace DraxClient
                 case "MOLREYZX":
                 case "MORLEYMAX":
                 case "NOTIFIER":
+                case "INSPRE":
                 case "PEARL":
                 case "SYNCRO":
                     this.tbOffset.Text = sendcmd("SETTINGSGET|PANEL1,AMX1OFFSET");
@@ -539,6 +540,8 @@ namespace DraxClient
                     this.tbOffset.Text = sendcmd("SETTINGSGET|SETUP,AMX1OFFSET");
                     break;
             }
+
+            if (tbOffset.Text == "") tbOffset.Text = "0";   
 
             // Status
             string status = sendcmd("GETCOMMPORTSTATUS|" + cbComport.Text);
@@ -567,14 +570,22 @@ namespace DraxClient
             }
 
             // Baud Raute
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "300", Value = "300" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "600", Value = "600" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "1200", Value = "600" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "2400", Value = "1200" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "4800", Value = "4800" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "9600", Value = "9600" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "19200", Value = "19200" });
-            cbBaudRate.Items.Add(new ComboBoxItem { Text = "38400", Value = "38400" });
+            if (_panelType == "NOTIFIER" || _panelType == "INPSIRE")
+            {
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "9600", Value = "9600" });
+                cbBaudRate.Enabled = false;
+            }
+            else
+            {
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "300", Value = "300" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "600", Value = "600" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "1200", Value = "600" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "2400", Value = "1200" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "4800", Value = "4800" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "9600", Value = "9600" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "19200", Value = "19200" });
+                cbBaudRate.Items.Add(new ComboBoxItem { Text = "38400", Value = "38400" });
+            }
             result = sendcmd("SETTINGSGET|SETUP,BaudRate");
             foreach (ComboBoxItem item in cbBaudRate.Items)
             {
@@ -589,6 +600,16 @@ namespace DraxClient
             foreach (ComboBoxItem item in cbParity.Items)
             {
                 if (item.Value.ToLower() == result.ToLower()) { cbParity.SelectedItem = item; break; }
+            }
+
+            // Parity
+            cbStopBits.Items.Add(new ComboBoxItem { Text = "1", Value = "1" });
+            cbStopBits.Items.Add(new ComboBoxItem { Text = "1.5", Value = "1.5" });
+            cbStopBits.Items.Add(new ComboBoxItem { Text = "2", Value = "2" });
+            result = sendcmd("SETTINGSGET|SETUP,STOPBITS");
+            foreach (ComboBoxItem item in cbStopBits.Items)
+            {
+                if (item.Value.ToLower() == result.ToLower()) { cbStopBits.SelectedItem = item; break; }
             }
 
             // Debug / data-logging checkbox
@@ -687,6 +708,7 @@ namespace DraxClient
                 sendcmd($"SETTINGSSET|SETUP,BAUDRATE,{this.cbBaudRate.Text}");
                 sendcmd($"SETTINGSSET|SETUP,DATABITS,{this.cbDataBits.Text}");
                 sendcmd($"SETTINGSSET|SETUP,PARITY,{this.cbParity.Text}");
+                sendcmd($"SETTINGSSET|SETUP,STOPBITS,{this.cbStopBits.Text}");
                 sendcmd($"SETTINGSSET|SETUP,GIAMX1OFFSET,{this.tbOffset.Text}");
                 if (_panelType == "GENT")
                 {

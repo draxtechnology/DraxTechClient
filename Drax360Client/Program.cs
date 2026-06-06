@@ -28,7 +28,7 @@ namespace DraxClient
                 // tried to marshal onto a handle-less form.
                 var _mainForm = new frmprimary();
                 var handle = _mainForm.Handle;
-                _mainForm.Show();
+                //_mainForm.Show();
                 PipeManager.SetMainForm(_mainForm);
                 PipeManager.Start();
             }
