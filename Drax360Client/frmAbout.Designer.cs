@@ -36,6 +36,8 @@
             lbcopyright = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
             pictureBox1 = new PictureBox();
+            lblpanelversion = new Label();
+            lblclientversion = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -51,7 +53,7 @@
             // 
             // btok
             // 
-            btok.Location = new Point(595, 260);
+            btok.Location = new Point(594, 288);
             btok.Margin = new Padding(3, 2, 3, 2);
             btok.Name = "btok";
             btok.Size = new Size(94, 39);
@@ -63,7 +65,7 @@
             // lblversion
             // 
             lblversion.AutoSize = true;
-            lblversion.Location = new Point(634, 316);
+            lblversion.Location = new Point(499, 211);
             lblversion.Name = "lblversion";
             lblversion.Size = new Size(27, 15);
             lblversion.TabIndex = 3;
@@ -95,12 +97,34 @@
             pictureBox1.TabIndex = 5;
             pictureBox1.TabStop = false;
             // 
+            // lblpanelversion
+            // 
+            lblpanelversion.AutoSize = true;
+            lblpanelversion.Location = new Point(499, 175);
+            lblpanelversion.Name = "lblpanelversion";
+            lblpanelversion.Size = new Size(27, 15);
+            lblpanelversion.TabIndex = 6;
+            lblpanelversion.Text = "xxxx";
+            lblpanelversion.TextAlign = ContentAlignment.TopCenter;
+            // 
+            // lblclientversion
+            // 
+            lblclientversion.AutoSize = true;
+            lblclientversion.Location = new Point(499, 247);
+            lblclientversion.Name = "lblclientversion";
+            lblclientversion.Size = new Size(27, 15);
+            lblclientversion.TabIndex = 7;
+            lblclientversion.Text = "xxxx";
+            lblclientversion.TextAlign = ContentAlignment.TopCenter;
+            // 
             // frmAbout
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Window;
             ClientSize = new Size(700, 338);
+            Controls.Add(lblclientversion);
+            Controls.Add(lblpanelversion);
             Controls.Add(pictureBox1);
             Controls.Add(lbcopyright);
             Controls.Add(lblversion);
@@ -126,5 +150,7 @@
         private Label lbcopyright;
         private System.Windows.Forms.Timer timer1;
         private PictureBox pictureBox1;
+        private Label lblpanelversion;
+        private Label lblclientversion;
     }
 }
