@@ -466,6 +466,7 @@ namespace DraxClient
                     break;
 
                 case "RSM":
+                    tabPage.TabPages.Remove(tpserialsettings);
                     tabPage.TabPages.Add(tprsm);
                     break;
 
