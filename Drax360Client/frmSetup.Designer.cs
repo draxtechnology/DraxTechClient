@@ -211,7 +211,6 @@
             lblComCounterPanel1.TabIndex = 8;
             lblComCounterPanel1.Text = " - ";
             lblComCounterPanel1.TextAlign = ContentAlignment.MiddleCenter;
-            lblComCounterPanel1.Click += lblComCounterPanel1_Click;
             // 
             // progressBar1
             // 
@@ -329,7 +328,7 @@
             // 
             tbOffset.Location = new Point(176, 253);
             tbOffset.Name = "tbOffset";
-            tbOffset.Size = new Size(140, 23);
+            tbOffset.Size = new Size(78, 23);
             tbOffset.TabIndex = 4;
             // 
             // cbParity
@@ -594,16 +593,15 @@
             // 
             tprsm.BackColor = Color.FromArgb(245, 246, 250);
             tprsm.Controls.Add(btnNodes);
-
             tprsm.Location = new Point(4, 24);
             tprsm.Name = "tprsm";
             tprsm.Padding = new Padding(16, 14, 16, 8);
             tprsm.Size = new Size(582, 290);
             tprsm.TabIndex = 4;
             tprsm.Text = "RSM";
-            //
+            // 
             // btnNodes
-            //
+            // 
             btnNodes.Location = new Point(140, 21);
             btnNodes.Margin = new Padding(3, 4, 3, 4);
             btnNodes.Name = "btnNodes";

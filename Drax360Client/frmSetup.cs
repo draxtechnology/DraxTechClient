@@ -541,7 +541,7 @@ namespace DraxClient
                     break;
             }
 
-            if (tbOffset.Text == "") tbOffset.Text = "0";   
+            if (tbOffset.Text == "") tbOffset.Text = "0";
 
             // Status
             string status = sendcmd("GETCOMMPORTSTATUS|" + cbComport.Text);
@@ -790,11 +790,6 @@ namespace DraxClient
                     txtFilePath.Text = openFileDialog.FileName;
                 }
             }
-        }
-
-        private void lblComCounterPanel1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

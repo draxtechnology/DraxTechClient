@@ -23,13 +23,13 @@ namespace DraxClient
             InitializeComponent();
 
             string clientVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
-            lblclientversion.Text = "Client Version V" + clientVersion;
+            lblclientversion.Text = "Client Version: V" + clientVersion;
 
             string _panelType = sendcmd("GetPanelType");
             string versions = sendcmd("GETVERSIONS");
             string[] parts = versions.Split('|');
-            lblversion.Text = "Service Version V" + (parts.Length > 0 && !parts[0].StartsWith("Error") ? parts[0] : "Unavailable");
-            lblpanelversion.Text = _panelType + " Panel Version V" + (parts.Length > 1 ? parts[1] : "Unavailable");
+            lblversion.Text = "Service Version: V" + (parts.Length > 0 && !parts[0].StartsWith("Error") ? parts[0] : "Unavailable");
+            lblpanelversion.Text = _panelType + " Panel Version: V" + (parts.Length > 1 ? parts[1] : "Unavailable");
         }
 
         private string sendcmd(string cmd, string parameters = "")
@@ -68,6 +68,14 @@ namespace DraxClient
         private void btok_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btcopy_Click(object sender, EventArgs e)
+        {
+            string info = lblversion.Text + Environment.NewLine
+                        + lblpanelversion.Text + Environment.NewLine
+                        + lblclientversion.Text;
+            Clipboard.SetText(info);
         }
 
         private void frmAbout_Load(object sender, EventArgs e)
