@@ -12,9 +12,10 @@ namespace DraxClient.Panels.RSM
 
         public Device()
         {
-            ID = new Guid();
+            ID = Guid.NewGuid();
             Name = string.Empty;
             IP = string.Empty;
+            Site = string.Empty;
         }
 
         /// <summary>
@@ -24,5 +25,10 @@ namespace DraxClient.Panels.RSM
 
         public string Name { get; set; }
         public string IP { get; set; }
+
+        // User-entered site label, shown in the RSM node grid's "Site Name"
+        // column. Like Name, it's a manual label (not panel-reported) and is
+        // persisted to devices.json. Node Name maps to Name above.
+        public string Site { get; set; }
     }
 }

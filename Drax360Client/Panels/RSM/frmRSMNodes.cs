@@ -114,15 +114,23 @@ namespace DraxClient.Panels.RSM
 
             foreach (var node in nodes)
             {
-                // Enrich Name from devices.json if the service hasn't populated it yet
+                // Enrich Name + Site from devices.json if the service hasn't
+                // populated them yet. Site is always blank from the service today
+                // (it has no per-node Site store), so it comes from config here.
+                // Matched by IP for now — stable-key (serial) match is a later step.
                 string name = node.Name;
-                if (string.IsNullOrEmpty(name))
+                string site = node.Site;
+                if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(site))
                 {
                     var d = FindDeviceByIP(node.Address);
-                    if (d != null) name = d.Name;
+                    if (d != null)
+                    {
+                        if (string.IsNullOrEmpty(name)) name = d.Name;
+                        if (string.IsNullOrEmpty(site)) site = d.Site;
+                    }
                 }
 
-                int idx = dgNodes.Rows.Add(node.Node, node.Site, name,
+                int idx = dgNodes.Rows.Add(node.Node, site, name,
                     node.TypeText, node.Status, node.Messages, node.Address);
 
                 DataGridViewRow row = dgNodes.Rows[idx];

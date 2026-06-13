@@ -36,6 +36,8 @@
             pnleditoptions = new Panel();
             lblname = new Label();
             tbname = new TextBox();
+            lbsite = new Label();
+            tbsite = new TextBox();
             progressBar1 = new ProgressBar();
             label3 = new Label();
             tbsoftwarever = new TextBox();
@@ -76,7 +78,7 @@
             // 
             // btcancel
             // 
-            btcancel.Location = new Point(0, 393);
+            btcancel.Location = new Point(0, 426);
             btcancel.Name = "btcancel";
             btcancel.Size = new Size(113, 40);
             btcancel.TabIndex = 1;
@@ -108,6 +110,8 @@
             // 
             pnleditoptions.Controls.Add(lblname);
             pnleditoptions.Controls.Add(tbname);
+            pnleditoptions.Controls.Add(lbsite);
+            pnleditoptions.Controls.Add(tbsite);
             pnleditoptions.Controls.Add(progressBar1);
             pnleditoptions.Controls.Add(label3);
             pnleditoptions.Controls.Add(tbsoftwarever);
@@ -136,7 +140,7 @@
             pnleditoptions.Controls.Add(tbdhcpname);
             pnleditoptions.Location = new Point(12, 2);
             pnleditoptions.Name = "pnleditoptions";
-            pnleditoptions.Size = new Size(478, 470);
+            pnleditoptions.Size = new Size(478, 503);
             pnleditoptions.TabIndex = 4;
             // 
             // lblname
@@ -158,10 +162,30 @@
             tbname.Size = new Size(187, 23);
             tbname.TabIndex = 28;
             tbname.TextChanged += tbname_TextChanged;
-            // 
+            //
+            // lbsite
+            //
+            lbsite.AutoSize = true;
+            lbsite.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbsite.Location = new Point(13, 396);
+            lbsite.Name = "lbsite";
+            lbsite.Size = new Size(63, 15);
+            lbsite.TabIndex = 29;
+            lbsite.Text = "Site Name:";
+            lbsite.TextAlign = ContentAlignment.TopRight;
+            //
+            // tbsite
+            //
+            tbsite.Location = new Point(128, 393);
+            tbsite.MaxLength = 32;
+            tbsite.Name = "tbsite";
+            tbsite.Size = new Size(187, 23);
+            tbsite.TabIndex = 30;
+            tbsite.TextChanged += tbsite_TextChanged;
+            //
             // progressBar1
-            // 
-            progressBar1.Location = new Point(175, 439);
+            //
+            progressBar1.Location = new Point(175, 472);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(113, 23);
             progressBar1.TabIndex = 26;
@@ -358,7 +382,7 @@
             // 
             // btrestoretodefaults
             // 
-            btrestoretodefaults.Location = new Point(350, 393);
+            btrestoretodefaults.Location = new Point(350, 426);
             btrestoretodefaults.Name = "btrestoretodefaults";
             btrestoretodefaults.Size = new Size(113, 40);
             btrestoretodefaults.TabIndex = 5;
@@ -368,7 +392,7 @@
             // 
             // btsavechanges
             // 
-            btsavechanges.Location = new Point(175, 393);
+            btsavechanges.Location = new Point(175, 426);
             btsavechanges.Name = "btsavechanges";
             btsavechanges.Size = new Size(113, 40);
             btsavechanges.TabIndex = 4;
@@ -390,7 +414,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(500, 474);
+            ClientSize = new Size(500, 507);
             ControlBox = false;
             Controls.Add(pnleditoptions);
             Controls.Add(pbdiscoveryimage);
@@ -440,5 +464,7 @@
         private Button btclose;
         private Label lblname;
         private TextBox tbname;
+        private Label lbsite;
+        private TextBox tbsite;
     }
 }

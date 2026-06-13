@@ -151,6 +151,7 @@ namespace DraxClient.Panels.RSM
         private string settingSerialNumber = string.Empty;
         private string settingMACAddress = string.Empty;
         private string settingName = string.Empty;
+        private string settingSite = string.Empty;
         private string settingDHCPName = string.Empty;
         private string settingIpAddress = string.Empty;
         private string settingSubnetMask = string.Empty;
@@ -494,6 +495,7 @@ namespace DraxClient.Panels.RSM
                 tbserialnumber.Text = settingSerialNumber;
                 tbmacaddress.Text = settingMACAddress;
                 tbname.Text = settingName;
+                tbsite.Text = settingSite;
                 tbdhcpname.Text = settingDHCPName;
                 tbipaddress.Text = settingIpAddress;
                 tbsubnetmask.Text = settingSubnetMask;
@@ -754,6 +756,7 @@ namespace DraxClient.Panels.RSM
             {
                 settingIpAddress = OurDevice.IP;
                 settingName = OurDevice.Name;
+                settingSite = OurDevice.Site;
             }
 
             // Start listener using async ReceiveAsync loop on a background task
@@ -789,6 +792,7 @@ namespace DraxClient.Panels.RSM
             Cursor.Current = Cursors.WaitCursor;
             progressBar1.Visible = true;
             OurDevice.Name = tbname.Text; // Update our device's Name
+            OurDevice.Site = tbsite.Text; // Update our device's Site label
 
             // has ip address changed?
             string ipaddress = this.tbipaddress.Text;
@@ -968,6 +972,11 @@ namespace DraxClient.Panels.RSM
         }
 
         private void tbname_TextChanged(object sender, EventArgs e)
+        {
+            panel_handler();
+        }
+
+        private void tbsite_TextChanged(object sender, EventArgs e)
         {
             panel_handler();
         }
