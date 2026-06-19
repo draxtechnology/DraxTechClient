@@ -87,6 +87,7 @@
             chkDisablePanelText = new CheckBox();
             chkDisplayChkSumFails = new CheckBox();
             chkOutStationFaults = new CheckBox();
+            tpInspire = new TabPage();
             pnlFooter.SuspendLayout();
             tabPage.SuspendLayout();
             tpserialsettings.SuspendLayout();
@@ -149,6 +150,7 @@
             tabPage.Controls.Add(tpemail);
             tabPage.Controls.Add(tprsm);
             tabPage.Controls.Add(tbGent);
+            tabPage.Controls.Add(tpInspire);
             tabPage.Dock = DockStyle.Fill;
             tabPage.Location = new Point(0, 0);
             tabPage.Name = "tabPage";
@@ -214,9 +216,9 @@
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(189, 15);
+            progressBar1.Location = new Point(217, 15);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(377, 23);
+            progressBar1.Size = new Size(349, 23);
             progressBar1.TabIndex = 7;
             // 
             // pnlStatusDot
@@ -326,7 +328,7 @@
             // 
             // tbOffset
             // 
-            tbOffset.Location = new Point(176, 253);
+            tbOffset.Location = new Point(217, 248);
             tbOffset.Name = "tbOffset";
             tbOffset.Size = new Size(78, 23);
             tbOffset.TabIndex = 4;
@@ -728,6 +730,16 @@
             chkOutStationFaults.TabIndex = 1;
             chkOutStationFaults.Text = "All Outstation Faults Are General Fault";
             // 
+            // tpInspire
+            // 
+            tpInspire.Location = new Point(4, 24);
+            tpInspire.Name = "tpInspire";
+            tpInspire.Padding = new Padding(3);
+            tpInspire.Size = new Size(582, 290);
+            tpInspire.TabIndex = 6;
+            tpInspire.Text = "Inspire Panel";
+            tpInspire.UseVisualStyleBackColor = true;
+            // 
             // frmSetup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -823,5 +835,6 @@
         private Label lblComCounterPanel1;
         private Label label10;
         private ComboBox cbStopBits;
+        private TabPage tpInspire;
     }
 }

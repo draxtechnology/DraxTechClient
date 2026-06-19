@@ -117,32 +117,13 @@ namespace DraxClient
 
         private static string HandlePipeCommand(string command)
         {
-            switch (command)
-            {
-                case string s when s.Contains("|NWM:TBSHOW"):
-                    ShowTestBox();
-                    return "OK";
+            if (command.Contains("TBSHOW")) { ShowTestBox(); return "OK"; }
+            if (command.Contains("TBHIDE")) { HideTestBox(); return "OK"; }
+            if (command.Contains("SHOWABOUT")) { ShowAbout(); return "OK"; }
+            if (command.Contains("SETUPSHOW")) { Setup(); return "OK"; }
+            if (command.Contains("NWM:CLOSEALLWINDOWS")) { return "OK"; }
 
-                case string s when s.Contains("|NWM:TBHIDE"):
-                    HideTestBox();
-                    return "OK";
-
-                case string s when s.Contains("|NWM:SHOWABOUT"):
-                    ShowAbout();
-                    return "OK";
-
-                case string s when s.Contains("|GEN:SETUPSHOW"):
-                    Setup();
-                    return "OK";
-
-                case string s when s.Contains("|NWM:CLOSEALLWINDOWS"):
-                    // HideTestBox();
-                    return "OK";
-
-                default:
-                    // Optionally handle unknown responses
-                    return "UNKNOWN_COMMAND";
-            }
+            return "UNKNOWN_COMMAND";
         }
 
         // Belt-and-braces: even with frmprimary as the persistent owner, a

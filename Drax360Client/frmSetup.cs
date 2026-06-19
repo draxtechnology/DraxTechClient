@@ -450,6 +450,7 @@ namespace DraxClient
             tabPage.TabPages.Remove(tpemail);
             tabPage.TabPages.Remove(tpadvanced);
             tabPage.TabPages.Remove(tbGent);
+            tabPage.TabPages.Remove(tpInspire);
             // COM ports
             for (int i = 1; i <= 10; i++)
                 cbComport.Items.Add(new ComboBoxItem { Text = $"COM{i}", Value = i.ToString() });
@@ -463,6 +464,10 @@ namespace DraxClient
 
                 case "ADVANCED":
                     tabPage.TabPages.Add(tpadvanced);
+                    break;
+
+                case "INSPIRE":
+                    tabPage.TabPages.Add(tpInspire);
                     break;
 
                 case "RSM":
