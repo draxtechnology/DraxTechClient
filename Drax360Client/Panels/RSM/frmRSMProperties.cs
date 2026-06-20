@@ -21,6 +21,22 @@ namespace DraxClient.Panels.RSM
         private readonly string _fallbackSite;
         private System.Windows.Forms.Timer _timer;
         private int _refreshTick;
+        private string _type = "";   // raw module-type code from the last snapshot
+        private bool _online;        // last-reported online state (gates option edits)
+        private bool _needReboot;    // an option change was applied that needs a restart
+
+        // Editable Module-Options rows → optSetGet number. The per-type option row
+        // (Name4 = 13) has a dynamic caption and is handled separately.
+        private static readonly Dictionary<string, int> EditableOptions = new()
+        {
+            ["DHCP Name"]        = 2,
+            ["IP Address"]       = 3,
+            ["Subnet Mask"]      = 4,
+            ["Gateway"]          = 5,
+            ["Reporting To [1]"] = 6,
+            ["Reporting To [2]"] = 7,
+            ["Master Panel ID"]  = 19,
+        };
 
         // fallbackName/Site come from the grid row, which already enriches from
         // devices.json by IP — used when the service hasn't populated them yet.
@@ -75,6 +91,52 @@ namespace DraxClient.Panels.RSM
 
         private void btClose_Click(object sender, EventArgs e) => Close();
 
+        // Double-click an editable Module-Options row to change it. Opens the
+        // per-option editor, sends the change to the panel via RSMSETOPT, and flags
+        // that a restart will be offered on close. Display-only rows are ignored.
+        private void dgOptions_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            string field = dgOptions.Rows[e.RowIndex].Cells[0].Value?.ToString() ?? "";
+            string current = dgOptions.Rows[e.RowIndex].Cells[1].Value?.ToString() ?? "";
+
+            if (!EditableOptions.TryGetValue(field, out int option))
+            {
+                // The per-type option row (Name4 = 13) carries a dynamic caption.
+                if (field == OptionFieldCaption(_type)) option = 13;
+                else return; // not an editable row
+            }
+
+            if (!_online)
+            {
+                MessageBox.Show("The node must be online before you can change its options.",
+                    "Node offline", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using var dlg = new frmRSMSetOption(option, field, current, _type);
+            if (dlg.ShowDialog(this) != DialogResult.OK) return;
+
+            try { SendCmd($"RSMSETOPT|{_node}|{option}|{dlg.ResultValue}"); }
+            catch { /* fire-and-forget; the confirming GET refreshes the value */ }
+
+            _needReboot = true;
+            RequestModuleOptions(); // pull the confirming GET back onto the page
+        }
+
+        private void frmRSMProperties_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!_needReboot) return;
+            _needReboot = false; // only ask once even if close re-enters
+            var dr = MessageBox.Show(
+                "Option changes were made that need the node to restart to take effect. Restart it now?",
+                "Restart node", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dr == DialogResult.Yes)
+            {
+                try { SendCmd("RSMRESTART|" + _node); } catch { }
+            }
+        }
+
         // ── Page population ─────────────────────────────────────────────────────
 
         private void Refresh_Pages()
@@ -91,6 +153,9 @@ namespace DraxClient.Panels.RSM
             }
             catch { return; }
             if (p == null) return;
+
+            _type = p.Type ?? "";
+            _online = string.Equals(p.OnlineStatus, "Online", StringComparison.OrdinalIgnoreCase);
 
             string name = string.IsNullOrEmpty(p.Name) ? _fallbackName : p.Name;
             string site = string.IsNullOrEmpty(p.Site) ? _fallbackSite : p.Site;

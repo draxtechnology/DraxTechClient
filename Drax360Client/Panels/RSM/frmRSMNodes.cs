@@ -157,7 +157,7 @@ namespace DraxClient.Panels.RSM
             bool sel = dgNodes.SelectedRows.Count > 0;
             btProperties.Enabled = sel;
             btDelete.Enabled = sel;
-            btRestart.Enabled = false; // pending RSMRESTART pipe verb
+            btRestart.Enabled = sel;
             btLicense.Enabled = sel;
         }
 
@@ -256,6 +256,20 @@ namespace DraxClient.Panels.RSM
             _devices.Add(frm.OurDevice);
             SaveDevices();
             Refresh_Grid();
+        }
+
+        // Restart — send the selected node a restart command (RSMRESTART verb)
+        private void btRestart_Click(object sender, EventArgs e)
+        {
+            if (dgNodes.SelectedRows.Count == 0) return;
+            DataGridViewRow sel = dgNodes.SelectedRows[0];
+            int node = sel.Tag is int n ? n : (int)(sel.Cells[colNode.Index].Value ?? 0);
+
+            var dr = MessageBox.Show($"Restart node {node}?", "Restart Module",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dr != DialogResult.Yes) return;
+
+            try { SendCmd("RSMRESTART|" + node); } catch { }
         }
 
         private void btLicense_Click(object sender, EventArgs e)
