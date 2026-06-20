@@ -53,7 +53,6 @@ namespace DraxClient.Panels.RSM
             ConfigGrid(dgProperties);
             ConfigGrid(dgStatus);
             ConfigGrid(dgOptions);
-            dgOptions.CellDoubleClick += dgOptions_CellDoubleClick;
 
             // Tab pages
             tabProperties.Text    = "Properties";
@@ -91,9 +90,8 @@ namespace DraxClient.Panels.RSM
             Text                = "Node Properties";
             Controls.AddRange(new Control[] { tabs, btClose });
 
-            Load        += frmRSMProperties_Load;
-            FormClosing += frmRSMProperties_FormClosing;
-            FormClosed  += frmRSMProperties_FormClosed;
+            Load       += frmRSMProperties_Load;
+            FormClosed += frmRSMProperties_FormClosed;
 
             ((System.ComponentModel.ISupportInitialize)dgProperties).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgStatus).EndInit();

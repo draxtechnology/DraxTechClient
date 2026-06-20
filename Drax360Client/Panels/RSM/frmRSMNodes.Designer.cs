@@ -68,7 +68,7 @@ namespace DraxClient.Panels.RSM
             btDelete.Text     = "Delete";       btDelete.Location     = new Point(100, btnY); btDelete.Size     = new Size(75, btnH); btDelete.Click     += btDelete_Click;
             btDiscovery.Text  = "Discovery";    btDiscovery.Location  = new Point(181, btnY); btDiscovery.Size  = new Size(90, btnH); btDiscovery.Click  += btDiscovery_Click;
             btLicense.Text    = "Install License"; btLicense.Location = new Point(277, btnY); btLicense.Size   = new Size(105, btnH); btLicense.Click    += btLicense_Click;
-            btRestart.Text    = "Restart Module"; btRestart.Location  = new Point(388, btnY); btRestart.Size   = new Size(110, btnH); btRestart.Enabled  = false; btRestart.Click += btRestart_Click;
+            btRestart.Text    = "Restart Module"; btRestart.Location  = new Point(388, btnY); btRestart.Size   = new Size(110, btnH); btRestart.Enabled  = false;
             btClose.Text      = "Close";         btClose.Location     = new Point(876, btnY); btClose.Size     = new Size(80, btnH); btClose.Click       += btClose_Click;
 
             // Form
