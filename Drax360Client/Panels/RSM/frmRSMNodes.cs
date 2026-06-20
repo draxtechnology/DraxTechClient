@@ -165,10 +165,27 @@ namespace DraxClient.Panels.RSM
 
         private void btClose_Click(object sender, EventArgs e) => Close();
 
-        // Properties — edit the device entry for the selected node's IP
+        // Properties — open the read-only per-node properties window
+        // (VB6 frmRSMProperties: Properties / Status / Module Options pages).
         private void btProperties_Click(object sender, EventArgs e)
         {
             if (dgNodes.SelectedRows.Count == 0) return;
+            DataGridViewRow sel = dgNodes.SelectedRows[0];
+            int node = sel.Tag is int n ? n : (int)(sel.Cells[colNode.Index].Value ?? 0);
+            string name = sel.Cells[colName.Index].Value?.ToString() ?? "";
+            string site = sel.Cells[colSite.Index].Value?.ToString() ?? "";
+
+            using var frm = new frmRSMProperties(node, name, site);
+            frm.ShowDialog();
+        }
+
+        // Double-click a node to edit its device entry (Name / Site / IP) in the
+        // discovery dialog. This was previously behind the Properties button;
+        // Properties now opens the read-only properties window, so device editing
+        // lives here until the Module-Options edit page lands (later tier).
+        private void dgNodes_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || dgNodes.SelectedRows.Count == 0) return;
             string ip = dgNodes.SelectedRows[0].Cells[colAddress.Index].Value?.ToString() ?? "";
 
             Device device = FindDeviceByIP(ip) ?? new Device { IP = ip };

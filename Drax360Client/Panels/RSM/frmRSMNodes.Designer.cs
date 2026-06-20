@@ -44,6 +44,7 @@ namespace DraxClient.Panels.RSM
             dgNodes.TabIndex = 0;
             dgNodes.Columns.AddRange(colNode, colSite, colName, colType, colStatus, colMessages, colAddress);
             dgNodes.SelectionChanged += dgNodes_SelectionChanged;
+            dgNodes.CellDoubleClick  += dgNodes_CellDoubleClick;
 
             colNode.HeaderText     = "Node";     colNode.Width     = 50;  colNode.DefaultCellStyle.Alignment     = DataGridViewContentAlignment.MiddleCenter;
             colSite.HeaderText     = "Site Name"; colSite.Width    = 120;
