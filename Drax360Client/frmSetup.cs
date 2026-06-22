@@ -539,6 +539,16 @@ namespace DraxClient
                 case "SYNCRO":
                     this.tbOffset.Text = sendcmd("SETTINGSGET|PANEL1,AMX1OFFSET");
                     break;
+                case "INSPIRE":
+                    // Inspire module offset lives in SETUP (the service reads
+                    // SETUP/giAmx1Offset + SETUP/ModuleOffsetMode in PanelInspire).
+                    this.tbInspireOffset.Text = sendcmd("SETTINGSGET|SETUP,GIAMX1OFFSET");
+                    if (this.tbInspireOffset.Text == "") this.tbInspireOffset.Text = "0";
+                    string insMode = sendcmd("SETTINGSGET|SETUP,ModuleOffsetMode");
+                    bool insLoop = string.Equals(insMode, "Loop", StringComparison.OrdinalIgnoreCase);
+                    this.rbOffsetLoop.Checked = insLoop;
+                    this.rbOffsetNode.Checked = !insLoop;
+                    break;
                 case "RSM":
                     load_rsm();
                     break;
@@ -726,6 +736,13 @@ namespace DraxClient
                     sendcmd($"SETTINGSSET|SETUP,EXTENDEDTEXTFILEPATH,{txtFilePath.Text}");
                     sendcmd($"SETTINGSSET|SETUP,UseExtendedTextIfOver,{ExtendedTextifOver.Text}");
                     sendcmd($"SETTINGSSET|SETUP,DELIMITER,{(cboDelimiter.SelectedIndex) + 1}");
+                }
+                if (_panelType == "INSPIRE")
+                {
+                    // Overwrites the generic GIAMX1OFFSET write above with the
+                    // value from the Inspire tab, plus the Node/Loop axis mode.
+                    sendcmd($"SETTINGSSET|SETUP,GIAMX1OFFSET,{this.tbInspireOffset.Text}");
+                    sendcmd($"SETTINGSSET|SETUP,ModuleOffsetMode,{(rbOffsetLoop.Checked ? "Loop" : "Node")}");
                 }
             }
             sendcmd("SETTINGSSAVE");

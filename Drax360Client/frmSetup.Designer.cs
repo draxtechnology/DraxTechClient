@@ -88,6 +88,11 @@
             chkDisplayChkSumFails = new CheckBox();
             chkOutStationFaults = new CheckBox();
             tpInspire = new TabPage();
+            gbModuleOffset = new GroupBox();
+            rbOffsetNode = new RadioButton();
+            rbOffsetLoop = new RadioButton();
+            lblOffsetAmount = new Label();
+            tbInspireOffset = new TextBox();
             pnlFooter.SuspendLayout();
             tabPage.SuspendLayout();
             tpserialsettings.SuspendLayout();
@@ -729,9 +734,12 @@
             chkOutStationFaults.Size = new Size(226, 19);
             chkOutStationFaults.TabIndex = 1;
             chkOutStationFaults.Text = "All Outstation Faults Are General Fault";
-            // 
+            //
             // tpInspire
-            // 
+            //
+            tpInspire.Controls.Add(gbModuleOffset);
+            tpInspire.Controls.Add(lblOffsetAmount);
+            tpInspire.Controls.Add(tbInspireOffset);
             tpInspire.Location = new Point(4, 24);
             tpInspire.Name = "tpInspire";
             tpInspire.Padding = new Padding(3);
@@ -739,9 +747,57 @@
             tpInspire.TabIndex = 6;
             tpInspire.Text = "Inspire Panel";
             tpInspire.UseVisualStyleBackColor = true;
-            // 
+            //
+            // gbModuleOffset
+            //
+            gbModuleOffset.Controls.Add(rbOffsetNode);
+            gbModuleOffset.Controls.Add(rbOffsetLoop);
+            gbModuleOffset.Location = new Point(90, 30);
+            gbModuleOffset.Name = "gbModuleOffset";
+            gbModuleOffset.Size = new Size(220, 80);
+            gbModuleOffset.TabIndex = 0;
+            gbModuleOffset.TabStop = false;
+            gbModuleOffset.Text = "Module Offset";
+            //
+            // rbOffsetNode
+            //
+            rbOffsetNode.AutoSize = true;
+            rbOffsetNode.Checked = true;
+            rbOffsetNode.Location = new Point(24, 38);
+            rbOffsetNode.Name = "rbOffsetNode";
+            rbOffsetNode.Size = new Size(55, 19);
+            rbOffsetNode.TabIndex = 0;
+            rbOffsetNode.TabStop = true;
+            rbOffsetNode.Text = "Node";
+            //
+            // rbOffsetLoop
+            //
+            rbOffsetLoop.AutoSize = true;
+            rbOffsetLoop.Location = new Point(130, 38);
+            rbOffsetLoop.Name = "rbOffsetLoop";
+            rbOffsetLoop.Size = new Size(52, 19);
+            rbOffsetLoop.TabIndex = 1;
+            rbOffsetLoop.Text = "Loop";
+            //
+            // lblOffsetAmount
+            //
+            lblOffsetAmount.AutoSize = true;
+            lblOffsetAmount.Location = new Point(90, 128);
+            lblOffsetAmount.Name = "lblOffsetAmount";
+            lblOffsetAmount.Size = new Size(86, 15);
+            lblOffsetAmount.TabIndex = 1;
+            lblOffsetAmount.Tag = "fieldlabel";
+            lblOffsetAmount.Text = "Offset Amount";
+            //
+            // tbInspireOffset
+            //
+            tbInspireOffset.Location = new Point(200, 125);
+            tbInspireOffset.Name = "tbInspireOffset";
+            tbInspireOffset.Size = new Size(80, 23);
+            tbInspireOffset.TabIndex = 2;
+            //
             // frmSetup
-            // 
+            //
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(590, 370);
@@ -836,5 +892,10 @@
         private Label label10;
         private ComboBox cbStopBits;
         private TabPage tpInspire;
+        private GroupBox gbModuleOffset;
+        private RadioButton rbOffsetNode;
+        private RadioButton rbOffsetLoop;
+        private Label lblOffsetAmount;
+        private TextBox tbInspireOffset;
     }
 }
