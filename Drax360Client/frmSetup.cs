@@ -651,6 +651,25 @@ namespace DraxClient
 
                 this.chkClassicIsolations.Checked = sendcmd("SETTINGSGET|SETUP,UseClassicIsolations") == "1";
             }
+            if (_panelType == "INSPIRE")
+            {
+                this.tbInspireOffset.Text = sendcmd("SETTINGSGET|SETUP,ModuleOffset");
+                if (this.tbInspireOffset.Text.Length == 0)
+                {
+                    this.tbInspireOffset.Text = "100";
+                }
+
+                string ModuleOffsetMode = sendcmd("SETTINGSGET|SETUP,ModuleOffsetMode");
+                if (ModuleOffsetMode == "Loop")
+                {
+                    this.rbOffsetLoop.Checked = true;
+
+                }
+                else
+                {
+                    this.rbOffsetNode.Checked = true;
+                }
+            }
         }
 
         // ── Pipe helpers (unchanged) ──────────────────────────────────────────
@@ -741,7 +760,7 @@ namespace DraxClient
                 {
                     // Overwrites the generic GIAMX1OFFSET write above with the
                     // value from the Inspire tab, plus the Node/Loop axis mode.
-                    sendcmd($"SETTINGSSET|SETUP,GIAMX1OFFSET,{this.tbInspireOffset.Text}");
+                    sendcmd($"SETTINGSSET|SETUP,ModuleOffset,{this.tbInspireOffset.Text}");
                     sendcmd($"SETTINGSSET|SETUP,ModuleOffsetMode,{(rbOffsetLoop.Checked ? "Loop" : "Node")}");
                 }
             }

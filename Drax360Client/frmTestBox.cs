@@ -57,7 +57,7 @@ namespace DraxClient
             }
 
             tbNode.Minimum = 1;
-            tbNode.Maximum = 64;
+            tbNode.Maximum = 255;
             tbNode.Value = 1;
             tbNode.Increment = 1;
 
@@ -67,7 +67,7 @@ namespace DraxClient
             tbLoop.Increment = 1;
 
             tbDevice.Minimum = 0;
-            tbDevice.Maximum = 127;
+            tbDevice.Maximum = 255;
             tbDevice.Value = 1;
             tbDevice.Increment = 1;
 
