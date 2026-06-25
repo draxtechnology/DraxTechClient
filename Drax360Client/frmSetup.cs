@@ -500,6 +500,7 @@ namespace DraxClient
                     string smtppassword = sendcmd("SETTINGSGET|EMAIL,PASSWORD");
                     this.tbpassword.Text = AesDecryptor.DecryptOpenSSLCtr(smtppassword, "");
                     this.tbport.Text = sendcmd("SETTINGSGET|EMAIL,SMTPPORT");
+                    this.tbfrom.Text = sendcmd("SETTINGSGET|EMAIL,FROM");
                     result = sendcmd("SETTINGSGET|EMAIL,SMTPAUTHORISATION");
                     this.cbauthorisation.Checked = result == "1" || result == "True";
 
@@ -731,6 +732,7 @@ namespace DraxClient
                 string encryptedPassword = AesDecryptor.EncryptOpenSSLCtr(this.tbpassword.Text, "");
                 sendcmd($"SETTINGSSET|EMAIL,PASSWORD,{encryptedPassword}");
                 sendcmd($"SETTINGSSET|EMAIL,SMTPPORT,{this.tbport.Text}");
+                sendcmd($"SETTINGSSET|EMAIL,FROM,{this.tbfrom.Text}");
                 sendcmd($"SETTINGSSET|EMAIL,SMTPAUTHORISATION,{(cbauthorisation.Checked ? "1" : "0")}");
                 sendcmd($"SETTINGSSET|EMAIL,DATALOGGING,{(debug.Checked ? "1" : "0")}");
             }

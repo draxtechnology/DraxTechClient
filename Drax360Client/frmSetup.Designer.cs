@@ -72,6 +72,8 @@
             tbuser = new TextBox();
             lbpassword = new Label();
             tbpassword = new TextBox();
+            lbfrom = new Label();
+            tbfrom = new TextBox();
             cbauthorisation = new CheckBox();
             tprsm = new TabPage();
             btnNodes = new Button();
@@ -501,6 +503,8 @@
             tpemail.Controls.Add(tbuser);
             tpemail.Controls.Add(lbpassword);
             tpemail.Controls.Add(tbpassword);
+            tpemail.Controls.Add(lbfrom);
+            tpemail.Controls.Add(tbfrom);
             tpemail.Controls.Add(cbauthorisation);
             tpemail.Location = new Point(4, 24);
             tpemail.Name = "tpemail";
@@ -595,7 +599,24 @@
             cbauthorisation.Size = new Size(180, 19);
             cbauthorisation.TabIndex = 5;
             cbauthorisation.Text = "Requires SMTP Authorisation";
-            // 
+            //
+            // lbfrom
+            //
+            lbfrom.AutoSize = true;
+            lbfrom.Location = new Point(320, 170);
+            lbfrom.Name = "lbfrom";
+            lbfrom.Size = new Size(80, 15);
+            lbfrom.TabIndex = 6;
+            lbfrom.Tag = "fieldlabel";
+            lbfrom.Text = "From Address";
+            //
+            // tbfrom
+            //
+            tbfrom.Location = new Point(320, 188);
+            tbfrom.Name = "tbfrom";
+            tbfrom.Size = new Size(250, 23);
+            tbfrom.TabIndex = 6;
+            //
             // tprsm
             // 
             tprsm.BackColor = Color.FromArgb(245, 246, 250);
@@ -869,6 +890,8 @@
         private TextBox tbname;
         private Label lbpassword;
         private TextBox tbpassword;
+        private Label lbfrom;
+        private TextBox tbfrom;
         private CheckBox cbauthorisation;
         private TabPage tprsm;
         private Button btnNodes;
