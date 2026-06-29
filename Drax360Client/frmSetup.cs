@@ -545,10 +545,6 @@ namespace DraxClient
                     // SETUP/giAmx1Offset + SETUP/ModuleOffsetMode in PanelInspire).
                     this.tbInspireOffset.Text = sendcmd("SETTINGSGET|SETUP,GIAMX1OFFSET");
                     if (this.tbInspireOffset.Text == "") this.tbInspireOffset.Text = "0";
-                    string insMode = sendcmd("SETTINGSGET|SETUP,ModuleOffsetMode");
-                    bool insLoop = string.Equals(insMode, "Loop", StringComparison.OrdinalIgnoreCase);
-                    this.rbOffsetLoop.Checked = insLoop;
-                    this.rbOffsetNode.Checked = !insLoop;
                     break;
                 case "RSM":
                     load_rsm();
@@ -654,21 +650,25 @@ namespace DraxClient
             }
             if (_panelType == "INSPIRE")
             {
-                this.tbInspireOffset.Text = sendcmd("SETTINGSGET|SETUP,ModuleOffset");
-                if (this.tbInspireOffset.Text.Length == 0)
-                {
-                    this.tbInspireOffset.Text = "100";
-                }
-
                 string ModuleOffsetMode = sendcmd("SETTINGSGET|SETUP,ModuleOffsetMode");
                 if (ModuleOffsetMode == "Loop")
                 {
                     this.rbOffsetLoop.Checked = true;
+                    this.tbInspireOffset.Text = sendcmd("SETTINGSGET|SETUP,ModuleOffset");
+                    if (this.tbInspireOffset.Text.Length == 0)
+                    {
+                        this.tbInspireOffset.Text = "10";
+                    }
 
                 }
                 else
                 {
                     this.rbOffsetNode.Checked = true;
+                    this.tbInspireOffset.Text = sendcmd("SETTINGSGET|SETUP,ModuleOffset");
+                    if (this.tbInspireOffset.Text.Length == 0)
+                    {
+                        this.tbInspireOffset.Text = "100";
+                    }
                 }
             }
         }
@@ -833,6 +833,24 @@ namespace DraxClient
                 {
                     txtFilePath.Text = openFileDialog.FileName;
                 }
+            }
+        }
+
+        private void rbOffsetLoop_CheckedChanged(object sender, EventArgs e)
+        {
+            this.tbInspireOffset.Text = sendcmd("SETTINGSGET|SETUP,ModuleOffset");
+            if (this.tbInspireOffset.Text.Length == 0)
+            {
+                this.tbInspireOffset.Text = "10";
+            }
+        }
+
+        private void rbOffsetNode_CheckedChanged(object sender, EventArgs e)
+        {
+            this.tbInspireOffset.Text = sendcmd("SETTINGSGET|SETUP,ModuleOffset");
+            if (this.tbInspireOffset.Text.Length == 0)
+            {
+                this.tbInspireOffset.Text = "100";
             }
         }
     }

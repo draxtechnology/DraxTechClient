@@ -95,6 +95,7 @@
             rbOffsetLoop = new RadioButton();
             lblOffsetAmount = new Label();
             tbInspireOffset = new TextBox();
+            label11 = new Label();
             pnlFooter.SuspendLayout();
             tabPage.SuspendLayout();
             tpserialsettings.SuspendLayout();
@@ -104,6 +105,8 @@
             tpemail.SuspendLayout();
             tprsm.SuspendLayout();
             tbGent.SuspendLayout();
+            tpInspire.SuspendLayout();
+            gbModuleOffset.SuspendLayout();
             SuspendLayout();
             // 
             // pnlFooter
@@ -591,6 +594,23 @@
             tbpassword.Size = new Size(250, 23);
             tbpassword.TabIndex = 4;
             // 
+            // lbfrom
+            // 
+            lbfrom.AutoSize = true;
+            lbfrom.Location = new Point(320, 170);
+            lbfrom.Name = "lbfrom";
+            lbfrom.Size = new Size(80, 15);
+            lbfrom.TabIndex = 6;
+            lbfrom.Tag = "fieldlabel";
+            lbfrom.Text = "From Address";
+            // 
+            // tbfrom
+            // 
+            tbfrom.Location = new Point(320, 188);
+            tbfrom.Name = "tbfrom";
+            tbfrom.Size = new Size(250, 23);
+            tbfrom.TabIndex = 6;
+            // 
             // cbauthorisation
             // 
             cbauthorisation.AutoSize = true;
@@ -599,24 +619,7 @@
             cbauthorisation.Size = new Size(180, 19);
             cbauthorisation.TabIndex = 5;
             cbauthorisation.Text = "Requires SMTP Authorisation";
-            //
-            // lbfrom
-            //
-            lbfrom.AutoSize = true;
-            lbfrom.Location = new Point(320, 170);
-            lbfrom.Name = "lbfrom";
-            lbfrom.Size = new Size(80, 15);
-            lbfrom.TabIndex = 6;
-            lbfrom.Tag = "fieldlabel";
-            lbfrom.Text = "From Address";
-            //
-            // tbfrom
-            //
-            tbfrom.Location = new Point(320, 188);
-            tbfrom.Name = "tbfrom";
-            tbfrom.Size = new Size(250, 23);
-            tbfrom.TabIndex = 6;
-            //
+            // 
             // tprsm
             // 
             tprsm.BackColor = Color.FromArgb(245, 246, 250);
@@ -755,9 +758,10 @@
             chkOutStationFaults.Size = new Size(226, 19);
             chkOutStationFaults.TabIndex = 1;
             chkOutStationFaults.Text = "All Outstation Faults Are General Fault";
-            //
+            // 
             // tpInspire
-            //
+            // 
+            tpInspire.Controls.Add(label11);
             tpInspire.Controls.Add(gbModuleOffset);
             tpInspire.Controls.Add(lblOffsetAmount);
             tpInspire.Controls.Add(tbInspireOffset);
@@ -768,9 +772,9 @@
             tpInspire.TabIndex = 6;
             tpInspire.Text = "Inspire Panel";
             tpInspire.UseVisualStyleBackColor = true;
-            //
+            // 
             // gbModuleOffset
-            //
+            // 
             gbModuleOffset.Controls.Add(rbOffsetNode);
             gbModuleOffset.Controls.Add(rbOffsetLoop);
             gbModuleOffset.Location = new Point(90, 30);
@@ -779,46 +783,57 @@
             gbModuleOffset.TabIndex = 0;
             gbModuleOffset.TabStop = false;
             gbModuleOffset.Text = "Module Offset";
-            //
+            // 
             // rbOffsetNode
-            //
+            // 
             rbOffsetNode.AutoSize = true;
             rbOffsetNode.Checked = true;
             rbOffsetNode.Location = new Point(24, 38);
             rbOffsetNode.Name = "rbOffsetNode";
-            rbOffsetNode.Size = new Size(55, 19);
+            rbOffsetNode.Size = new Size(54, 19);
             rbOffsetNode.TabIndex = 0;
             rbOffsetNode.TabStop = true;
             rbOffsetNode.Text = "Node";
-            //
+            rbOffsetNode.CheckedChanged += rbOffsetNode_CheckedChanged;
+            // 
             // rbOffsetLoop
-            //
+            // 
             rbOffsetLoop.AutoSize = true;
             rbOffsetLoop.Location = new Point(130, 38);
             rbOffsetLoop.Name = "rbOffsetLoop";
             rbOffsetLoop.Size = new Size(52, 19);
             rbOffsetLoop.TabIndex = 1;
             rbOffsetLoop.Text = "Loop";
-            //
+            rbOffsetLoop.CheckedChanged += rbOffsetLoop_CheckedChanged;
+            // 
             // lblOffsetAmount
-            //
+            // 
             lblOffsetAmount.AutoSize = true;
-            lblOffsetAmount.Location = new Point(90, 128);
+            lblOffsetAmount.Location = new Point(93, 131);
             lblOffsetAmount.Name = "lblOffsetAmount";
             lblOffsetAmount.Size = new Size(86, 15);
             lblOffsetAmount.TabIndex = 1;
             lblOffsetAmount.Tag = "fieldlabel";
             lblOffsetAmount.Text = "Offset Amount";
-            //
+            // 
             // tbInspireOffset
-            //
+            // 
             tbInspireOffset.Location = new Point(200, 125);
             tbInspireOffset.Name = "tbInspireOffset";
             tbInspireOffset.Size = new Size(80, 23);
             tbInspireOffset.TabIndex = 2;
-            //
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(90, 189);
+            label11.Name = "label11";
+            label11.Size = new Size(242, 15);
+            label11.TabIndex = 3;
+            label11.Text = "Modules will be off set by the selected value.";
+            // 
             // frmSetup
-            //
+            // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(590, 370);
@@ -844,6 +859,10 @@
             tprsm.ResumeLayout(false);
             tbGent.ResumeLayout(false);
             tbGent.PerformLayout();
+            tpInspire.ResumeLayout(false);
+            tpInspire.PerformLayout();
+            gbModuleOffset.ResumeLayout(false);
+            gbModuleOffset.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -920,5 +939,6 @@
         private RadioButton rbOffsetLoop;
         private Label lblOffsetAmount;
         private TextBox tbInspireOffset;
+        private Label label11;
     }
 }
