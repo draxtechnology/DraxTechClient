@@ -45,6 +45,10 @@ namespace DraxClient
             cbType.Items.Add(new ComboBoxItem { Text = "10 - Maintenance", Value = "10" });
             cbType.Items.Add(new ComboBoxItem { Text = "15 - Status", Value = "15" });
 
+            // Default selection
+            ComboBoxItem defaultItem = cbType.Items.Cast<ComboBoxItem>().FirstOrDefault(i => i.Value == "0");
+            cbType.SelectedItem = defaultItem;
+
             string result = sendcmd($"SETTINGSGET|TESTBOX,INPUTTYPE");
             // find the item with matching Value
             foreach (ComboBoxItem item in cbType.Items)
@@ -72,8 +76,20 @@ namespace DraxClient
             tbDevice.Increment = 1;
 
             this.tbNode.Text = sendcmd($"SETTINGSGET|TESTBOX,Node");
+            if (this.tbNode.Text.Length == 0)
+            {
+                this.tbNode.Text = "1";
+            }
             this.tbLoop.Text = sendcmd($"SETTINGSGET|TESTBOX,Zone");
+            if (this.tbLoop.Text.Length == 0)
+            {
+                this.tbLoop.Text = "1";
+            }
             this.tbDevice.Text = sendcmd($"SETTINGSGET|TESTBOX,Input");
+            if (this.tbDevice.Text.Length == 0)
+            {
+                this.tbDevice.Text = "1";
+            }
         }
         public class ComboBoxItem
         {
