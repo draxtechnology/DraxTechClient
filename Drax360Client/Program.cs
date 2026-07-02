@@ -34,7 +34,7 @@ namespace DraxClient
             }
         }
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             using var mutex = new Mutex(initiallyOwned: true, SingleInstanceMutexName, out bool createdNew);
             if (!createdNew)
@@ -44,7 +44,14 @@ namespace DraxClient
                 return;
             }
 
-            AllocConsole();  //Display console window for debugging purposes
+            // Console is opt-in for diagnostics only — operators shouldn't get a
+            // stray console window they could accidentally close (which would kill
+            // the client). Enable with "DraxClient.exe --console" (or --debug).
+            if (args.Any(a => a.Equals("--console", StringComparison.OrdinalIgnoreCase)
+                           || a.Equals("--debug", StringComparison.OrdinalIgnoreCase)))
+            {
+                AllocConsole();  // diagnostics only; surfaces the PipeManager console output
+            }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new HiddenAppContext());

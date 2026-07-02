@@ -91,6 +91,17 @@
     <!-- Install-folder confirmation dialog: Welcome → Choose folder → Ready → Progress → Finish -->
     <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
 
+    <!-- Skip the End-User License Agreement dialog. There is no agreed EULA text
+         yet, so the page is removed rather than shipping WixUI's placeholder
+         (Lorem ipsum) licence. This reroutes Welcome → InstallDir directly (and
+         InstallDir Back → Welcome), so LicenseAgreementDlg is never shown.
+         To restore later: delete this <UI> block and supply a real licence via
+         <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />. -->
+    <UI>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg" Order="2" Condition="NOT Installed" />
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2" Condition="1" />
+    </UI>
+
   </Package>
 
 </Wix>
