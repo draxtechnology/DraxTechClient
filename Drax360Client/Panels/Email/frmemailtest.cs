@@ -107,7 +107,7 @@ namespace DraxClient.Panels.Email
                 byte[] ba = Encoding.Default.GetBytes(message);
                 pipe.Write(ba, 0, ba.Length);
                 var result = await Task.Run(() => readmessage(pipe));
-                string strresponse = Encoding.Default.GetString(result);
+                string strresponse = PipeProtocol.Decode(Encoding.Default.GetString(result));
                 Console.WriteLine("Response received from Send server: " + strresponse);
                 return strresponse;
             }

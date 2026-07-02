@@ -50,7 +50,7 @@ namespace DraxClient
                 byte[] ba = Encoding.Default.GetBytes(message);
                 pipe.Write(ba, 0, ba.Length);
                 var result = await Task.Run(() => readmessage(pipe));
-                return Encoding.Default.GetString(result);
+                return PipeProtocol.Decode(Encoding.Default.GetString(result));
             }
         }
 

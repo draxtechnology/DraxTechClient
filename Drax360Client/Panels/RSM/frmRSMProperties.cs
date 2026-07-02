@@ -212,7 +212,7 @@ namespace DraxClient.Panels.RSM
             using var ms = new MemoryStream();
             do { int r = pipe.Read(buf, 0, buf.Length); ms.Write(buf, 0, r); }
             while (!pipe.IsMessageComplete);
-            return Encoding.Default.GetString(ms.ToArray());
+            return PipeProtocol.Decode(Encoding.Default.GetString(ms.ToArray()));
         }
 
         // POCO matching PanelRSM.BuildNodePropertiesSnapshot() JSON schema.

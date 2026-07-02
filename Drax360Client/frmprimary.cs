@@ -135,7 +135,7 @@ namespace DraxClient
                     return readmessage(pipe);
                 });
 
-                string strresponse = Encoding.Default.GetString(result);
+                string strresponse = PipeProtocol.Decode(Encoding.Default.GetString(result));
 
                 Console.WriteLine("Response received from Send server: " + strresponse);
 
