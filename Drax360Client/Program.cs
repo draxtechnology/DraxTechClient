@@ -1,12 +1,27 @@
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace DraxClient
 {
     internal static class Program
     {
-        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool AllocConsole();
+
+        [DllImport("kernel32.dll")]
+        private static extern nint GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        private static extern nint GetSystemMenu(nint hWnd, bool bRevert);
+
+        [DllImport("user32.dll")]
+        private static extern bool EnableMenuItem(nint hMenu, uint uIDEnableItem, uint uEnable);
+
+        private const uint SC_CLOSE = 0xF060;
+        private const uint MF_BYCOMMAND = 0x0;
+        private const uint MF_GRAYED = 0x1;
 
         // Single-instance guard. Named mutex acquired on Main; second launch
         // sees createdNew=false and bails out silently. The mutex is disposed
@@ -44,17 +59,56 @@ namespace DraxClient
                 return;
             }
 
-            // Console is opt-in for diagnostics only — operators shouldn't get a
-            // stray console window they could accidentally close (which would kill
-            // the client). Enable with "DraxClient.exe --console" (or --debug).
-            if (args.Any(a => a.Equals("--console", StringComparison.OrdinalIgnoreCase)
-                           || a.Equals("--debug", StringComparison.OrdinalIgnoreCase)))
+            // Diagnostics console. On by default so the PipeManager / pipe traffic is
+            // visible without having to relaunch with a flag (the single-instance guard
+            // above means a second flagged launch would just bail). Suppress it for a
+            // clean operator deploy with "--no-console" or DRAXCLIENT_NOCONSOLE=1.
+            bool suppressConsole =
+                args.Any(a => a.Equals("--no-console", StringComparison.OrdinalIgnoreCase))
+                || string.Equals(Environment.GetEnvironmentVariable("DRAXCLIENT_NOCONSOLE"), "1",
+                                 StringComparison.Ordinal);
+            if (!suppressConsole)
             {
-                AllocConsole();  // diagnostics only; surfaces the PipeManager console output
+                EnableConsole();
             }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new HiddenAppContext());
+        }
+
+        // Allocate a diagnostics console and make it actually usable.
+        private static void EnableConsole()
+        {
+            // AllocConsole returns false if we already have a console (e.g. launched
+            // from a terminal) — in that case stdout is already wired up, so leave it.
+            if (!AllocConsole())
+            {
+                return;
+            }
+
+            // A WinExe (Windows subsystem) starts with no valid standard handles, and
+            // .NET may have cached a null Console.Out before the console existed. Rebind
+            // stdout/stderr to the freshly-allocated console so Console.WriteLine — the
+            // whole point of enabling this — actually surfaces. AutoFlush so lines appear
+            // immediately rather than sitting in a buffer.
+            var stdout = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true };
+            Console.SetOut(stdout);
+            var stderr = new StreamWriter(Console.OpenStandardError()) { AutoFlush = true };
+            Console.SetError(stderr);
+            Console.Title = "DraxClient diagnostics";
+
+            // Closing an allocated console sends CTRL_CLOSE_EVENT and terminates the
+            // client. Grey out the console's close box so it can't be shut accidentally;
+            // the client is meant to be exited from its own UI / tray, not this window.
+            nint consoleWindow = GetConsoleWindow();
+            if (consoleWindow != nint.Zero)
+            {
+                nint sysMenu = GetSystemMenu(consoleWindow, false);
+                if (sysMenu != nint.Zero)
+                {
+                    EnableMenuItem(sysMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED);
+                }
+            }
         }
     }
 }
