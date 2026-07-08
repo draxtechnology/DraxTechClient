@@ -42,7 +42,8 @@ The client is **both a pipe server and a pipe client**, talking to an external D
   - `|NWM:TBSHOW` / `|NWM:TBHIDE` — show/hide `frmTestBox`
   - `|NWM:SHOWABOUT` — show `frmAbout`
   - `|GEN:SETUPSHOW` — show `frmSetup`
-  - `|NWM:CLOSEALLWINDOWS` — currently a no-op
+  - `|NWM:CLOSEALLWINDOWS` — closes the popup forms (test box/setup/about), hides the main form, client keeps running (prefix varies by panel, matched on the bare command)
+  - `|NWM:END` — AMX sends this at shutdown; exits the client (legacy NWM parity), releasing the single-instance mutex
 - **`DraxTechnologyPipeSend`** — client connects to this as a client. Every form that needs to read/write settings or issue a panel action uses a local `sendcmd(...)` helper (duplicated across `frmSetup.cs`, `frmTestBox.cs`, `frmprimary.cs`) which opens a `NamedPipeClientStream`, writes one message, reads one message back, closes. `|` (constant `kpipedelim`) is both the command separator and the argument separator.
 
 Common outbound commands seen across forms: `SETTINGSGET|SECTION,KEY`, `SETTINGSSET|SECTION,KEY,VALUE`, `SETTINGSSAVE`, `SETTINGSRELOAD`, `GetPanelType`, `GETCOMMPORTSTATUS|COMx`, `ServiceRestart`, and panel action verbs (`Evacuate`, `Alert`, `Reset`, `Silence`, `DisableDevice`, `EnableDevice`, `DisableZone`, …) with `node,loop,zone,ip` arguments. When adding a new setting/action, follow this pipe convention rather than inventing a new transport.
