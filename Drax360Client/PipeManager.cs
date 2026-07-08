@@ -121,9 +121,41 @@ namespace DraxClient
             if (command.Contains("TBHIDE")) { HideTestBox(); return "OK"; }
             if (command.Contains("SHOWABOUT")) { ShowAbout(); return "OK"; }
             if (command.Contains("SETUPSHOW")) { Setup(); return "OK"; }
-            if (command.Contains("NWM:CLOSEALLWINDOWS")) { return "OK"; }
+            if (command.Contains("CLOSEALLWINDOWS")) { CloseAllWindows(); return "OK"; }
+            if (command.Contains(":END")) { ExitClient(); return "OK"; }
 
             return "UNKNOWN_COMMAND";
+        }
+
+        // AMX sends END when it shuts down; the legacy NWM ended the program on
+        // it. Exiting here releases the single-instance mutex — otherwise the
+        // client lingers hidden after AMX closes and the next launch bails
+        // against the stale instance (Mike's on-site "client not running",
+        // 2026-07-07). The OK response is written before the marshalled exit
+        // runs, so the service's pipe round-trip completes normally.
+        private static void ExitClient()
+        {
+            Console.WriteLine("END received from AMX — exiting client.");
+            if (MainFormReady())
+                _mainForm!.BeginInvoke((MethodInvoker)Application.Exit);
+            else
+                Application.Exit();
+        }
+
+        // Legacy CLOSEALLWINDOWS closed the control/test box/setup/about
+        // windows but left the program running — mirror that: close the popup
+        // forms, hide the main form, keep the client alive. The prefix varies
+        // by panel (NWM:/GEN:/AUT:), so match on the bare command.
+        private static void CloseAllWindows()
+        {
+            if (!MainFormReady()) return;
+            _mainForm!.BeginInvoke((MethodInvoker)(() =>
+            {
+                if (_testBox != null && !_testBox.IsDisposed) _testBox.Close();
+                if (_setup != null && !_setup.IsDisposed) _setup.Close();
+                if (_aboutBox != null && !_aboutBox.IsDisposed) _aboutBox.Close();
+                if (_mainForm.Visible) _mainForm.Hide();
+            }));
         }
 
         // Belt-and-braces: even with frmprimary as the persistent owner, a
