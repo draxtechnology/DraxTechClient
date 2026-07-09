@@ -230,9 +230,12 @@ namespace DraxClient
 
         private void btAnalogueAll_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 255; i++)
+            for (int i = 1; i <= 255; i++)
             {
-                sendcmd("Analogue", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + i);
+                // The service extracts arguments with a "Text: <n>" regex (the
+                // tail of TextBox.ToString()), so a bare int is invisible to it
+                // and every request would go out as device 0.
+                sendcmd("Analogue", this.tbNode + "," + this.tbLoop + "," + this.tbZone + ",Text: " + i);
             }
         }
     }
