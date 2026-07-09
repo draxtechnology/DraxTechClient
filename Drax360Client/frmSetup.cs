@@ -688,7 +688,6 @@ namespace DraxClient
                     {
                         this.tbInspireOffset.Text = "10";
                     }
-
                 }
                 else
                 {
