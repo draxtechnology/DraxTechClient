@@ -576,7 +576,14 @@ namespace DraxClient
             // Data Bits
             cbDataBits.Items.Add(new ComboBoxItem { Text = "8", Value = "8" });
             cbDataBits.Items.Add(new ComboBoxItem { Text = "7", Value = "7" });
-            result = sendcmd("SETTINGSGET|SETUP,DataBits");
+            if (_panelType == "SYNCRO")
+            {
+                result = sendcmd("SETTINGSGET|SYNCRO,DataBits");
+            }
+            else
+            {
+                result = sendcmd("SETTINGSGET|SETUP,DataBits");
+            }
             foreach (ComboBoxItem item in cbDataBits.Items)
             {
                 if (item.Value == result) { cbDataBits.SelectedItem = item; break; }
@@ -599,7 +606,14 @@ namespace DraxClient
                 cbBaudRate.Items.Add(new ComboBoxItem { Text = "19200", Value = "19200" });
                 cbBaudRate.Items.Add(new ComboBoxItem { Text = "38400", Value = "38400" });
             }
-            result = sendcmd("SETTINGSGET|SETUP,BaudRate");
+            if (_panelType == "SYNCRO")
+            {
+                result = sendcmd("SETTINGSGET|SYNCRO,BaudRate");
+            }
+            else
+            {
+                result = sendcmd("SETTINGSGET|SETUP,BaudRate");
+            }
             foreach (ComboBoxItem item in cbBaudRate.Items)
             {
                 if (item.Value == result) { cbBaudRate.SelectedItem = item; break; }
@@ -609,7 +623,14 @@ namespace DraxClient
             cbParity.Items.Add(new ComboBoxItem { Text = "Even", Value = "Even" });
             cbParity.Items.Add(new ComboBoxItem { Text = "Odd", Value = "Odd" });
             cbParity.Items.Add(new ComboBoxItem { Text = "None", Value = "None" });
-            result = sendcmd("SETTINGSGET|SETUP,PARITY");
+            if (_panelType == "SYNCRO")
+            {
+                result = sendcmd("SETTINGSGET|SYNCRO,PARITY");
+            }
+            else
+            {
+                result = sendcmd("SETTINGSGET|SETUP,PARITY");
+            }
             foreach (ComboBoxItem item in cbParity.Items)
             {
                 if (item.Value.ToLower() == result.ToLower()) { cbParity.SelectedItem = item; break; }
@@ -619,7 +640,14 @@ namespace DraxClient
             cbStopBits.Items.Add(new ComboBoxItem { Text = "1", Value = "1" });
             cbStopBits.Items.Add(new ComboBoxItem { Text = "1.5", Value = "1.5" });
             cbStopBits.Items.Add(new ComboBoxItem { Text = "2", Value = "2" });
-            result = sendcmd("SETTINGSGET|SETUP,STOPBITS");
+            if (_panelType == "SYNCRO")
+            {
+                result = sendcmd("SETTINGSGET|SYNCRO,STOPBITS");
+            }
+            else
+            {
+                result = sendcmd("SETTINGSGET|S}ETUP,STOPBITS");
+            }
             foreach (ComboBoxItem item in cbStopBits.Items)
             {
                 if (item.Value.ToLower() == result.ToLower()) { cbStopBits.SelectedItem = item; break; }
@@ -629,6 +657,7 @@ namespace DraxClient
             result = "0";
             if (_panelType == "ADVANCED") result = sendcmd("SETTINGSGET|MAIN,DesignTime");
             else if (_panelType == "GENT") result = sendcmd("SETTINGSGET|SETUP,DataLogging");
+            else if (_panelType == "SYNCRO") result = sendcmd("SETTINGSGET|SETUP,CreateLog");
             this.debug.Checked = result == "1" || result == "True";
 
             // Advanced-only controls
@@ -739,31 +768,45 @@ namespace DraxClient
             else
             {
                 if (cbComport.SelectedItem is ComboBoxItem item)
+                {
                     sendcmd($"SETTINGSSET|PANEL1,COMMPORT,{item.Value}");
-
-                sendcmd($"SETTINGSSET|SETUP,DATALOGGING,{(debug.Checked ? "1" : "0")}");
-                sendcmd($"SETTINGSSET|SETUP,BAUDRATE,{this.cbBaudRate.Text}");
-                sendcmd($"SETTINGSSET|SETUP,DATABITS,{this.cbDataBits.Text}");
-                sendcmd($"SETTINGSSET|SETUP,PARITY,{this.cbParity.Text}");
-                sendcmd($"SETTINGSSET|SETUP,STOPBITS,{this.cbStopBits.Text}");
-                sendcmd($"SETTINGSSET|SETUP,GIAMX1OFFSET,{this.tbOffset.Text}");
-                if (_panelType == "GENT")
-                {
-                    sendcmd($"SETTINGSSET|SETUP,OutStationFaultsGenFault,{(chkOutStationFaults.Checked ? "1" : "0")}");
-                    sendcmd($"SETTINGSSET|SETUP,DisplayChkSumFails,{(chkDisplayChkSumFails.Checked ? "1" : "0")}");
-                    sendcmd($"SETTINGSSET|SETUP,DisablePanelText,{(chkDisablePanelText.Checked ? "1" : "0")}");
-                    sendcmd($"SETTINGSSET|SETUP,DisplayUnknownEvents,{(chkDisplayUnknown.Checked ? "1" : "0")}");
-                    sendcmd($"SETTINGSSET|SETUP,EXTENDEDTEXT,{(chkExtendedText.Checked ? "1" : "0")}");
-                    sendcmd($"SETTINGSSET|SETUP,EXTENDEDTEXTFILEPATH,{txtFilePath.Text}");
-                    sendcmd($"SETTINGSSET|SETUP,UseExtendedTextIfOver,{ExtendedTextifOver.Text}");
-                    sendcmd($"SETTINGSSET|SETUP,DELIMITER,{(cboDelimiter.SelectedIndex) + 1}");
                 }
-                if (_panelType == "INSPIRE")
+
+                if (_panelType == "SYNCRO")
                 {
-                    // Overwrites the generic GIAMX1OFFSET write above with the
-                    // value from the Inspire tab, plus the Node/Loop axis mode.
-                    sendcmd($"SETTINGSSET|SETUP,ModuleOffset,{this.tbInspireOffset.Text}");
-                    sendcmd($"SETTINGSSET|SETUP,ModuleOffsetMode,{(rbOffsetLoop.Checked ? "Loop" : "Node")}");
+                    sendcmd($"SETTINGSSET|SETUP,CREATELOG,{(debug.Checked ? "1" : "0")}");
+                    sendcmd($"SETTINGSSET|SYNCRO,BAUDRATE,{this.cbBaudRate.Text}");
+                    sendcmd($"SETTINGSSET|SYNCRO,DATABITS,{this.cbDataBits.Text}");
+                    sendcmd($"SETTINGSSET|SYNCRO,PARITY,{this.cbParity.Text}");
+                    sendcmd($"SETTINGSSET|SYNCRO,STOPBITS,{this.cbStopBits.Text}");
+                    sendcmd($"SETTINGSSET|PANEL1,AMX1OFFSET,{this.tbOffset.Text}");
+                }
+                else
+                {
+                    sendcmd($"SETTINGSSET|SETUP,DATALOGGING,{(debug.Checked ? "1" : "0")}");
+                    sendcmd($"SETTINGSSET|SETUP,BAUDRATE,{this.cbBaudRate.Text}");
+                    sendcmd($"SETTINGSSET|SETUP,DATABITS,{this.cbDataBits.Text}");
+                    sendcmd($"SETTINGSSET|SETUP,PARITY,{this.cbParity.Text}");
+                    sendcmd($"SETTINGSSET|SETUP,STOPBITS,{this.cbStopBits.Text}");
+                    sendcmd($"SETTINGSSET|SETUP,GIAMX1OFFSET,{this.tbOffset.Text}");
+                    if (_panelType == "GENT")
+                    {
+                        sendcmd($"SETTINGSSET|SETUP,OutStationFaultsGenFault,{(chkOutStationFaults.Checked ? "1" : "0")}");
+                        sendcmd($"SETTINGSSET|SETUP,DisplayChkSumFails,{(chkDisplayChkSumFails.Checked ? "1" : "0")}");
+                        sendcmd($"SETTINGSSET|SETUP,DisablePanelText,{(chkDisablePanelText.Checked ? "1" : "0")}");
+                        sendcmd($"SETTINGSSET|SETUP,DisplayUnknownEvents,{(chkDisplayUnknown.Checked ? "1" : "0")}");
+                        sendcmd($"SETTINGSSET|SETUP,EXTENDEDTEXT,{(chkExtendedText.Checked ? "1" : "0")}");
+                        sendcmd($"SETTINGSSET|SETUP,EXTENDEDTEXTFILEPATH,{txtFilePath.Text}");
+                        sendcmd($"SETTINGSSET|SETUP,UseExtendedTextIfOver,{ExtendedTextifOver.Text}");
+                        sendcmd($"SETTINGSSET|SETUP,DELIMITER,{(cboDelimiter.SelectedIndex) + 1}");
+                    }
+                    if (_panelType == "INSPIRE")
+                    {
+                        // Overwrites the generic GIAMX1OFFSET write above with the
+                        // value from the Inspire tab, plus the Node/Loop axis mode.
+                        sendcmd($"SETTINGSSET|SETUP,ModuleOffset,{this.tbInspireOffset.Text}");
+                        sendcmd($"SETTINGSSET|SETUP,ModuleOffsetMode,{(rbOffsetLoop.Checked ? "Loop" : "Node")}");
+                    }
                 }
             }
             sendcmd("SETTINGSSAVE");
