@@ -227,5 +227,13 @@ namespace DraxClient
         {
             sendcmd("MuteBuzzers", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
         }
+
+        private void btAnalogueAll_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 255; i++)
+            {
+                sendcmd("Analogue", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + i);
+            }
+        }
     }
 }

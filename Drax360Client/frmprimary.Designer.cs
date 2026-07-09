@@ -57,6 +57,7 @@
             btnrestartservice = new Button();
             btAnalogue = new Button();
             btMute = new Button();
+            btAnalogueAll = new Button();
             panel1.SuspendLayout();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -315,12 +316,12 @@
             // 
             // btAnalogue
             // 
-            btAnalogue.Location = new Point(776, 154);
+            btAnalogue.Location = new Point(776, 148);
             btAnalogue.Margin = new Padding(3, 2, 3, 2);
             btAnalogue.Name = "btAnalogue";
             btAnalogue.Size = new Size(206, 68);
             btAnalogue.TabIndex = 20;
-            btAnalogue.Text = "Get Analogue Values";
+            btAnalogue.Text = "Get Single Analogue Value";
             btAnalogue.UseVisualStyleBackColor = true;
             btAnalogue.Click += btAnalogue_Click;
             // 
@@ -335,11 +336,23 @@
             btMute.UseVisualStyleBackColor = true;
             btMute.Click += btMute_Click;
             // 
+            // btAnalogueAll
+            // 
+            btAnalogueAll.Location = new Point(776, 248);
+            btAnalogueAll.Margin = new Padding(3, 2, 3, 2);
+            btAnalogueAll.Name = "btAnalogueAll";
+            btAnalogueAll.Size = new Size(206, 68);
+            btAnalogueAll.TabIndex = 22;
+            btAnalogueAll.Text = "Get All Analogue Values";
+            btAnalogueAll.UseVisualStyleBackColor = true;
+            btAnalogueAll.Click += btAnalogueAll_Click;
+            // 
             // frmprimary
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1032, 402);
+            Controls.Add(btAnalogueAll);
             Controls.Add(btMute);
             Controls.Add(btAnalogue);
             Controls.Add(btnrestartservice);
@@ -402,5 +415,6 @@
         private Button btnrestartservice;
         private Button btAnalogue;
         private Button btMute;
+        private Button btAnalogueAll;
     }
 }
