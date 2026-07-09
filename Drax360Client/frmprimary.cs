@@ -228,14 +228,28 @@ namespace DraxClient
             sendcmd("MuteBuzzers", this.tbNode + "," + this.tbLoop + "," + this.tbZone + "," + this.tbIP);
         }
 
-        private void btAnalogueAll_Click(object sender, EventArgs e)
+        private async void btAnalogueAll_Click(object sender, EventArgs e)
         {
-            for (int i = 1; i <= 255; i++)
+            // Paced rather than fired as one burst: the panel answers one query
+            // at a time, and 255 back-to-back writes risk overrunning it.
+            btAnalogueAll.Enabled = false;
+            string label = btAnalogueAll.Text;
+            try
             {
-                // The service extracts arguments with a "Text: <n>" regex (the
-                // tail of TextBox.ToString()), so a bare int is invisible to it
-                // and every request would go out as device 0.
-                sendcmd("Analogue", this.tbNode + "," + this.tbLoop + "," + this.tbZone + ",Text: " + i);
+                for (int i = 1; i <= 255; i++)
+                {
+                    // The service extracts arguments with a "Text: <n>" regex (the
+                    // tail of TextBox.ToString()), so a bare int is invisible to it
+                    // and every request would go out as device 0.
+                    sendcmd("Analogue", this.tbNode + "," + this.tbLoop + "," + this.tbZone + ",Text: " + i);
+                    btAnalogueAll.Text = i + " / 255";
+                    await Task.Delay(300);
+                }
+            }
+            finally
+            {
+                btAnalogueAll.Text = label;
+                btAnalogueAll.Enabled = true;
             }
         }
     }
