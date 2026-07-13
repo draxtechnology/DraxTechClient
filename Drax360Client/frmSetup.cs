@@ -479,6 +479,12 @@ namespace DraxClient
                     tabPage.TabPages.Remove(tpserialsettings);
                     tabPage.TabPages.Add(tpemail);
                     break;
+
+                case "AUTESPA":
+                    this.progressBar1.Visible = false;
+                    this.lbStatus.Visible = false;
+                    this.pnlStatusDot.Visible = false;
+                    break;
             }
 
             string result = sendcmd("SETTINGSGET|PANEL1,COMMPORT");
@@ -646,7 +652,7 @@ namespace DraxClient
             }
             else
             {
-                result = sendcmd("SETTINGSGET|S}ETUP,STOPBITS");
+                result = sendcmd("SETTINGSGET|SETUP,STOPBITS");
             }
             foreach (ComboBoxItem item in cbStopBits.Items)
             {
