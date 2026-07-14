@@ -116,10 +116,10 @@ namespace DraxClient
                 int glNumHeartbeats = Convert.ToInt32(sendcmd("GetPanelHandShake"));
                 int glNumMessages = Convert.ToInt32(sendcmd("GetPanelNumMessages"));
 
-                this.lblComCounterPanel1.Text = "Heart Beats: " + glNumHeartbeats.ToString() + " - Messages: " + glNumMessages;
-
-                // Me.lblComCounterPanel1.Caption = Format$(glNumHeartbeats, "#,###,###,##0") & " - " & Format$(glNumMessages, "#,###,###,##0")
-
+                if (_panelType != "AUTESPA")
+                {
+                    this.lblComCounterPanel1.Text = "Heart Beats: " + glNumHeartbeats.ToString() + " - Messages: " + glNumMessages;
+                }
             }
         }
 
@@ -371,13 +371,29 @@ namespace DraxClient
             try
             {
                 string status = await Task.Run(() => sendcmd("GETCOMMPORTSTATUS|" + comport));
-                bool connected = IsConnectedStatus(status);
-                if (connected != _lastKnownConnected)
+                if (_panelType == "AUTESPA")
                 {
-                    _lastKnownConnected = connected;
-                    this.lbStatus.Text = connected ? "Connected" : "Disconnected";
-                    this.lbStatus.ForeColor = connected ? clrGreen : clrRed;
-                    UpdateStatusDot(connected);
+                    // ESPA has no connect/disconnect dot — lbStatus instead shows
+                    // the timestamp of the last message PanelEspa received on the
+                    // serial port (DraxService.cs GETCOMMPORTSTATUS -> ap.lastDataReceived).
+                    string lower = status?.ToLower() ?? "";
+                    if (lower.StartsWith("data last received"))
+                    {
+                        int colon = status.IndexOf(':');
+                        string ts = colon >= 0 ? status.Substring(colon + 1).Trim() : "";
+                        if (!string.IsNullOrEmpty(ts)) this.lbStatus.Text = "Last message " + ts;
+                    }
+                }
+                else
+                {
+                    bool connected = IsConnectedStatus(status);
+                    if (connected != _lastKnownConnected)
+                    {
+                        _lastKnownConnected = connected;
+                        this.lbStatus.Text = connected ? "Connected" : "Disconnected";
+                        this.lbStatus.ForeColor = connected ? clrGreen : clrRed;
+                        UpdateStatusDot(connected);
+                    }
                 }
                 UpdateProgressBarFromStatus(status);
             }
@@ -482,8 +498,10 @@ namespace DraxClient
 
                 case "AUTESPA":
                     this.progressBar1.Visible = false;
-                    this.lbStatus.Visible = false;
+                    this.lbStatus.Text = "Last Message";
+                    this.lbStatus.Left = 20;
                     this.pnlStatusDot.Visible = false;
+                    this.lblComCounterPanel1.Visible = false;
                     break;
             }
 
@@ -565,11 +583,13 @@ namespace DraxClient
             // Status
             string status = sendcmd("GETCOMMPORTSTATUS|" + cbComport.Text);
             bool connected = IsConnectedStatus(status);
-            _lastKnownConnected = connected;
-            this.lbStatus.Text = connected ? "Connected" : "Disconnected";
-            this.lbStatus.ForeColor = connected ? clrGreen : clrRed;
-            UpdateStatusDot(connected);
-
+            if (_panelType != "AUTESPA")
+            {
+                _lastKnownConnected = connected;
+                this.lbStatus.Text = connected ? "Connected" : "Disconnected";
+                this.lbStatus.ForeColor = connected ? clrGreen : clrRed;
+                UpdateStatusDot(connected);
+            }
             // Live polling so cable removal / re-insertion (or the service
             // restarting) shows up without re-opening the form. Service can
             // reply with either "CONNECTED" or "Data Last Received: <ts>" once
