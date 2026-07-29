@@ -96,6 +96,8 @@
             lblOffsetAmount = new Label();
             tbInspireOffset = new TextBox();
             label11 = new Label();
+            lblPanelZero = new Label();
+            tbPanelZeroAddress = new TextBox();
             pnlFooter.SuspendLayout();
             tabPage.SuspendLayout();
             tpserialsettings.SuspendLayout();
@@ -765,6 +767,8 @@
             tpInspire.Controls.Add(gbModuleOffset);
             tpInspire.Controls.Add(lblOffsetAmount);
             tpInspire.Controls.Add(tbInspireOffset);
+            tpInspire.Controls.Add(lblPanelZero);
+            tpInspire.Controls.Add(tbPanelZeroAddress);
             tpInspire.Location = new Point(4, 24);
             tpInspire.Name = "tpInspire";
             tpInspire.Padding = new Padding(3);
@@ -822,15 +826,32 @@
             tbInspireOffset.Name = "tbInspireOffset";
             tbInspireOffset.Size = new Size(80, 23);
             tbInspireOffset.TabIndex = 2;
-            // 
+            //
             // label11
-            // 
+            //
             label11.AutoSize = true;
             label11.Location = new Point(90, 189);
             label11.Name = "label11";
             label11.Size = new Size(242, 15);
             label11.TabIndex = 3;
             label11.Text = "Modules will be off set by the selected value.";
+            //
+            // lblPanelZero
+            //
+            lblPanelZero.AutoSize = true;
+            lblPanelZero.Location = new Point(93, 231);
+            lblPanelZero.Name = "lblPanelZero";
+            lblPanelZero.Size = new Size(92, 15);
+            lblPanelZero.TabIndex = 4;
+            lblPanelZero.Tag = "fieldlabel";
+            lblPanelZero.Text = "Panel 0 Address";
+            //
+            // tbPanelZeroAddress
+            //
+            tbPanelZeroAddress.Location = new Point(200, 225);
+            tbPanelZeroAddress.Name = "tbPanelZeroAddress";
+            tbPanelZeroAddress.Size = new Size(80, 23);
+            tbPanelZeroAddress.TabIndex = 5;
             // 
             // frmSetup
             // 
@@ -937,6 +958,8 @@
         private GroupBox gbModuleOffset;
         private RadioButton rbOffsetNode;
         private RadioButton rbOffsetLoop;
+        private Label lblPanelZero;
+        private TextBox tbPanelZeroAddress;
         private Label lblOffsetAmount;
         private TextBox tbInspireOffset;
         private Label label11;

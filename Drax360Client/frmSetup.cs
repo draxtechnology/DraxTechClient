@@ -558,17 +558,19 @@ namespace DraxClient
                     break;
                 case "MOLREYZX":
                 case "MORLEYMAX":
-                case "NOTIFIER":
-                case "INSPRE":
-                case "PEARL":
                 case "SYNCRO":
                     this.tbOffset.Text = sendcmd("SETTINGSGET|PANEL1,AMX1OFFSET");
                     break;
+                case "NOTIFIER":
+                case "PEARL":
                 case "INSPIRE":
-                    // Inspire module offset lives in SETUP (the service reads
-                    // SETUP/giAmx1Offset + SETUP/ModuleOffsetMode in PanelInspire).
-                    this.tbInspireOffset.Text = sendcmd("SETTINGSGET|SETUP,GIAMX1OFFSET");
-                    if (this.tbInspireOffset.Text == "") this.tbInspireOffset.Text = "0";
+                    // The service reads SETUP/giAmx1Offset (same key as every C#
+                    // driver — Taktis precedent) and the save path below writes
+                    // the same key; PANEL1/Amx1Offset was the VB's location.
+                    // Loading tbOffset matters: the generic save writes
+                    // SETUP/GIAMX1OFFSET from it, so leaving it empty (defaulted
+                    // to 0) wiped the site's offset on OK.
+                    this.tbOffset.Text = sendcmd("SETTINGSGET|SETUP,GIAMX1OFFSET");
                     break;
                 case "RSM":
                     load_rsm();
@@ -616,7 +618,7 @@ namespace DraxClient
             }
 
             // Baud Raute
-            if (_panelType == "NOTIFIER" || _panelType == "INPSIRE")
+            if (_panelType == "NOTIFIER" || _panelType == "INSPIRE")
             {
                 cbBaudRate.Items.Add(new ComboBoxItem { Text = "9600", Value = "9600" });
                 cbBaudRate.Enabled = false;
@@ -724,6 +726,15 @@ namespace DraxClient
                         this.tbInspireOffset.Text = "100";
                     }
                 }
+
+                // Panel 0 Address — the AMX panel number substituted when an
+                // event arrives with panel 00 (the wire's "local panel").
+                // Service default is 1; mirrors the VB setup form's field.
+                this.tbPanelZeroAddress.Text = sendcmd("SETTINGSGET|SETUP,PANELZEROADDRESS");
+                if (this.tbPanelZeroAddress.Text.Length == 0)
+                {
+                    this.tbPanelZeroAddress.Text = "1";
+                }
             }
         }
 
@@ -827,10 +838,12 @@ namespace DraxClient
                     }
                     if (_panelType == "INSPIRE")
                     {
-                        // Overwrites the generic GIAMX1OFFSET write above with the
-                        // value from the Inspire tab, plus the Node/Loop axis mode.
+                        // The Inspire tab's offset is the module offset; the AMX
+                        // offset (GIAMX1OFFSET) went out with the generic write
+                        // above from the serial-settings tab.
                         sendcmd($"SETTINGSSET|SETUP,ModuleOffset,{this.tbInspireOffset.Text}");
                         sendcmd($"SETTINGSSET|SETUP,ModuleOffsetMode,{(rbOffsetLoop.Checked ? "Loop" : "Node")}");
+                        sendcmd($"SETTINGSSET|SETUP,PANELZEROADDRESS,{this.tbPanelZeroAddress.Text}");
                     }
                 }
             }
