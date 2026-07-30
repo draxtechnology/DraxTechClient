@@ -110,7 +110,20 @@ namespace DraxClient
             }
             finally
             {
-                pipeServer?.Disconnect();
+                // Disconnect() throws InvalidOperationException ("Pipe hasn't
+                // been connected yet") when the far side dropped during the
+                // read/write — seen intermittently at client startup
+                // (2026-07-30). Nothing to release in that state; Dispose
+                // still runs either way.
+                try
+                {
+                    if (pipeServer != null && pipeServer.IsConnected)
+                        pipeServer.Disconnect();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Pipe disconnect: {ex.Message}");
+                }
                 pipeServer?.Dispose();
             }
         }
