@@ -681,11 +681,36 @@ namespace DraxClient
                 if (item.Value.ToLower() == result.ToLower()) { cbStopBits.SelectedItem = item; break; }
             }
 
-            // Debug / data-logging checkbox
-            result = "0";
-            if (_panelType == "ADVANCED") result = sendcmd("SETTINGSGET|MAIN,DesignTime");
-            else if (_panelType == "GENT") result = sendcmd("SETTINGSGET|SETUP,DataLogging");
-            else if (_panelType == "SYNCRO") result = sendcmd("SETTINGSGET|SETUP,CreateLog");
+            // Debug / data-logging checkbox — SETUP/DataLogging is the standard
+            // key (the save below writes it for every serial panel); legacy
+            // per-panel keys are read only when the standard key is absent, so
+            // a deployed ini keeps its setting until the first save migrates it.
+            result = sendcmd("SETTINGSGET|SETUP,DataLogging");
+            if (string.IsNullOrEmpty(result))
+            {
+                switch (_panelType)
+                {
+                    case "ADVANCED":
+                        result = sendcmd("SETTINGSGET|MAIN,DesignTime");
+                        break;
+                    case "SYNCRO":
+                        result = sendcmd("SETTINGSGET|SETUP,CreateLog");
+                        break;
+                    case "EMAIL":
+                        result = sendcmd("SETTINGSGET|EMAIL,DATALOGGING");
+                        break;
+                    case "NOTIFIER":
+                    case "PEARL":
+                        result = sendcmd("SETTINGSGET|SETUP,DesignTime");
+                        break;
+                    case "RSM":
+                        result = sendcmd("SETTINGSGET|SETUP,Debug");
+                        break;
+                    case "MORLEYZX":
+                        result = sendcmd("SETTINGSGET|SETUP,DebugLog");
+                        break;
+                }
+            }
             this.debug.Checked = result == "1" || result == "True";
 
             // Advanced-only controls
