@@ -621,7 +621,6 @@ namespace DraxClient
             if (_panelType == "NOTIFIER" || _panelType == "INSPIRE")
             {
                 cbBaudRate.Items.Add(new ComboBoxItem { Text = "9600", Value = "9600" });
-                cbBaudRate.Enabled = false;
             }
             else
             {
