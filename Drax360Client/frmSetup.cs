@@ -29,7 +29,9 @@ namespace DraxClient
         private System.Windows.Forms.Timer _connectionPollTimer;
         private bool _isConnecting = false;
         private bool _isDisconnecting = false;
-        private bool _lastKnownConnected;
+        // -1 forces the first poll to apply the UI; 0 = port closed,
+        // 1 = port open but no recent panel data, 2 = receiving.
+        private int _lastKnownState = -1;
         private bool _pollInProgress;
         // Most-recent "Data Last Received: <ts>" timestamp seen from the
         // service. The progress bar ticks forward every time this changes.
@@ -51,6 +53,7 @@ namespace DraxClient
         static readonly Color clrTextMuted = Color.FromArgb(100, 116, 139);
         static readonly Color clrGreen = Color.FromArgb(22, 163, 74);
         static readonly Color clrRed = Color.FromArgb(220, 38, 38);
+        static readonly Color clrAmber = Color.FromArgb(217, 119, 6);
 
         #region private variables
         private string _panelType = "";
@@ -321,14 +324,20 @@ namespace DraxClient
         }
 
         // ── Status dot helper (drawn on pnlStatusDot) ─────────────────────────
-        private void UpdateStatusDot(bool connected)
+        private void UpdateStatusDot(int state)
         {
             pnlStatusDot.Paint -= PaintDot_Red;
+            pnlStatusDot.Paint -= PaintDot_Amber;
             pnlStatusDot.Paint -= PaintDot_Green;
-            if (connected)
+            if (state == 2)
             {
                 pnlStatusDot.Paint += PaintDot_Green;
                 OnSerialPortConnected();
+            }
+            else if (state == 1)
+            {
+                pnlStatusDot.Paint += PaintDot_Amber;
+                OnSerialPortDisconnected();
             }
             else
             {
@@ -339,6 +348,7 @@ namespace DraxClient
         }
 
         private void PaintDot_Green(object sender, PaintEventArgs e) => PaintDot(e, clrGreen);
+        private void PaintDot_Amber(object sender, PaintEventArgs e) => PaintDot(e, clrAmber);
         private void PaintDot_Red(object sender, PaintEventArgs e) => PaintDot(e, clrRed);
 
         private void PaintDot(PaintEventArgs e, Color c)
@@ -350,13 +360,42 @@ namespace DraxClient
 
         // Service replies "CONNECTED" before any data arrives, then switches to
         // "Data Last Received: <timestamp>" once the panel actually starts
-        // talking (DraxService.cs:1460-1467). Both mean the COM port is open.
-        // Anything else ("DISCONNECTED", "ERROR", "Error: ...", empty) is not.
-        private static bool IsConnectedStatus(string status)
+        // talking (DraxService.cs:1460-1467). A bare "CONNECTED" — or a stale
+        // timestamp — only proves the COM port is OPEN: COM3 exists whenever
+        // the USB adaptor is plugged in, panel or no panel, so the dot showed
+        // green against a dead link (Mike, 2026-08-06). Green now requires
+        // data within kDataFreshSeconds; port-open-but-silent shows amber.
+        // 90s covers the slowest heartbeat cadence (60s panels) with margin.
+        private const int kDataFreshSeconds = 90;
+
+        private void ApplyConnectionState(int state)
         {
-            if (string.IsNullOrEmpty(status)) return false;
+            this.lbStatus.Text = state == 2 ? "Connected"
+                               : state == 1 ? "Port open – no panel data"
+                               : "Disconnected";
+            this.lbStatus.ForeColor = state == 2 ? clrGreen
+                                    : state == 1 ? clrAmber
+                                    : clrRed;
+            UpdateStatusDot(state);
+        }
+
+        private static int ConnectionState(string status)
+        {
+            // 0 = port closed/error, 1 = port open but no recent panel data,
+            // 2 = receiving.
+            if (string.IsNullOrEmpty(status)) return 0;
             string lower = status.ToLower();
-            return lower.StartsWith("connected") || lower.StartsWith("data last received");
+            if (lower.StartsWith("data last received"))
+            {
+                int colon = status.IndexOf(':');
+                string ts = colon >= 0 ? status.Substring(colon + 1).Trim() : "";
+                if (DateTime.TryParse(ts, out DateTime last) &&
+                    (DateTime.Now - last).TotalSeconds <= kDataFreshSeconds)
+                    return 2;
+                return 1;
+            }
+            if (lower.StartsWith("connected")) return 1;
+            return 0;
         }
 
         private async void PollConnectionTick(object sender, EventArgs e)
@@ -386,13 +425,11 @@ namespace DraxClient
                 }
                 else
                 {
-                    bool connected = IsConnectedStatus(status);
-                    if (connected != _lastKnownConnected)
+                    int state = ConnectionState(status);
+                    if (state != _lastKnownState)
                     {
-                        _lastKnownConnected = connected;
-                        this.lbStatus.Text = connected ? "Connected" : "Disconnected";
-                        this.lbStatus.ForeColor = connected ? clrGreen : clrRed;
-                        UpdateStatusDot(connected);
+                        _lastKnownState = state;
+                        ApplyConnectionState(state);
                     }
                 }
                 UpdateProgressBarFromStatus(status);
@@ -584,13 +621,11 @@ namespace DraxClient
 
             // Status
             string status = sendcmd("GETCOMMPORTSTATUS|" + cbComport.Text);
-            bool connected = IsConnectedStatus(status);
             if (_panelType != "AUTESPA")
             {
-                _lastKnownConnected = connected;
-                this.lbStatus.Text = connected ? "Connected" : "Disconnected";
-                this.lbStatus.ForeColor = connected ? clrGreen : clrRed;
-                UpdateStatusDot(connected);
+                int state = ConnectionState(status);
+                _lastKnownState = state;
+                ApplyConnectionState(state);
             }
             // Live polling so cable removal / re-insertion (or the service
             // restarting) shows up without re-opening the form. Service can
