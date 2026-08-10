@@ -14,7 +14,6 @@ namespace DraxClient
 {
     public partial class frmAbout : Form
     {
-        private const string kpipenamesend = "DraxTechnologyPipeSend";
         private const char kpipedelim = '|';
 
         public frmAbout()
@@ -43,7 +42,7 @@ namespace DraxClient
 
         private async Task<string> sendserver(string message)
         {
-            using (NamedPipeClientStream pipe = new NamedPipeClientStream(".", kpipenamesend, PipeDirection.InOut))
+            using (NamedPipeClientStream pipe = new NamedPipeClientStream(".", PipeProtocol.SendPipeName, PipeDirection.InOut))
             {
                 pipe.Connect(3000);
                 pipe.ReadMode = PipeTransmissionMode.Message;

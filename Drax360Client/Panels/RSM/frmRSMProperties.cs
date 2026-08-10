@@ -15,7 +15,6 @@ namespace DraxClient.Panels.RSM
     // display-only for now.
     public partial class frmRSMProperties : Form
     {
-        private const string kPipeName = "DraxTechnologyPipeSend";
         private readonly int _node;
         private readonly string _fallbackName;
         private readonly string _fallbackSite;
@@ -203,7 +202,7 @@ namespace DraxClient.Panels.RSM
 
         private static string SendCmd(string cmd)
         {
-            using var pipe = new NamedPipeClientStream(".", kPipeName, PipeDirection.InOut);
+            using var pipe = new NamedPipeClientStream(".", PipeProtocol.SendPipeName, PipeDirection.InOut);
             pipe.Connect(3000);
             pipe.ReadMode = PipeTransmissionMode.Message;
             byte[] msg = Encoding.Default.GetBytes(cmd);

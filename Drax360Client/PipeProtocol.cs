@@ -14,6 +14,12 @@ namespace DraxClient
         // Control-char delimited so it can never collide with a real setting value.
         public const string EmptyResult = "\u0001EMPTY\u0001";
 
+        // One send/return pipe pair per service instance (1..4) so side-by-side
+        // Drax360Service installs don't cross-talk. Suffixed with Program.InstanceNumber,
+        // which is set once at startup from the "--instance" launch argument.
+        public static string SendPipeName => $"DraxTechnologyPipeSend{Program.InstanceNumber}";
+        public static string ReturnPipeName => $"DraxTechnologyPipeReturn{Program.InstanceNumber}";
+
         /// <summary>Map the service's empty-response sentinel back to an empty string.</summary>
         public static string Decode(string raw) => raw == EmptyResult ? "" : raw;
     }

@@ -12,7 +12,6 @@ namespace DraxClient
     public static class PipeManager
     {
         private static Form? _mainForm;
-        private const string PipeNameReturn = "DraxTechnologyPipeReturn";
         private const char PipeDelimiter = '|';
 
         private static NamedPipeServerStream? _pipeServer;
@@ -38,26 +37,26 @@ namespace DraxClient
             try
             {
                 var pipe = NamedPipeServerStreamAcl.Create(
-                    PipeNameReturn, PipeDirection.InOut, 254,
+                    PipeProtocol.ReturnPipeName, PipeDirection.InOut, 254,
                     PipeTransmissionMode.Message, PipeOptions.Asynchronous,
                     0, 0, _pipeSecurity);
-                Console.WriteLine($"[{PipeNameReturn}] ready");
+                Console.WriteLine($"[{PipeProtocol.ReturnPipeName}] ready");
                 return pipe;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"ACL pipe failed ({ex.GetType().Name}) — using default ACL");
                 var pipe = new NamedPipeServerStream(
-                    PipeNameReturn, PipeDirection.InOut, 254,
+                    PipeProtocol.ReturnPipeName, PipeDirection.InOut, 254,
                     PipeTransmissionMode.Message, PipeOptions.Asynchronous);
-                Console.WriteLine($"[{PipeNameReturn}] ready (default ACL)");
+                Console.WriteLine($"[{PipeProtocol.ReturnPipeName}] ready (default ACL)");
                 return pipe;
             }
         }
 
         public static void Start()
         {
-            Console.WriteLine($"Pipe Server Return is Starting ({PipeNameReturn})");
+            Console.WriteLine($"Pipe Server Return is Starting ({PipeProtocol.ReturnPipeName})");
             Task.Run(() => ListenLoop());
         }
 

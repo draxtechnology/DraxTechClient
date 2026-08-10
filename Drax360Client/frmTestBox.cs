@@ -19,8 +19,6 @@ namespace DraxClient
     {
         #region constants
         const string kpipename = "DraxTechnologyPipe";
-        const string kpipenamesend = "DraxTechnologyPipeSend";
-        const string kpipenamereturn = "DraxTechnologyPipeReturn";
         const char kpipedelim = '|';
 
         private int _port;
@@ -161,7 +159,7 @@ namespace DraxClient
 
         private async Task<string> sendserver(string message)
         {
-            using (NamedPipeClientStream pipe = new NamedPipeClientStream(".", kpipenamesend, PipeDirection.InOut))
+            using (NamedPipeClientStream pipe = new NamedPipeClientStream(".", PipeProtocol.SendPipeName, PipeDirection.InOut))
             {
                 pipe.Connect(5000);
                 pipe.ReadMode = PipeTransmissionMode.Message;

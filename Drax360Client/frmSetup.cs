@@ -21,7 +21,6 @@ namespace DraxClient
 {
     public partial class frmSetup : Form
     {
-        const string kpipenamesend = "DraxTechnologyPipeSend";
         const char kpipedelim = '|';
 
         private ProgressBar progressBarConnection;
@@ -809,7 +808,7 @@ namespace DraxClient
 
         private async Task<string> sendserver(string message)
         {
-            using (NamedPipeClientStream pipe = new NamedPipeClientStream(".", kpipenamesend, PipeDirection.InOut))
+            using (NamedPipeClientStream pipe = new NamedPipeClientStream(".", PipeProtocol.SendPipeName, PipeDirection.InOut))
             {
                 pipe.Connect(5000);
                 pipe.ReadMode = PipeTransmissionMode.Message;

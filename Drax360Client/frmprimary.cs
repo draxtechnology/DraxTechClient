@@ -11,8 +11,6 @@ namespace DraxClient
     public partial class frmprimary : Form
     {
         #region constants
-        const string kpipenamesend = "DraxTechnologyPipeSend";
-        const string kpipenamereturn = "DraxTechnologyPipeReturn";
         const char kpipedelim = '|';
 
         #endregion
@@ -122,7 +120,7 @@ namespace DraxClient
 
         private async Task<string> sendserver(string message)
         {
-            using (NamedPipeClientStream pipe = new NamedPipeClientStream(".", kpipenamesend, PipeDirection.InOut))
+            using (NamedPipeClientStream pipe = new NamedPipeClientStream(".", PipeProtocol.SendPipeName, PipeDirection.InOut))
             {
                 pipe.Connect(5000);
                 pipe.ReadMode = PipeTransmissionMode.Message;

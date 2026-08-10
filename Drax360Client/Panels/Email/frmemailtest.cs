@@ -15,7 +15,6 @@ namespace DraxClient.Panels.Email
 {
     public partial class frmemailtest : Form
     {
-        const string kpipenamesend = "DraxTechnologyPipeSend";
         const char kpipedelim = '|';
 
         private void LoadFormData()
@@ -100,7 +99,7 @@ namespace DraxClient.Panels.Email
 
         private async Task<string> sendserver(string message)
         {
-            using (NamedPipeClientStream pipe = new NamedPipeClientStream(".", kpipenamesend, PipeDirection.InOut))
+            using (NamedPipeClientStream pipe = new NamedPipeClientStream(".", PipeProtocol.SendPipeName, PipeDirection.InOut))
             {
                 pipe.Connect(5000);
                 pipe.ReadMode = PipeTransmissionMode.Message;

@@ -14,7 +14,6 @@ namespace DraxClient.Panels.RSM
     // all persisted to devices.json so the service can enrich log lines.
     public partial class frmRSMNodes : Form
     {
-        private const string kPipeName = "DraxTechnologyPipeSend";
         private readonly object _fileLock = new();
         private static readonly string _devicesPath = Paths.GetFile("devices.json");
 
@@ -266,7 +265,7 @@ namespace DraxClient.Panels.RSM
 
         private static string SendCmd(string cmd)
         {
-            using var pipe = new NamedPipeClientStream(".", kPipeName, PipeDirection.InOut);
+            using var pipe = new NamedPipeClientStream(".", PipeProtocol.SendPipeName, PipeDirection.InOut);
             pipe.Connect(3000);
             pipe.ReadMode = PipeTransmissionMode.Message;
             byte[] msg = Encoding.Default.GetBytes(cmd);

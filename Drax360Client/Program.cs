@@ -27,11 +27,19 @@ namespace DraxClient
         private const uint MF_BYCOMMAND = 0x0;
         private const uint MF_GRAYED = 0x1;
 
-        // Single-instance guard. Named mutex acquired on Main; second launch
-        // sees createdNew=false and bails out silently. The mutex is disposed
-        // when Application.Run returns at app exit, releasing it for the
+        // Single-instance guard. Named mutex acquired on Main; second launch of the
+        // SAME instance number sees createdNew=false and bails out silently. Scoped
+        // per instance (not machine-wide) so one DraxClient per side-by-side
+        // Drax360Service install can run concurrently on the same box. The mutex is
+        // disposed when Application.Run returns at app exit, releasing it for the
         // next launch.
-        private const string SingleInstanceMutexName = "DraxClientSingleInstance";
+        private static string SingleInstanceMutexName => $"DraxClientSingleInstance{InstanceNumber}";
+
+        // Which service instance (1..4) this client talks to. Passed as "--instance N"
+        // by whatever launches this copy (each of the 4 side-by-side Drax360Service
+        // installs gets its own launch shortcut with its number baked in). Missing or
+        // out of range falls back to instance 1.
+        public static int InstanceNumber { get; private set; } = 1;
 
         public class HiddenAppContext : ApplicationContext
         {
@@ -55,23 +63,25 @@ namespace DraxClient
         [STAThread]
         static void Main(string[] args)
         {
+            InstanceNumber = ParseInstanceNumber(args);
+
             using var mutex = new Mutex(initiallyOwned: true, SingleInstanceMutexName, out bool createdNew);
             if (!createdNew)
             {
-                // Another DraxClient is already running on this session — bail. Log it
-                // (to file, and to the launching terminal if there is one) so this stops
-                // being a silent no-op: a second launch, e.g. from a command prompt,
-                // previously just returned with nothing shown anywhere, which made it
-                // look like the app had failed rather than deliberately deferred to the
-                // instance already running.
+                // Another DraxClient for this same instance number is already running on
+                // this session — bail. Log it (to file, and to the launching terminal if
+                // there is one) so this stops being a silent no-op: a second launch, e.g.
+                // from a command prompt, previously just returned with nothing shown
+                // anywhere, which made it look like the app had failed rather than
+                // deliberately deferred to the instance already running.
                 LogStartupEvent(
-                    "Startup aborted: another DraxClient is already running on this "
-                    + "session (single-instance mutex already held).",
+                    $"Startup aborted: another DraxClient for instance {InstanceNumber} is "
+                    + "already running on this session (single-instance mutex already held).",
                     echoToParentConsole: true);
                 return;
             }
 
-            LogStartupEvent("Startup: single-instance mutex acquired; this instance is starting.");
+            LogStartupEvent($"Startup: single-instance mutex acquired for instance {InstanceNumber}; this instance is starting.");
 
             // Diagnostics console. On by default so the PipeManager / pipe traffic is
             // visible without having to relaunch with a flag (the single-instance guard
@@ -88,6 +98,21 @@ namespace DraxClient
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new HiddenAppContext());
+        }
+
+        // Reads "--instance N" (N = 1..4); missing or out-of-range falls back to 1.
+        private static int ParseInstanceNumber(string[] args)
+        {
+            for (int i = 0; i < args.Length - 1; i++)
+            {
+                if (args[i].Equals("--instance", StringComparison.OrdinalIgnoreCase)
+                    && int.TryParse(args[i + 1], out int n)
+                    && n >= 1 && n <= 4)
+                {
+                    return n;
+                }
+            }
+            return 1;
         }
 
         // Allocate a diagnostics console and make it actually usable.
