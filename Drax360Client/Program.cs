@@ -100,7 +100,9 @@ namespace DraxClient
             Application.Run(new HiddenAppContext());
         }
 
-        // Reads "--instance N" (N = 1..4); missing or out-of-range falls back to 1.
+        // Reads the instance number (1..4) from either "--instance N" or a bare
+        // positional "N" (e.g. whatever fixed-argument launch mechanism AMX itself
+        // ends up using). Missing or out-of-range falls back to 1.
         private static int ParseInstanceNumber(string[] args)
         {
             for (int i = 0; i < args.Length - 1; i++)
@@ -112,6 +114,15 @@ namespace DraxClient
                     return n;
                 }
             }
+
+            foreach (string arg in args)
+            {
+                if (int.TryParse(arg, out int n) && n >= 1 && n <= 4)
+                {
+                    return n;
+                }
+            }
+
             return 1;
         }
 
