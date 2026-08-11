@@ -4,7 +4,7 @@
 
   <Package Name="Drax Technology Client"
            Manufacturer="Drax Technology"
-           Version="1.0.1"
+           Version="1.0.2"
            UpgradeCode="BCDEEC3D-DD83-44D7-9AC4-783B277ECBC5"
            Scope="perMachine"
            InstallerVersion="500">
@@ -44,17 +44,17 @@
       <ComponentRef Id="DesktopShortcutComponent" />
     </Feature>
     <Feature Id="ClientInstance2" Title="Shortcuts — Service Instance 2"
-             Description="Start Menu shortcut launching the client against the instance-2 service (C:\AMX2)."
+             Description="Start Menu shortcut launching the client against the instance-2 service (C:\AMX1\NWM2)."
              Level="1" AllowAdvertise="no">
       <ComponentRef Id="StartMenuShortcutComponent2" />
     </Feature>
     <Feature Id="ClientInstance3" Title="Shortcuts — Service Instance 3"
-             Description="Start Menu shortcut launching the client against the instance-3 service (C:\AMX3)."
+             Description="Start Menu shortcut launching the client against the instance-3 service (C:\AMX1\NWM3)."
              Level="1" AllowAdvertise="no">
       <ComponentRef Id="StartMenuShortcutComponent3" />
     </Feature>
     <Feature Id="ClientInstance4" Title="Shortcuts — Service Instance 4"
-             Description="Start Menu shortcut launching the client against the instance-4 service (C:\AMX4)."
+             Description="Start Menu shortcut launching the client against the instance-4 service (C:\AMX1\NWM4)."
              Level="1" AllowAdvertise="no">
       <ComponentRef Id="StartMenuShortcutComponent4" />
     </Feature>
