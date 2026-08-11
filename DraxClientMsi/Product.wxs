@@ -4,7 +4,7 @@
 
   <Package Name="Drax Technology Client"
            Manufacturer="Drax Technology"
-           Version="1.0.0"
+           Version="1.0.1"
            UpgradeCode="BCDEEC3D-DD83-44D7-9AC4-783B277ECBC5"
            Scope="perMachine"
            InstallerVersion="500">
@@ -19,11 +19,44 @@
     <Icon Id="DraxClient.ico" SourceFile="..\Drax360Client\DT-small.ico" />
     <Property Id="ARPPRODUCTICON" Value="DraxClient.ico" />
 
-    <Feature Id="Main" Title="Drax Client" Level="1">
+    <!-- The client resolves which service instance it fronts from the
+         instance launch argument (Program.InstanceNumber; missing = 1).
+         The engineer picks the instance(s) at install time on the feature
+         tree: each instance feature installs a Start Menu + Desktop shortcut
+         pair carrying the matching argument. Instance 1 is on by default and
+         keeps the original unsuffixed shortcuts (no argument = instance 1);
+         2-4 are off by default (Level 2 > default INSTALLLEVEL) and can be
+         added later via Programs and Features -> Change. Mirrors the service
+         MSI's per-instance feature picker. -->
+    <Feature Id="Main" Title="Drax Client" Level="1" AllowAbsent="no" AllowAdvertise="no">
       <ComponentGroupRef Id="ClientComponents" />
       <ComponentGroupRef Id="DependencyFiles" />
+    </Feature>
+    <!-- All four instances' shortcuts install unconditionally, dormant until
+         needed — Mike/James's direction (2026-08-11): no instance question at
+         install time, matching the service MSI. Instance 1 gets the original
+         Start Menu + Desktop pair; instances 2-4 get Start Menu entries only
+         (every instance reachable without four desktop icons). -->
+    <Feature Id="ClientInstance1" Title="Shortcuts — Service Instance 1"
+             Description="Start Menu and Desktop shortcuts for the instance-1 service (C:\AMX1)."
+             Level="1" AllowAdvertise="no">
       <ComponentRef Id="StartMenuShortcutComponent" />
       <ComponentRef Id="DesktopShortcutComponent" />
+    </Feature>
+    <Feature Id="ClientInstance2" Title="Shortcuts — Service Instance 2"
+             Description="Start Menu shortcut launching the client against the instance-2 service (C:\AMX2)."
+             Level="1" AllowAdvertise="no">
+      <ComponentRef Id="StartMenuShortcutComponent2" />
+    </Feature>
+    <Feature Id="ClientInstance3" Title="Shortcuts — Service Instance 3"
+             Description="Start Menu shortcut launching the client against the instance-3 service (C:\AMX3)."
+             Level="1" AllowAdvertise="no">
+      <ComponentRef Id="StartMenuShortcutComponent3" />
+    </Feature>
+    <Feature Id="ClientInstance4" Title="Shortcuts — Service Instance 4"
+             Description="Start Menu shortcut launching the client against the instance-4 service (C:\AMX4)."
+             Level="1" AllowAdvertise="no">
+      <ComponentRef Id="StartMenuShortcutComponent4" />
     </Feature>
 
     <!-- Default install location: C:\AMX1\ — user can change this in the installer UI -->
@@ -88,6 +121,62 @@
                      KeyPath="yes" />
     </Component>
 
+    <!-- Instance 2-4 shortcut pairs — same exe; the instance argument picks
+         the service pipe pair the client fronts (PipeProtocol.SendPipeName). -->
+    <Component Id="StartMenuShortcutComponent2"
+               Directory="DraxStartMenu"
+               Guid="7A1B2C3D-4E5F-6071-8293-A4B5C6D7E8F9">
+      <Shortcut Id="StartMenuShortcut2"
+                Name="Drax Technology Client 2"
+                Description="Drax Technology Client — service instance 2"
+                Target="[INSTALLFOLDER]DraxClient.exe"
+                Arguments="--instance 2"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="DraxClient.ico" />
+      <RemoveFolder Id="RemoveDraxStartMenu2" On="uninstall" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\Drax\DraxClient"
+                     Name="StartMenuShortcut2"
+                     Type="integer"
+                     Value="1"
+                     KeyPath="yes" />
+    </Component>
+    <Component Id="StartMenuShortcutComponent3"
+               Directory="DraxStartMenu"
+               Guid="9C3D4E5F-6071-8293-A4B5-C6D7E8F90112">
+      <Shortcut Id="StartMenuShortcut3"
+                Name="Drax Technology Client 3"
+                Description="Drax Technology Client — service instance 3"
+                Target="[INSTALLFOLDER]DraxClient.exe"
+                Arguments="--instance 3"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="DraxClient.ico" />
+      <RemoveFolder Id="RemoveDraxStartMenu3" On="uninstall" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\Drax\DraxClient"
+                     Name="StartMenuShortcut3"
+                     Type="integer"
+                     Value="1"
+                     KeyPath="yes" />
+    </Component>
+    <Component Id="StartMenuShortcutComponent4"
+               Directory="DraxStartMenu"
+               Guid="BE5F6071-8293-A4B5-C6D7-E8F901122334">
+      <Shortcut Id="StartMenuShortcut4"
+                Name="Drax Technology Client 4"
+                Description="Drax Technology Client — service instance 4"
+                Target="[INSTALLFOLDER]DraxClient.exe"
+                Arguments="--instance 4"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="DraxClient.ico" />
+      <RemoveFolder Id="RemoveDraxStartMenu4" On="uninstall" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\Drax\DraxClient"
+                     Name="StartMenuShortcut4"
+                     Type="integer"
+                     Value="1"
+                     KeyPath="yes" />
+    </Component>
     <!-- Install-folder confirmation dialog: Welcome → Choose folder → Ready → Progress → Finish -->
     <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
 
