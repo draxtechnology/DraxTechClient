@@ -53,9 +53,10 @@ namespace DraxClient
                 // until the window handle has been created": closing the Setup
                 // form disposed it, then the next service push (NWM:TBSHOW etc.)
                 // tried to marshal onto a handle-less form.
-                var _mainForm = new frmprimary();
+                // var _mainForm = new frmprimary();
+                var _mainForm = new frmSetup();
                 var handle = _mainForm.Handle;
-                //_mainForm.Show();
+                _mainForm.Show();
                 PipeManager.SetMainForm(_mainForm);
                 PipeManager.Start();
             }

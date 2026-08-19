@@ -992,5 +992,22 @@ namespace DraxClient
                 this.tbInspireOffset.Text = "100";
             }
         }
+
+
+        private void single_CheckedChanged(object sender, EventArgs e)
+        {
+            this.tbSingleIP.Enabled = true;
+            this.tbSingleIP.ReadOnly = false;
+            this.tbSingleOffset.Enabled = true;
+            this.tbSingleOffset.ReadOnly = false;
+        }
+
+        private void multi_CheckedChanged(object sender, EventArgs e)
+        {
+            this.tbSingleIP.Enabled = false;
+            this.tbSingleIP.ReadOnly = true;
+            this.tbSingleOffset.Enabled = false;
+            this.tbSingleOffset.ReadOnly = true;
+        }
     }
 }

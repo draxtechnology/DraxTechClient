@@ -90,14 +90,24 @@
             chkDisplayChkSumFails = new CheckBox();
             chkOutStationFaults = new CheckBox();
             tpInspire = new TabPage();
+            label11 = new Label();
             gbModuleOffset = new GroupBox();
             rbOffsetNode = new RadioButton();
             rbOffsetLoop = new RadioButton();
             lblOffsetAmount = new Label();
             tbInspireOffset = new TextBox();
-            label11 = new Label();
             lblPanelZero = new Label();
             tbPanelZeroAddress = new TextBox();
+            tbTaktis = new TabPage();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            label13 = new Label();
+            tbSingleOffset = new TextBox();
+            groupBox1 = new GroupBox();
+            single = new RadioButton();
+            multi = new RadioButton();
+            tbSingleIP = new TextBox();
+            label12 = new Label();
+            tabPage1 = new TabPage();
             pnlFooter.SuspendLayout();
             tabPage.SuspendLayout();
             tpserialsettings.SuspendLayout();
@@ -109,6 +119,8 @@
             tbGent.SuspendLayout();
             tpInspire.SuspendLayout();
             gbModuleOffset.SuspendLayout();
+            tbTaktis.SuspendLayout();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // pnlFooter
@@ -163,6 +175,7 @@
             tabPage.Controls.Add(tprsm);
             tabPage.Controls.Add(tbGent);
             tabPage.Controls.Add(tpInspire);
+            tabPage.Controls.Add(tbTaktis);
             tabPage.Dock = DockStyle.Fill;
             tabPage.Location = new Point(0, 0);
             tabPage.Name = "tabPage";
@@ -777,6 +790,15 @@
             tpInspire.Text = "Inspire Panel";
             tpInspire.UseVisualStyleBackColor = true;
             // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(90, 189);
+            label11.Name = "label11";
+            label11.Size = new Size(242, 15);
+            label11.TabIndex = 3;
+            label11.Text = "Modules will be off set by the selected value.";
+            // 
             // gbModuleOffset
             // 
             gbModuleOffset.Controls.Add(rbOffsetNode);
@@ -826,32 +848,128 @@
             tbInspireOffset.Name = "tbInspireOffset";
             tbInspireOffset.Size = new Size(80, 23);
             tbInspireOffset.TabIndex = 2;
-            //
-            // label11
-            //
-            label11.AutoSize = true;
-            label11.Location = new Point(90, 189);
-            label11.Name = "label11";
-            label11.Size = new Size(242, 15);
-            label11.TabIndex = 3;
-            label11.Text = "Modules will be off set by the selected value.";
-            //
+            // 
             // lblPanelZero
-            //
+            // 
             lblPanelZero.AutoSize = true;
             lblPanelZero.Location = new Point(93, 231);
             lblPanelZero.Name = "lblPanelZero";
-            lblPanelZero.Size = new Size(92, 15);
+            lblPanelZero.Size = new Size(90, 15);
             lblPanelZero.TabIndex = 4;
             lblPanelZero.Tag = "fieldlabel";
             lblPanelZero.Text = "Panel 0 Address";
-            //
+            // 
             // tbPanelZeroAddress
-            //
+            // 
             tbPanelZeroAddress.Location = new Point(200, 225);
             tbPanelZeroAddress.Name = "tbPanelZeroAddress";
             tbPanelZeroAddress.Size = new Size(80, 23);
             tbPanelZeroAddress.TabIndex = 5;
+            // 
+            // tbTaktis
+            // 
+            tbTaktis.Controls.Add(tableLayoutPanel1);
+            tbTaktis.Controls.Add(label13);
+            tbTaktis.Controls.Add(tbSingleOffset);
+            tbTaktis.Controls.Add(groupBox1);
+            tbTaktis.Controls.Add(tbSingleIP);
+            tbTaktis.Controls.Add(label12);
+            tbTaktis.Location = new Point(4, 24);
+            tbTaktis.Name = "tbTaktis";
+            tbTaktis.Padding = new Padding(3);
+            tbTaktis.Size = new Size(582, 290);
+            tbTaktis.TabIndex = 7;
+            tbTaktis.Text = "Taktis Panel";
+            tbTaktis.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Location = new Point(43, 162);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Size = new Size(200, 100);
+            tableLayoutPanel1.TabIndex = 7;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(85, 113);
+            label13.Name = "label13";
+            label13.Size = new Size(42, 15);
+            label13.TabIndex = 5;
+            label13.Tag = "fieldlabel";
+            label13.Text = "Offset:";
+            // 
+            // tbSingleOffset
+            // 
+            tbSingleOffset.Location = new Point(130, 110);
+            tbSingleOffset.Name = "tbSingleOffset";
+            tbSingleOffset.Size = new Size(78, 23);
+            tbSingleOffset.TabIndex = 6;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(single);
+            groupBox1.Controls.Add(multi);
+            groupBox1.Location = new Point(27, 6);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(220, 65);
+            groupBox1.TabIndex = 2;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Panel IP Setup";
+            // 
+            // single
+            // 
+            single.AutoSize = true;
+            single.Checked = true;
+            single.Location = new Point(24, 38);
+            single.Name = "single";
+            single.Size = new Size(70, 19);
+            single.TabIndex = 0;
+            single.TabStop = true;
+            single.Text = "Single IP";
+            single.Click += single_CheckedChanged;
+            // 
+            // multi
+            // 
+            multi.AutoSize = true;
+            multi.Location = new Point(130, 38);
+            multi.Name = "multi";
+            multi.Size = new Size(66, 19);
+            multi.TabIndex = 1;
+            multi.Text = "Multi IP";
+            multi.Click += multi_CheckedChanged;
+            // 
+            // tbSingleIP
+            // 
+            tbSingleIP.Location = new Point(130, 75);
+            tbSingleIP.Name = "tbSingleIP";
+            tbSingleIP.Size = new Size(100, 23);
+            tbSingleIP.TabIndex = 1;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(27, 83);
+            label12.Name = "label12";
+            label12.Size = new Size(97, 15);
+            label12.TabIndex = 0;
+            label12.Text = "Panel IP Address:";
+            // 
+            // tabPage1
+            // 
+            tabPage1.Location = new Point(4, 24);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new Padding(3);
+            tabPage1.Size = new Size(582, 290);
+            tabPage1.TabIndex = 7;
+            tabPage1.Text = "tabPage1";
+            tabPage1.UseVisualStyleBackColor = true;
             // 
             // frmSetup
             // 
@@ -884,6 +1002,10 @@
             tpInspire.PerformLayout();
             gbModuleOffset.ResumeLayout(false);
             gbModuleOffset.PerformLayout();
+            tbTaktis.ResumeLayout(false);
+            tbTaktis.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -955,6 +1077,7 @@
         private Label label10;
         private ComboBox cbStopBits;
         private TabPage tpInspire;
+        private TabPage tbTaktis;
         private GroupBox gbModuleOffset;
         private RadioButton rbOffsetNode;
         private RadioButton rbOffsetLoop;
@@ -963,5 +1086,14 @@
         private Label lblOffsetAmount;
         private TextBox tbInspireOffset;
         private Label label11;
+        private TabPage tabPage1;
+        private TextBox tbSingleIP;
+        private Label label12;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Label label13;
+        private TextBox tbSingleOffset;
+        private GroupBox groupBox1;
+        private RadioButton single;
+        private RadioButton multi;
     }
 }
