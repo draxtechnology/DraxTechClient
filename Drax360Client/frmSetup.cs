@@ -56,6 +56,12 @@ namespace DraxClient
 
         #region private variables
         private string _panelType = "";
+        // Event-only printer feeds (the Autronica ESPA, the ARM): the panel
+        // only talks when something happens, so a data-freshness dot would sit
+        // amber through every quiet period. These panels hide the dot and show
+        // a passive "Last message <timestamp>" label instead (Mike, 2026-08-25:
+        // ARM gets the same treatment as the Autronica).
+        private bool IsPassiveFeedPanel => _panelType == "AUTESPA" || _panelType == "ARM";
         #endregion
 
         public frmSetup()
@@ -118,7 +124,7 @@ namespace DraxClient
                 int glNumHeartbeats = Convert.ToInt32(sendcmd("GetPanelHandShake"));
                 int glNumMessages = Convert.ToInt32(sendcmd("GetPanelNumMessages"));
 
-                if (_panelType != "AUTESPA")
+                if (!IsPassiveFeedPanel)
                 {
                     this.lblComCounterPanel1.Text = "Heart Beats: " + glNumHeartbeats.ToString() + " - Messages: " + glNumMessages;
                 }
@@ -409,17 +415,34 @@ namespace DraxClient
             try
             {
                 string status = await Task.Run(() => sendcmd("GETCOMMPORTSTATUS|" + comport));
-                if (_panelType == "AUTESPA")
+                if (IsPassiveFeedPanel)
                 {
-                    // ESPA has no connect/disconnect dot — lbStatus instead shows
-                    // the timestamp of the last message PanelEspa received on the
-                    // serial port (DraxService.cs GETCOMMPORTSTATUS -> ap.lastDataReceived).
+                    // ESPA and ARM have no connect/disconnect dot — lbStatus instead
+                    // shows the timestamp of the last message the panel driver received
+                    // on the serial port (DraxService.cs GETCOMMPORTSTATUS ->
+                    // ap.lastDataReceived). A closed port still shows red rather than
+                    // leaving a stale timestamp up — same misleading-green lesson as
+                    // the dot panels (Mike, 2026-08-06).
                     string lower = status?.ToLower() ?? "";
                     if (lower.StartsWith("data last received"))
                     {
                         int colon = status.IndexOf(':');
                         string ts = colon >= 0 ? status.Substring(colon + 1).Trim() : "";
-                        if (!string.IsNullOrEmpty(ts)) this.lbStatus.Text = "Last message " + ts;
+                        if (!string.IsNullOrEmpty(ts))
+                        {
+                            this.lbStatus.Text = "Last message " + ts;
+                            this.lbStatus.ForeColor = clrTextMuted;
+                        }
+                    }
+                    else if (lower.StartsWith("connected"))
+                    {
+                        this.lbStatus.Text = "Port open – waiting for panel data";
+                        this.lbStatus.ForeColor = clrAmber;
+                    }
+                    else if (lower.StartsWith("disconnected"))
+                    {
+                        this.lbStatus.Text = "Port closed";
+                        this.lbStatus.ForeColor = clrRed;
                     }
                 }
                 else
@@ -533,6 +556,7 @@ namespace DraxClient
                     break;
 
                 case "AUTESPA":
+                case "ARM":
                     this.progressBar1.Visible = false;
                     this.lbStatus.Text = "Last Message";
                     this.lbStatus.Left = 20;
@@ -620,7 +644,7 @@ namespace DraxClient
 
             // Status
             string status = sendcmd("GETCOMMPORTSTATUS|" + cbComport.Text);
-            if (_panelType != "AUTESPA")
+            if (!IsPassiveFeedPanel)
             {
                 int state = ConnectionState(status);
                 _lastKnownState = state;
