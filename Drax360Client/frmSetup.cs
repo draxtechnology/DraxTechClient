@@ -526,6 +526,7 @@ namespace DraxClient
             tabPage.TabPages.Remove(tpadvanced);
             tabPage.TabPages.Remove(tbGent);
             tabPage.TabPages.Remove(tpInspire);
+            tabPage.TabPages.Remove(tbTaktis);
             // COM ports
             for (int i = 1; i <= 10; i++)
                 cbComport.Items.Add(new ComboBoxItem { Text = $"COM{i}", Value = i.ToString() });
