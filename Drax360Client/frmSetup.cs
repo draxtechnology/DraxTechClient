@@ -1037,6 +1037,13 @@ namespace DraxClient
         // (SETTINGSGET already returns "" for keys that aren't set).
         private const int kMaxTaktisConnections = 50;
 
+        // How many Connection* sections existed the last time we asked the
+        // service (LoadFormData, or our own previous save) — lets save_taktis_connections
+        // work out which trailing sections are now orphaned (e.g. Multi IP
+        // shrank from 3 rows to 1, or the user switched back to Single IP)
+        // and issue SETTINGSDELETE for exactly those.
+        private int _taktisLoadedConnectionCount = 0;
+
         private void load_taktis_connections()
         {
             var connections = new List<(string IP, string Offset)>();
@@ -1047,6 +1054,7 @@ namespace DraxClient
                 string offset = sendcmd($"SETTINGSGET|Connection{i},Offset");
                 connections.Add((ip, offset));
             }
+            _taktisLoadedConnectionCount = connections.Count;
 
             this.dgvMultiIP.Rows.Clear();
             foreach (var c in connections)
@@ -1074,29 +1082,42 @@ namespace DraxClient
 
         private void save_taktis_connections()
         {
+            int savedCount;
             if (this.single.Checked)
             {
                 sendcmd($"SETTINGSSET|Connection1,IPAddress,{this.tbSingleIP.Text}");
                 sendcmd($"SETTINGSSET|Connection1,Offset,{this.tbSingleOffset.Text}");
                 sendcmd("SETTINGSSET|Connection1,PanelNumber,1");
                 sendcmd("SETTINGSSET|Connection1,Mode,Standalone");
-                return;
+                savedCount = 1;
             }
-
-            int panelNumber = 1;
-            foreach (DataGridViewRow row in this.dgvMultiIP.Rows)
+            else
             {
-                if (row.IsNewRow) continue;
-                string ip = row.Cells[colIPAddress.Index].Value?.ToString() ?? "";
-                if (string.IsNullOrWhiteSpace(ip)) continue;
-                string offset = row.Cells[colIPOffset.Index].Value?.ToString() ?? "";
+                int panelNumber = 1;
+                foreach (DataGridViewRow row in this.dgvMultiIP.Rows)
+                {
+                    if (row.IsNewRow) continue;
+                    string ip = row.Cells[colIPAddress.Index].Value?.ToString() ?? "";
+                    if (string.IsNullOrWhiteSpace(ip)) continue;
+                    string offset = row.Cells[colIPOffset.Index].Value?.ToString() ?? "";
 
-                sendcmd($"SETTINGSSET|Connection{panelNumber},IPAddress,{ip}");
-                sendcmd($"SETTINGSSET|Connection{panelNumber},Offset,{offset}");
-                sendcmd($"SETTINGSSET|Connection{panelNumber},PanelNumber,{panelNumber}");
-                sendcmd($"SETTINGSSET|Connection{panelNumber},Mode,Standalone");
-                panelNumber++;
+                    sendcmd($"SETTINGSSET|Connection{panelNumber},IPAddress,{ip}");
+                    sendcmd($"SETTINGSSET|Connection{panelNumber},Offset,{offset}");
+                    sendcmd($"SETTINGSSET|Connection{panelNumber},PanelNumber,{panelNumber}");
+                    sendcmd($"SETTINGSSET|Connection{panelNumber},Mode,Standalone");
+                    panelNumber++;
+                }
+                savedCount = panelNumber - 1;
             }
+
+            // Remove sections left over from a previously larger connection
+            // list (Multi IP row count went down, or we switched back to
+            // Single IP) — requires the service to understand SETTINGSDELETE|Connection{n}.
+            for (int i = savedCount + 1; i <= _taktisLoadedConnectionCount; i++)
+            {
+                sendcmd($"SETTINGSDELETE|Connection{i}");
+            }
+            _taktisLoadedConnectionCount = savedCount;
         }
 
         private void single_CheckedChanged(object sender, EventArgs e)
