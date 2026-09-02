@@ -99,7 +99,9 @@
             lblPanelZero = new Label();
             tbPanelZeroAddress = new TextBox();
             tbTaktis = new TabPage();
-            tableLayoutPanel1 = new TableLayoutPanel();
+            dgvMultiIP = new DataGridView();
+            colIPAddress = new DataGridViewTextBoxColumn();
+            colIPOffset = new DataGridViewTextBoxColumn();
             label13 = new Label();
             tbSingleOffset = new TextBox();
             groupBox1 = new GroupBox();
@@ -120,6 +122,7 @@
             tpInspire.SuspendLayout();
             gbModuleOffset.SuspendLayout();
             tbTaktis.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvMultiIP).BeginInit();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -868,7 +871,7 @@
             // 
             // tbTaktis
             // 
-            tbTaktis.Controls.Add(tableLayoutPanel1);
+            tbTaktis.Controls.Add(dgvMultiIP);
             tbTaktis.Controls.Add(label13);
             tbTaktis.Controls.Add(tbSingleOffset);
             tbTaktis.Controls.Add(groupBox1);
@@ -882,18 +885,29 @@
             tbTaktis.Text = "Taktis Panel";
             tbTaktis.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanel1
+            // dgvMultiIP
             // 
-            tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Location = new Point(43, 162);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Size = new Size(200, 100);
-            tableLayoutPanel1.TabIndex = 7;
+            dgvMultiIP.AllowUserToResizeColumns = false;
+            dgvMultiIP.AllowUserToResizeRows = false;
+            dgvMultiIP.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvMultiIP.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvMultiIP.Columns.AddRange(new DataGridViewColumn[] { colIPAddress, colIPOffset });
+            dgvMultiIP.Location = new Point(27, 77);
+            dgvMultiIP.Name = "dgvMultiIP";
+            dgvMultiIP.RowHeadersWidth = 30;
+            dgvMultiIP.Size = new Size(350, 196);
+            dgvMultiIP.TabIndex = 7;
+            dgvMultiIP.Visible = false;
+            // 
+            // colIPAddress
+            // 
+            colIPAddress.HeaderText = "Panel IP Address";
+            colIPAddress.Name = "colIPAddress";
+            // 
+            // colIPOffset
+            // 
+            colIPOffset.HeaderText = "IP Offset";
+            colIPOffset.Name = "colIPOffset";
             // 
             // label13
             // 
@@ -1004,6 +1018,7 @@
             gbModuleOffset.PerformLayout();
             tbTaktis.ResumeLayout(false);
             tbTaktis.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvMultiIP).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);
@@ -1089,7 +1104,9 @@
         private TabPage tabPage1;
         private TextBox tbSingleIP;
         private Label label12;
-        private TableLayoutPanel tableLayoutPanel1;
+        private DataGridView dgvMultiIP;
+        private DataGridViewTextBoxColumn colIPAddress;
+        private DataGridViewTextBoxColumn colIPOffset;
         private Label label13;
         private TextBox tbSingleOffset;
         private GroupBox groupBox1;

@@ -546,6 +546,10 @@ namespace DraxClient
                     tabPage.TabPages.Add(tpInspire);
                     break;
 
+                case "TAKTIS":
+                    tabPage.TabPages.Add(tbTaktis);
+                    break;
+
                 case "RSM":
                     tabPage.TabPages.Remove(tpserialsettings);
                     tabPage.TabPages.Add(tprsm);
@@ -819,8 +823,11 @@ namespace DraxClient
                     this.tbPanelZeroAddress.Text = "1";
                 }
             }
+            if (_panelType == "TAKTIS")
+            {
+                load_taktis_connections();
+            }
         }
-
         // ── Pipe helpers (unchanged) ──────────────────────────────────────────
         private string sendcmd(string cmd, string parameters = "")
         {
@@ -928,6 +935,10 @@ namespace DraxClient
                         sendcmd($"SETTINGSSET|SETUP,ModuleOffsetMode,{(rbOffsetLoop.Checked ? "Loop" : "Node")}");
                         sendcmd($"SETTINGSSET|SETUP,PANELZEROADDRESS,{this.tbPanelZeroAddress.Text}");
                     }
+                    if (_panelType == "TAKTIS")
+                    {
+                        save_taktis_connections();
+                    }
                 }
             }
             sendcmd("SETTINGSSAVE");
@@ -1019,12 +1030,86 @@ namespace DraxClient
         }
 
 
+        // Taktis panel IP config lives in the service's ini as one section
+        // per connection ([Connection1], [Connection2], ...) with
+        // IPAddress/Mode/PanelNumber/Offset keys — there's no count key, so
+        // we read sequentially and stop at the first missing IPAddress
+        // (SETTINGSGET already returns "" for keys that aren't set).
+        private const int kMaxTaktisConnections = 50;
+
+        private void load_taktis_connections()
+        {
+            var connections = new List<(string IP, string Offset)>();
+            for (int i = 1; i <= kMaxTaktisConnections; i++)
+            {
+                string ip = sendcmd($"SETTINGSGET|Connection{i},IPAddress");
+                if (string.IsNullOrWhiteSpace(ip)) break;
+                string offset = sendcmd($"SETTINGSGET|Connection{i},Offset");
+                connections.Add((ip, offset));
+            }
+
+            this.dgvMultiIP.Rows.Clear();
+            foreach (var c in connections)
+            {
+                dgvMultiIP.Rows.Add(c.IP, c.Offset);
+            }
+
+            if (connections.Count > 0)
+            {
+                this.tbSingleIP.Text = connections[0].IP;
+                this.tbSingleOffset.Text = connections[0].Offset;
+            }
+
+            if (connections.Count > 1)
+            {
+                this.multi.Checked = true;
+                multi_CheckedChanged(this, EventArgs.Empty);
+            }
+            else
+            {
+                this.single.Checked = true;
+                single_CheckedChanged(this, EventArgs.Empty);
+            }
+        }
+
+        private void save_taktis_connections()
+        {
+            if (this.single.Checked)
+            {
+                sendcmd($"SETTINGSSET|Connection1,IPAddress,{this.tbSingleIP.Text}");
+                sendcmd($"SETTINGSSET|Connection1,Offset,{this.tbSingleOffset.Text}");
+                sendcmd("SETTINGSSET|Connection1,PanelNumber,1");
+                sendcmd("SETTINGSSET|Connection1,Mode,Standalone");
+                return;
+            }
+
+            int panelNumber = 1;
+            foreach (DataGridViewRow row in this.dgvMultiIP.Rows)
+            {
+                if (row.IsNewRow) continue;
+                string ip = row.Cells[colIPAddress.Index].Value?.ToString() ?? "";
+                if (string.IsNullOrWhiteSpace(ip)) continue;
+                string offset = row.Cells[colIPOffset.Index].Value?.ToString() ?? "";
+
+                sendcmd($"SETTINGSSET|Connection{panelNumber},IPAddress,{ip}");
+                sendcmd($"SETTINGSSET|Connection{panelNumber},Offset,{offset}");
+                sendcmd($"SETTINGSSET|Connection{panelNumber},PanelNumber,{panelNumber}");
+                sendcmd($"SETTINGSSET|Connection{panelNumber},Mode,Standalone");
+                panelNumber++;
+            }
+        }
+
         private void single_CheckedChanged(object sender, EventArgs e)
         {
             this.tbSingleIP.Enabled = true;
             this.tbSingleIP.ReadOnly = false;
             this.tbSingleOffset.Enabled = true;
             this.tbSingleOffset.ReadOnly = false;
+            this.tbSingleIP.Visible = true;
+            this.tbSingleOffset.Visible = true;
+            this.label12.Visible = true;
+            this.label13.Visible = true;
+            this.dgvMultiIP.Visible = false;
         }
 
         private void multi_CheckedChanged(object sender, EventArgs e)
@@ -1033,6 +1118,11 @@ namespace DraxClient
             this.tbSingleIP.ReadOnly = true;
             this.tbSingleOffset.Enabled = false;
             this.tbSingleOffset.ReadOnly = true;
+            this.tbSingleIP.Visible = false;
+            this.tbSingleOffset.Visible = false;
+            this.label12.Visible = false;
+            this.label13.Visible = false;
+            this.dgvMultiIP.Visible = true;
         }
     }
 }
