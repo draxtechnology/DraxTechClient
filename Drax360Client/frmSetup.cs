@@ -1046,20 +1046,22 @@ namespace DraxClient
 
         private void load_taktis_connections()
         {
-            var connections = new List<(string IP, string Offset)>();
+            var connections = new List<(string IP, string Offset, string Mode)>();
             for (int i = 1; i <= kMaxTaktisConnections; i++)
             {
                 string ip = sendcmd($"SETTINGSGET|Connection{i},IPAddress");
                 if (string.IsNullOrWhiteSpace(ip)) break;
                 string offset = sendcmd($"SETTINGSGET|Connection{i},Offset");
-                connections.Add((ip, offset));
+                string mode = sendcmd($"SETTINGSGET|Connection{i},Mode");
+                if (string.IsNullOrWhiteSpace(mode)) mode = "Standalone";
+                connections.Add((ip, offset, mode));
             }
             _taktisLoadedConnectionCount = connections.Count;
 
             this.dgvMultiIP.Rows.Clear();
             foreach (var c in connections)
             {
-                dgvMultiIP.Rows.Add(c.IP, c.Offset);
+                dgvMultiIP.Rows.Add(c.IP, c.Offset, c.Mode);
             }
 
             if (connections.Count > 0)
@@ -1078,6 +1080,9 @@ namespace DraxClient
                 this.single.Checked = true;
                 single_CheckedChanged(this, EventArgs.Empty);
             }
+
+            this.lbLicences.Text = sendcmd("READLICENSEDMAXIPCONNECTIONS");
+            
         }
 
         private void save_taktis_connections()
@@ -1100,11 +1105,13 @@ namespace DraxClient
                     string ip = row.Cells[colIPAddress.Index].Value?.ToString() ?? "";
                     if (string.IsNullOrWhiteSpace(ip)) continue;
                     string offset = row.Cells[colIPOffset.Index].Value?.ToString() ?? "";
+                    string mode = row.Cells[colType.Index].Value?.ToString() ?? "";
+                    if (string.IsNullOrWhiteSpace(mode)) mode = "Standalone";
 
                     sendcmd($"SETTINGSSET|Connection{panelNumber},IPAddress,{ip}");
                     sendcmd($"SETTINGSSET|Connection{panelNumber},Offset,{offset}");
                     sendcmd($"SETTINGSSET|Connection{panelNumber},PanelNumber,{panelNumber}");
-                    sendcmd($"SETTINGSSET|Connection{panelNumber},Mode,Standalone");
+                    sendcmd($"SETTINGSSET|Connection{panelNumber},Mode,{mode}");
                     panelNumber++;
                 }
                 savedCount = panelNumber - 1;
@@ -1131,6 +1138,7 @@ namespace DraxClient
             this.label12.Visible = true;
             this.label13.Visible = true;
             this.dgvMultiIP.Visible = false;
+            this.lbLicences.Visible = false;
         }
 
         private void multi_CheckedChanged(object sender, EventArgs e)
@@ -1144,6 +1152,7 @@ namespace DraxClient
             this.label12.Visible = false;
             this.label13.Visible = false;
             this.dgvMultiIP.Visible = true;
+            this.lbLicences.Visible = true;
         }
     }
 }

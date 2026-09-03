@@ -99,9 +99,11 @@
             lblPanelZero = new Label();
             tbPanelZeroAddress = new TextBox();
             tbTaktis = new TabPage();
+            lbLicences = new Label();
             dgvMultiIP = new DataGridView();
             colIPAddress = new DataGridViewTextBoxColumn();
             colIPOffset = new DataGridViewTextBoxColumn();
+            colType = new DataGridViewComboBoxColumn();
             label13 = new Label();
             tbSingleOffset = new TextBox();
             groupBox1 = new GroupBox();
@@ -871,6 +873,7 @@
             // 
             // tbTaktis
             // 
+            tbTaktis.Controls.Add(lbLicences);
             tbTaktis.Controls.Add(dgvMultiIP);
             tbTaktis.Controls.Add(label13);
             tbTaktis.Controls.Add(tbSingleOffset);
@@ -885,13 +888,22 @@
             tbTaktis.Text = "Taktis Panel";
             tbTaktis.UseVisualStyleBackColor = true;
             // 
+            // lbLicences
+            // 
+            lbLicences.AutoSize = true;
+            lbLicences.Location = new Point(303, 48);
+            lbLicences.Name = "lbLicences";
+            lbLicences.Size = new Size(62, 15);
+            lbLicences.TabIndex = 8;
+            lbLicences.Text = "lbLicences";
+            // 
             // dgvMultiIP
             // 
             dgvMultiIP.AllowUserToResizeColumns = false;
             dgvMultiIP.AllowUserToResizeRows = false;
             dgvMultiIP.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvMultiIP.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvMultiIP.Columns.AddRange(new DataGridViewColumn[] { colIPAddress, colIPOffset });
+            dgvMultiIP.Columns.AddRange(new DataGridViewColumn[] { colIPAddress, colIPOffset, colType });
             dgvMultiIP.Location = new Point(27, 77);
             dgvMultiIP.Name = "dgvMultiIP";
             dgvMultiIP.RowHeadersWidth = 30;
@@ -908,7 +920,13 @@
             // 
             colIPOffset.HeaderText = "IP Offset";
             colIPOffset.Name = "colIPOffset";
-            // 
+            //
+            // colType
+            //
+            colType.HeaderText = "Type";
+            colType.Name = "colType";
+            colType.Items.AddRange(new object[] { "Standalone", "Network" });
+            //
             // label13
             // 
             label13.AutoSize = true;
@@ -1107,10 +1125,12 @@
         private DataGridView dgvMultiIP;
         private DataGridViewTextBoxColumn colIPAddress;
         private DataGridViewTextBoxColumn colIPOffset;
+        private DataGridViewComboBoxColumn colType;
         private Label label13;
         private TextBox tbSingleOffset;
         private GroupBox groupBox1;
         private RadioButton single;
         private RadioButton multi;
+        private Label lbLicences;
     }
 }
