@@ -31,6 +31,12 @@
                          Variable="NetDesktop10Present"
                          Result="exists" />
 
+    <!-- Optional install folder, e.g. from the AMX installer that calls this
+         EXE (James, 2026-09-15 — AMX may live somewhere other than C:\AMX1):
+           DraxClientSetup.exe /quiet InstallFolder="D:\AMX2"
+         Empty (the default) leaves the MSI's own C:\AMX1 in charge. -->
+    <Variable Name="InstallFolder" Type="string" Value="" bal:Overridable="yes" />
+
     <Chain>
       <!--
         .NET 10 Desktop Runtime — installed silently only when missing.
@@ -54,8 +60,12 @@
                   UninstallArguments="/uninstall /quiet /norestart"
                   Permanent="yes" />
 
-      <!-- Drax Client MSI -->
-      <MsiPackage SourceFile="$(var.DraxClientMsi.TargetPath)" />
+      <!-- Drax Client MSI. InstallFolder is forwarded only when the caller
+           set it, so the MSI's own C:\AMX1 default stands otherwise. -->
+      <MsiPackage SourceFile="$(var.DraxClientMsi.TargetPath)">
+        <MsiProperty Name="INSTALLFOLDER" Value="[InstallFolder]"
+                     Condition="InstallFolder &lt;&gt; &quot;&quot;" />
+      </MsiPackage>
     </Chain>
   </Bundle>
 
