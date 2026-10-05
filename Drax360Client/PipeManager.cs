@@ -13,7 +13,6 @@ namespace DraxClient
     {
         private static Form? _mainForm;
         private const char PipeDelimiter = '|';
-
         private static NamedPipeServerStream? _pipeServer;
         private static frmTestBox? _testBox;
         private static frmAbout? _aboutBox;

@@ -46,19 +46,12 @@ namespace DraxClient
             private frmprimary _mainForm;
             public HiddenAppContext()
             {
-                // frmprimary is the persistent hidden owner — ShowInTaskbar=false
-                // and a SetVisibleCore override that keeps the handle alive after
-                // the first hide. Using frmSetup here was the cause of Mike's
-                // "Pipe error: Invoke or BeginInvoke cannot be called on a control
-                // until the window handle has been created": closing the Setup
-                // form disposed it, then the next service push (NWM:TBSHOW etc.)
-                // tried to marshal onto a handle-less form.
-                // var _mainForm = new frmprimary();
-                var _mainForm = new frmSetup();
+                var _mainForm = new frmprimary();
+                // var _mainForm = new frmSetup();
                 var handle = _mainForm.Handle;
-                _mainForm.Show();
                 PipeManager.SetMainForm(_mainForm);
                 PipeManager.Start();
+                //_mainForm.Show();
             }
         }
         [STAThread]
@@ -94,7 +87,7 @@ namespace DraxClient
                                  StringComparison.Ordinal);
             if (!suppressConsole)
             {
-                // EnableConsole();
+            //    EnableConsole();
             }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

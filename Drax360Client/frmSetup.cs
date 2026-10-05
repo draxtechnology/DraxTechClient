@@ -527,6 +527,7 @@ namespace DraxClient
             tabPage.TabPages.Remove(tbGent);
             tabPage.TabPages.Remove(tpInspire);
             tabPage.TabPages.Remove(tbTaktis);
+            tabPage.TabPages.Remove(tbGalaxy);
             // COM ports
             for (int i = 1; i <= 10; i++)
                 cbComport.Items.Add(new ComboBoxItem { Text = $"COM{i}", Value = i.ToString() });
@@ -548,6 +549,34 @@ namespace DraxClient
 
                 case "TAKTIS":
                     tabPage.TabPages.Add(tbTaktis);
+                    this.cbBaudRate.Visible = false;
+                    this.lbbaud.Visible = false;
+                    this.cbComport.Visible = false;
+                    this.lbcomm.Visible = false;
+                    this.cbDataBits.Visible = false;
+                    this.lbdata.Visible = false;
+                    this.cbParity.Visible = false;
+                    this.lbparity.Visible = false;
+                    this.cbStopBits.Visible = false;
+                    this.lbstop.Visible = false;
+                    this.lbporttext.Visible = false;
+                    this.tpserialsettings.Text = "Connection";
+                    break;
+
+                case "GALAXY":
+                    tabPage.TabPages.Add(tbGalaxy);
+                    this.cbBaudRate.Visible = false;
+                    this.lbbaud.Visible = false;
+                    this.cbComport.Visible = false;
+                    this.lbcomm.Visible = false;
+                    this.cbDataBits.Visible = false;
+                    this.lbdata.Visible = false;
+                    this.cbParity.Visible = false;
+                    this.lbparity.Visible = false;
+                    this.cbStopBits.Visible = false;
+                    this.lbstop.Visible = false;
+                    this.lbporttext.Visible = false;
+                    this.tpserialsettings.Text = "Connection";
                     break;
 
                 case "RSM":
@@ -827,6 +856,10 @@ namespace DraxClient
             {
                 load_taktis_connections();
             }
+            if(_panelType == "GALAXY")
+            {
+                this.tbGalaxyIP.Text = sendcmd("SETTINGSGET|EVENTLISTENIPADDRESS,IPADDRESS");
+            }
         }
         // ── Pipe helpers (unchanged) ──────────────────────────────────────────
         private string sendcmd(string cmd, string parameters = "")
@@ -938,6 +971,10 @@ namespace DraxClient
                     if (_panelType == "TAKTIS")
                     {
                         save_taktis_connections();
+                    }
+                    if (_panelType == "GALAXY")
+                    {
+                        sendcmd($"SETTINGSSET|SETUP,EVENTLISTENIPADDRESS,{this.tbGalaxyIP.Text}");
                     }
                 }
             }

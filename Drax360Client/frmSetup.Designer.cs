@@ -31,7 +31,7 @@
             btok = new Button();
             tabPage = new TabControl();
             tpserialsettings = new TabPage();
-            label10 = new Label();
+            lbstop = new Label();
             cbStopBits = new ComboBox();
             lblComCounterPanel1 = new Label();
             progressBar1 = new ProgressBar();
@@ -39,16 +39,16 @@
             cbDataBits = new ComboBox();
             lbStatus = new Label();
             cbBaudRate = new ComboBox();
-            label1 = new Label();
-            label7 = new Label();
+            lbcomm = new Label();
+            lbporttext = new Label();
             cbComport = new ComboBox();
-            label3 = new Label();
+            lbdata = new Label();
             lblCalibration = new Label();
-            label2 = new Label();
+            lbbaud = new Label();
             label6 = new Label();
             tbOffset = new TextBox();
             cbParity = new ComboBox();
-            label4 = new Label();
+            lbparity = new Label();
             tpsettings = new TabPage();
             debug = new CheckBox();
             tpadvanced = new TabPage();
@@ -111,7 +111,10 @@
             multi = new RadioButton();
             tbSingleIP = new TextBox();
             label12 = new Label();
+            tbGalaxy = new TabPage();
             tabPage1 = new TabPage();
+            tbGalaxyIP = new TextBox();
+            label1 = new Label();
             pnlFooter.SuspendLayout();
             tabPage.SuspendLayout();
             tpserialsettings.SuspendLayout();
@@ -126,6 +129,7 @@
             tbTaktis.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvMultiIP).BeginInit();
             groupBox1.SuspendLayout();
+            tbGalaxy.SuspendLayout();
             SuspendLayout();
             // 
             // pnlFooter
@@ -181,6 +185,7 @@
             tabPage.Controls.Add(tbGent);
             tabPage.Controls.Add(tpInspire);
             tabPage.Controls.Add(tbTaktis);
+            tabPage.Controls.Add(tbGalaxy);
             tabPage.Dock = DockStyle.Fill;
             tabPage.Location = new Point(0, 0);
             tabPage.Name = "tabPage";
@@ -191,7 +196,7 @@
             // tpserialsettings
             // 
             tpserialsettings.BackColor = Color.FromArgb(245, 246, 250);
-            tpserialsettings.Controls.Add(label10);
+            tpserialsettings.Controls.Add(lbstop);
             tpserialsettings.Controls.Add(cbStopBits);
             tpserialsettings.Controls.Add(lblComCounterPanel1);
             tpserialsettings.Controls.Add(progressBar1);
@@ -199,16 +204,16 @@
             tpserialsettings.Controls.Add(cbDataBits);
             tpserialsettings.Controls.Add(lbStatus);
             tpserialsettings.Controls.Add(cbBaudRate);
-            tpserialsettings.Controls.Add(label1);
-            tpserialsettings.Controls.Add(label7);
+            tpserialsettings.Controls.Add(lbcomm);
+            tpserialsettings.Controls.Add(lbporttext);
             tpserialsettings.Controls.Add(cbComport);
-            tpserialsettings.Controls.Add(label3);
+            tpserialsettings.Controls.Add(lbdata);
             tpserialsettings.Controls.Add(lblCalibration);
-            tpserialsettings.Controls.Add(label2);
+            tpserialsettings.Controls.Add(lbbaud);
             tpserialsettings.Controls.Add(label6);
             tpserialsettings.Controls.Add(tbOffset);
             tpserialsettings.Controls.Add(cbParity);
-            tpserialsettings.Controls.Add(label4);
+            tpserialsettings.Controls.Add(lbparity);
             tpserialsettings.Location = new Point(4, 24);
             tpserialsettings.Name = "tpserialsettings";
             tpserialsettings.Padding = new Padding(16, 14, 16, 8);
@@ -216,15 +221,15 @@
             tpserialsettings.TabIndex = 0;
             tpserialsettings.Text = "Serial Settings";
             // 
-            // label10
+            // lbstop
             // 
-            label10.AutoSize = true;
-            label10.Location = new Point(393, 166);
-            label10.Name = "label10";
-            label10.Size = new Size(53, 15);
-            label10.TabIndex = 10;
-            label10.Tag = "fieldlabel";
-            label10.Text = "Stop Bits";
+            lbstop.AutoSize = true;
+            lbstop.Location = new Point(393, 166);
+            lbstop.Name = "lbstop";
+            lbstop.Size = new Size(53, 15);
+            lbstop.TabIndex = 10;
+            lbstop.Tag = "fieldlabel";
+            lbstop.Text = "Stop Bits";
             // 
             // cbStopBits
             // 
@@ -284,26 +289,26 @@
             cbBaudRate.Size = new Size(140, 23);
             cbBaudRate.TabIndex = 5;
             // 
-            // label1
+            // lbcomm
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(16, 104);
-            label1.Name = "label1";
-            label1.Size = new Size(69, 15);
-            label1.TabIndex = 0;
-            label1.Tag = "fieldlabel";
-            label1.Text = "Comm Port";
+            lbcomm.AutoSize = true;
+            lbcomm.Location = new Point(16, 104);
+            lbcomm.Name = "lbcomm";
+            lbcomm.Size = new Size(69, 15);
+            lbcomm.TabIndex = 0;
+            lbcomm.Tag = "fieldlabel";
+            lbcomm.Text = "Comm Port";
             // 
-            // label7
+            // lbporttext
             // 
-            label7.AutoSize = true;
-            label7.ForeColor = SystemColors.ControlDarkDark;
-            label7.Location = new Point(16, 66);
-            label7.Name = "label7";
-            label7.Size = new Size(132, 15);
-            label7.TabIndex = 4;
-            label7.Tag = "fieldlabel";
-            label7.Text = "PORT CONFIGURATION";
+            lbporttext.AutoSize = true;
+            lbporttext.ForeColor = SystemColors.ControlDarkDark;
+            lbporttext.Location = new Point(16, 66);
+            lbporttext.Name = "lbporttext";
+            lbporttext.Size = new Size(132, 15);
+            lbporttext.TabIndex = 4;
+            lbporttext.Tag = "fieldlabel";
+            lbporttext.Text = "PORT CONFIGURATION";
             // 
             // cbComport
             // 
@@ -316,15 +321,15 @@
             cbComport.Size = new Size(140, 23);
             cbComport.TabIndex = 0;
             // 
-            // label3
+            // lbdata
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(16, 166);
-            label3.Name = "label3";
-            label3.Size = new Size(53, 15);
-            label3.TabIndex = 2;
-            label3.Tag = "fieldlabel";
-            label3.Text = "Data Bits";
+            lbdata.AutoSize = true;
+            lbdata.Location = new Point(16, 166);
+            lbdata.Name = "lbdata";
+            lbdata.Size = new Size(53, 15);
+            lbdata.TabIndex = 2;
+            lbdata.Tag = "fieldlabel";
+            lbdata.Text = "Data Bits";
             // 
             // lblCalibration
             // 
@@ -336,15 +341,15 @@
             lblCalibration.Tag = "section";
             lblCalibration.Text = "CALIBRATION";
             // 
-            // label2
+            // lbbaud
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(217, 104);
-            label2.Name = "label2";
-            label2.Size = new Size(60, 15);
-            label2.TabIndex = 1;
-            label2.Tag = "fieldlabel";
-            label2.Text = "Baud Rate";
+            lbbaud.AutoSize = true;
+            lbbaud.Location = new Point(217, 104);
+            lbbaud.Name = "lbbaud";
+            lbbaud.Size = new Size(60, 15);
+            lbbaud.TabIndex = 1;
+            lbbaud.Tag = "fieldlabel";
+            lbbaud.Text = "Baud Rate";
             // 
             // label6
             // 
@@ -372,15 +377,15 @@
             cbParity.Size = new Size(140, 23);
             cbParity.TabIndex = 3;
             // 
-            // label4
+            // lbparity
             // 
-            label4.AutoSize = true;
-            label4.Location = new Point(217, 166);
-            label4.Name = "label4";
-            label4.Size = new Size(37, 15);
-            label4.TabIndex = 3;
-            label4.Tag = "fieldlabel";
-            label4.Text = "Parity";
+            lbparity.AutoSize = true;
+            lbparity.Location = new Point(217, 166);
+            lbparity.Name = "lbparity";
+            lbparity.Size = new Size(37, 15);
+            lbparity.TabIndex = 3;
+            lbparity.Tag = "fieldlabel";
+            lbparity.Text = "Parity";
             // 
             // tpsettings
             // 
@@ -920,13 +925,13 @@
             // 
             colIPOffset.HeaderText = "IP Offset";
             colIPOffset.Name = "colIPOffset";
-            //
+            // 
             // colType
-            //
+            // 
             colType.HeaderText = "Type";
-            colType.Name = "colType";
             colType.Items.AddRange(new object[] { "Standalone", "Network" });
-            //
+            colType.Name = "colType";
+            // 
             // label13
             // 
             label13.AutoSize = true;
@@ -993,6 +998,18 @@
             label12.TabIndex = 0;
             label12.Text = "Panel IP Address:";
             // 
+            // tbGalaxy
+            // 
+            tbGalaxy.Controls.Add(label1);
+            tbGalaxy.Controls.Add(tbGalaxyIP);
+            tbGalaxy.Location = new Point(4, 24);
+            tbGalaxy.Name = "tbGalaxy";
+            tbGalaxy.Padding = new Padding(3);
+            tbGalaxy.Size = new Size(582, 290);
+            tbGalaxy.TabIndex = 8;
+            tbGalaxy.Text = "Galaxy";
+            tbGalaxy.UseVisualStyleBackColor = true;
+            // 
             // tabPage1
             // 
             tabPage1.Location = new Point(4, 24);
@@ -1002,6 +1019,22 @@
             tabPage1.TabIndex = 7;
             tabPage1.Text = "tabPage1";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tbGalaxyIP
+            // 
+            tbGalaxyIP.Location = new Point(116, 63);
+            tbGalaxyIP.Name = "tbGalaxyIP";
+            tbGalaxyIP.Size = new Size(193, 23);
+            tbGalaxyIP.TabIndex = 0;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(34, 71);
+            label1.Name = "label1";
+            label1.Size = new Size(62, 15);
+            label1.TabIndex = 1;
+            label1.Text = "IP Address";
             // 
             // frmSetup
             // 
@@ -1039,6 +1072,8 @@
             ((System.ComponentModel.ISupportInitialize)dgvMultiIP).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            tbGalaxy.ResumeLayout(false);
+            tbGalaxy.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1052,11 +1087,11 @@
         private Button btok;
         private Button btcancel;
         private ComboBox cbComport;
-        private Label label1;
+        private Label lbcomm;
         private Label lbStatus;
-        private Label label2;
-        private Label label3;
-        private Label label4;
+        private Label lbbaud;
+        private Label lbdata;
+        private Label lbparity;
         private ComboBox cbParity;
         private CheckBox debug;
         private Label label6;
@@ -1096,7 +1131,7 @@
         private CheckBox chkDisablePanelText;
         private CheckBox chkDisplayChkSumFails;
         private CheckBox chkOutStationFaults;
-        private Label label7;
+        private Label lbporttext;
         private ComboBox cbDataBits;
         private ComboBox cbBaudRate;
         private ProgressBar progressBar1;
@@ -1107,10 +1142,11 @@
         private Label label9;
         private Label label8;
         private Label lblComCounterPanel1;
-        private Label label10;
+        private Label lbstop;
         private ComboBox cbStopBits;
         private TabPage tpInspire;
         private TabPage tbTaktis;
+        private TabPage tbGalaxy;
         private GroupBox gbModuleOffset;
         private RadioButton rbOffsetNode;
         private RadioButton rbOffsetLoop;
@@ -1132,5 +1168,8 @@
         private RadioButton single;
         private RadioButton multi;
         private Label lbLicences;
+        private TabPage tabPage2;
+        private Label label1;
+        private TextBox tbGalaxyIP;
     }
 }
