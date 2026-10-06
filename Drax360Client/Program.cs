@@ -46,12 +46,26 @@ namespace DraxClient
             private frmprimary _mainForm;
             public HiddenAppContext()
             {
+                //
+                //   This is the code needed when building a new installer 
+                //
                 var _mainForm = new frmprimary();
-                // var _mainForm = new frmSetup();
                 var handle = _mainForm.Handle;
                 PipeManager.SetMainForm(_mainForm);
                 PipeManager.Start();
                 //_mainForm.Show();
+                //
+
+                //
+                //   This is the code needed when testing the testbox form
+                //
+                //var _mainForm = new frmTestBox();
+                //var handle = _mainForm.Handle;
+                //PipeManager.SetMainForm(_mainForm);
+                //PipeManager.Start();
+                //_mainForm.Show();
+                //
+
             }
         }
         [STAThread]

@@ -88,6 +88,19 @@ namespace DraxClient
             {
                 this.tbDevice.Text = "1";
             }
+
+            string _panelType = sendcmd("GetPanelType");
+            if (_panelType == "GALAXY")
+            {
+                this.lbnode.Text = "Zone";
+                this.lbloop.Visible = false;
+                this.tbLoop.Visible = false;
+                tbDevice.Maximum = 65025;   // 255 x 255 for Galaxy.
+                this.tbDevice.Text = sendcmd($"SETTINGSGET|TESTBOX,Input");
+            }
+
+            var s = _panelType.ToLower();
+            this.Text = string.IsNullOrEmpty(s) ? s : char.ToUpper(s[0]) + s.Substring(1) + " Test Box";
         }
         public class ComboBoxItem
         {
@@ -126,6 +139,12 @@ namespace DraxClient
             {
                 MessageBox.Show("Please enter a device.", "Validation Error");
                 return;
+            }
+
+            string _panelType = sendcmd("GetPanelType");
+            if (_panelType == "GALAXY")
+            {
+                this.tbLoop.Text = "0";
             }
 
             sendcmd("Test Box", selectedItem.Value + "," + this.tbNode.Text + "," + this.tbLoop.Text + "," + this.tbDevice.Text);
@@ -221,6 +240,12 @@ namespace DraxClient
             {
                 MessageBox.Show("Please enter a device.", "Validation Error");
                 return;
+            }
+
+            string _panelType = sendcmd("GetPanelType");
+            if (_panelType == "GALAXY")
+            {
+                this.tbLoop.Text = "0";
             }
             sendcmd("Test Box Reset", selectedItem.Value + "," + this.tbNode.Text + "," + this.tbLoop.Text + "," + this.tbDevice.Text);
             sendcmd($"SETTINGSSET|TESTBOX,Input," + this.tbDevice.Text);
