@@ -35,6 +35,7 @@
             cbType = new ComboBox();
             btOn = new Button();
             btReset = new Button();
+            btResetAll = new Button();
             tbNode = new NumericUpDown();
             tbLoop = new NumericUpDown();
             tbDevice = new NumericUpDown();
@@ -108,7 +109,22 @@
             btReset.Text = "RESET";
             btReset.UseVisualStyleBackColor = false;
             btReset.Click += btReset_Click;
-            // 
+            //
+            // btResetAll
+            //
+            btResetAll.BackColor = Color.FromArgb(226, 75, 74);
+            btResetAll.FlatAppearance.BorderSize = 0;
+            btResetAll.FlatStyle = FlatStyle.Flat;
+            btResetAll.ForeColor = Color.White;
+            btResetAll.Location = new Point(372, 75);
+            btResetAll.Margin = new Padding(3, 2, 3, 2);
+            btResetAll.Name = "btResetAll";
+            btResetAll.Size = new Size(82, 23);
+            btResetAll.TabIndex = 12;
+            btResetAll.Text = "RESET ALL";
+            btResetAll.UseVisualStyleBackColor = false;
+            btResetAll.Click += btResetAll_Click;
+            //
             // tbNode
             // 
             tbNode.Location = new Point(71, 24);
@@ -137,7 +153,8 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(392, 122);
+            ClientSize = new Size(483, 122);
+            Controls.Add(btResetAll);
             Controls.Add(tbDevice);
             Controls.Add(tbLoop);
             Controls.Add(tbNode);
@@ -169,6 +186,7 @@
         private ComboBox cbType;
         private Button btOn;
         private Button btReset;
+        private Button btResetAll;
         private NumericUpDown tbNode;
         private NumericUpDown tbLoop;
         private NumericUpDown tbDevice;

@@ -230,6 +230,16 @@ namespace DraxClient
             sendcmd("SETTINGSSAVE");
         }
 
+        // Resets every test input this service raised and has not yet reset. The
+        // service keeps the list, so nothing from the form is needed; it answers
+        // with the number it cleared.
+        private void btResetAll_Click(object sender, EventArgs e)
+        {
+            string cleared = sendcmd("Test Box Reset All");
+            Console.WriteLine($"Test Box Reset All cleared {cleared}");
+            MessageBox.Show($"Reset {cleared} test input(s).", "Test Box");
+        }
+
         private void frmTestBox_Load(object sender, EventArgs e)
         {
             Console.WriteLine("frmTestBox Load event fired.");
