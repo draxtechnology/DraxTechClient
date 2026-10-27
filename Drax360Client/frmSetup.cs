@@ -35,12 +35,6 @@ namespace DraxClient
         // Most-recent "Data Last Received: <ts>" timestamp seen from the
         // service. The progress bar ticks forward every time this changes.
         private string _lastDataTimestamp = "";
-        // When we last saw a *new* timestamp value — drives Marquee hysteresis
-        // so the bar doesn't flicker on/off between 1-second polls when the
-        // service's timestamp is seconds-precision and multiple polls within
-        // the same second see the same value.
-        private DateTime _lastFreshTimestampAt = DateTime.MinValue;
-        private const double kMarqueeInertiaSeconds = 10.0;
 
         // ── Palette ──────────────────────────────────────────────────────────
         static readonly Color clrBackground = Color.FromArgb(245, 246, 250);
@@ -101,21 +95,17 @@ namespace DraxClient
             // "Data Last Received" tick from the service.
             SetMarquee(false);
             _lastDataTimestamp = "";
-            _lastFreshTimestampAt = DateTime.MinValue;
         }
 
         private void OnSerialPortDisconnected()
         {
             SetMarquee(false);
             _lastDataTimestamp = "";
-            _lastFreshTimestampAt = DateTime.MinValue;
         }
 
-        // Marquee style = always-moving stripe while panel data is flowing.
-        // Continuous style with Value=0 = static empty bar (port closed or
-        // panel silent). Mike's feedback was that a quantitative bar driven
-        // by byte-burst events looked erratic; the Marquee just signals
-        // "link alive" without pretending to measure rate.
+        // One 20% block step per fresh "Data Last Received" timestamp (wraps
+        // at 100), like the VB heartbeat bar; the bar stands still when the
+        // panel goes quiet. SetMarquee(false) leaves it where it is.
         private void SetMarquee(bool on)
         {
             if (on)
@@ -127,7 +117,6 @@ namespace DraxClient
                     progressBar1.Value = 0;
                 }
                 progressBar1.Value = progressBar1.Value + 20;
-                _lastFreshTimestampAt = DateTime.Now;
 
                 int glNumHeartbeats = Convert.ToInt32(sendcmd("GetPanelHandShake"));
                 int glNumMessages = Convert.ToInt32(sendcmd("GetPanelNumMessages"));
@@ -467,24 +456,18 @@ namespace DraxClient
             finally { _pollInProgress = false; }
         }
 
-        // Progress bar shows handshake activity as a Marquee animation —
-        // continuous moving stripe while panel data is flowing, static
-        // empty bar otherwise. Driven by the "Data Last Received: <ts>"
-        // reply from the service. The first cut toggled Marquee on/off per
-        // poll based on whether the timestamp changed since the previous
-        // tick, but the service's timestamp is seconds-precision so multiple
-        // polls within the same second saw the same value and the bar
-        // flickered. Hysteresis now: record when we last saw a *fresh* value
-        // and keep Marquee running for kMarqueeInertiaSeconds after that.
-        // Reads as smooth motion while data flows, stops cleanly when the
-        // panel goes silent for more than a few seconds.
+        // Progress bar steps once per fresh "Data Last Received: <ts>" reply
+        // from the service, so it moves while the panel is talking and stands
+        // still when it goes quiet. The service's timestamp is seconds-precision,
+        // so at the 1-second poll that's at most one step a second. (The
+        // previous inertia check stepped only once the timestamp had been
+        // unchanged for 10 seconds, so the bar never moved on a healthy link.)
         private void UpdateProgressBarFromStatus(string status)
         {
             if (string.IsNullOrEmpty(status))
             {
                 SetMarquee(false);
                 _lastDataTimestamp = "";
-                _lastFreshTimestampAt = DateTime.MinValue;
                 return;
             }
             string lower = status.ToLower();
@@ -495,18 +478,14 @@ namespace DraxClient
                 if (!string.IsNullOrEmpty(ts) && ts != _lastDataTimestamp)
                 {
                     _lastDataTimestamp = ts;
-                    _lastFreshTimestampAt = DateTime.Now;
+                    SetMarquee(true);
                 }
-                bool fresh = (DateTime.Now - _lastFreshTimestampAt).TotalSeconds
-                             > kMarqueeInertiaSeconds;
-                SetMarquee(fresh);
             }
             else
             {
                 // "CONNECTED" with no data yet, "DISCONNECTED", or "ERROR".
                 SetMarquee(false);
                 _lastDataTimestamp = "";
-                _lastFreshTimestampAt = DateTime.MinValue;
             }
         }
 
