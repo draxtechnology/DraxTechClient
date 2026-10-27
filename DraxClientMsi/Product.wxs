@@ -4,7 +4,7 @@
 
   <Package Name="Drax Technology Client"
            Manufacturer="Drax Technology"
-           Version="1.0.3"
+           Version="1.0.4"
            UpgradeCode="BCDEEC3D-DD83-44D7-9AC4-783B277ECBC5"
            Scope="perMachine"
            InstallerVersion="500">

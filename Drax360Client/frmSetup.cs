@@ -62,6 +62,14 @@ namespace DraxClient
         // a passive "Last message <timestamp>" label instead (Mike, 2026-08-25:
         // ARM gets the same treatment as the Autronica).
         private bool IsPassiveFeedPanel => _panelType == "AUTESPA" || _panelType == "ARM";
+
+        // What GETCOMMPORTSTATUS is asked about. The TCP panels have no COM
+        // port (the combo is hidden, so its text never matched a panel and
+        // the Connection tab sat on Disconnected — Kentec, 2026-10-09): the
+        // service knows them as GALAXY and TAKTIS1..n, and answers "TAKTIS"
+        // for all the Taktis connections together.
+        private string StatusIdentifier =>
+            _panelType == "TAKTIS" || _panelType == "GALAXY" ? _panelType : cbComport.Text;
         #endregion
 
         public frmSetup()
@@ -409,7 +417,7 @@ namespace DraxClient
             // Capture the comport name on the UI thread; we can't touch the
             // ComboBox from inside the Task.Run lambda below (WinForms controls
             // are thread-affine to the thread that created them).
-            string comport = cbComport.Text;
+            string comport = StatusIdentifier;
             if (string.IsNullOrEmpty(comport)) return;
             _pollInProgress = true;
             try
@@ -677,7 +685,7 @@ namespace DraxClient
             if (tbOffset.Text == "") tbOffset.Text = "0";
 
             // Status
-            string status = sendcmd("GETCOMMPORTSTATUS|" + cbComport.Text);
+            string status = sendcmd("GETCOMMPORTSTATUS|" + StatusIdentifier);
             if (!IsPassiveFeedPanel)
             {
                 int state = ConnectionState(status);
