@@ -60,10 +60,13 @@ namespace DraxClient
         // What GETCOMMPORTSTATUS is asked about. The TCP panels have no COM
         // port (the combo is hidden, so its text never matched a panel and
         // the Connection tab sat on Disconnected — Kentec, 2026-10-09): the
-        // service knows them as GALAXY and TAKTIS1..n, and answers "TAKTIS"
-        // for all the Taktis connections together.
+        // service knows them as GALAXY, AUTOFLAME and TAKTIS1..n, and answers
+        // "TAKTIS" for all the Taktis connections together. AUTOFLAME (the
+        // Autoflame boiler controller over Modbus) is asked for by name even
+        // on RS485: the service's driver is one instance named after the panel.
         private string StatusIdentifier =>
-            _panelType == "TAKTIS" || _panelType == "GALAXY" ? _panelType : cbComport.Text;
+            _panelType == "TAKTIS" || _panelType == "GALAXY" || _panelType == "AUTOFLAME"
+                ? _panelType : cbComport.Text;
         #endregion
 
         public frmSetup()
@@ -645,6 +648,7 @@ namespace DraxClient
                 case "NOTIFIER":
                 case "PEARL":
                 case "INSPIRE":
+                case "AUTOFLAME":
                     // The service reads SETUP/giAmx1Offset (same key as every C#
                     // driver — Taktis precedent) and the save path below writes
                     // the same key; PANEL1/Amx1Offset was the VB's location.
