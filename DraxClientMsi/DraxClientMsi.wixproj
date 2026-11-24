@@ -13,8 +13,25 @@
     <PackageReference Include="WixToolset.Util.wixext" Version="7.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Drax360Client\DraxClient.csproj" />
-  </ItemGroup>
+  <!-- The client is built from here rather than through a ProjectReference.
+       WiX projects count as "native" to NuGet, and Visual Studio 18.11's
+       NuGet reports NU1201 (client "not compatible with native") for a
+       ProjectReference from one, even though WiX marks it build-order-only
+       (Mike, 2026-11-24). The reference only ever supplied this one
+       variable, so it is defined directly. Platform is pinned to AnyCPU so
+       an x64 installer build cannot redirect the client's output. -->
+  <PropertyGroup>
+    <DraxClientProject>$(MSBuildProjectDirectory)\..\Drax360Client\DraxClient.csproj</DraxClientProject>
+    <DraxClientTargetDir>$(MSBuildProjectDirectory)\..\Drax360Client\bin\$(Configuration)\net10.0-windows\</DraxClientTargetDir>
+    <DefineConstants>$(DefineConstants);DraxClient.TargetDir=$(DraxClientTargetDir)</DefineConstants>
+  </PropertyGroup>
+
+  <Target Name="BuildDraxClient" BeforeTargets="CoreCompile">
+    <!-- Restore in its own evaluation (the unique property forces one), then build. -->
+    <MSBuild Projects="$(DraxClientProject)" Targets="Restore"
+             Properties="Configuration=$(Configuration);Platform=AnyCPU;_DraxClientRestore=$([System.Guid]::NewGuid())" />
+    <MSBuild Projects="$(DraxClientProject)" Targets="Build"
+             Properties="Configuration=$(Configuration);Platform=AnyCPU" />
+  </Target>
 
 </Project>

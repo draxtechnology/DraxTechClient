@@ -10,6 +10,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTT Test", "MQTT Test\MQTT Test.csproj", "{DBB17C8A-D8B7-4975-93DA-62CA53C39727}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DraxClientMsi", "DraxClientMsi\DraxClientMsi.wixproj", "{5E29521F-A92C-40BC-A9C5-BC3660549016}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FFE1AAA5-4EEA-46AC-8925-848BCE8AF37F} = {FFE1AAA5-4EEA-46AC-8925-848BCE8AF37F}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DraxClientSetup", "DraxClientSetup\DraxClientSetup.wixproj", "{B3C4D5E6-F7A8-9B0C-1D2E-3F4A5B6C7D8E}"
 EndProject
